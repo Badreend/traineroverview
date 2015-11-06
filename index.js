@@ -30,6 +30,8 @@ io.on('connection', function(socket){
 	socket.on('beep', function(){
 		console.log('beep!!!')
 		socket.emit('boop');
+		io.sockets.emit('tempData','player joined the room');
+
 	});
 
 	socket.on("playerColor", function(data){
@@ -37,6 +39,10 @@ io.on('connection', function(socket){
 		io.sockets.emit("playerChangeColor",data);
 	});
 
+	socket.on("dataTransfer", function(data){
+		console.log(data);
+		io.sockets.emit("dataClient",data);
+	});
 
 	//
 socket.on('idAvailable',function(newId,available){
@@ -80,7 +86,6 @@ socket.on('idAvailable',function(newId,available){
 
 socket.on('disconnect',function(data){
 		io.sockets.emit('disconnect','test');
-
 		console.log('someDisconnected');
 		console.log(socket.ids);
 		console.log(ids)
