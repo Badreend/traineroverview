@@ -4,9 +4,6 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var express  = require('express');
 
-var ids = []
-    , idsData = [];
-
 app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
   res.sendfile('index.html');
@@ -102,6 +99,6 @@ socket.on('disconnect',function(data){
 var port = process.env.PORT || 5000;
 
 http.listen(port, function(){
-  console.log('serverIsworkin2');
+  console.log('Server is Online');
 });
 

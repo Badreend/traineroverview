@@ -6,7 +6,18 @@ Omdat het moest
 <head>
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	<title>Trainer Overview</title>
-	<style type="text/css" src="css/css.css"></style>
+	<!--
+		<style>
+	#mapDiv {
+		width:100%;
+		height:750px;
+	}
+	</style>
+-->
+
+<link rel="stylesheet" type="text/css" href="css/css.css">
+	
+
 
 	<script src="jquery-1.10.1.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
@@ -36,8 +47,6 @@ Omdat het moest
 	var app = {
 
 	}
-
-
 
 	app.map = {
 		mapDiv: undefined,
@@ -88,19 +97,7 @@ Omdat het moest
 		update();
 	}
 
-	var counter = 0;
-	var tempNum = 0;  
-	var tempLat = undefined;
-	var tempLong = undefined;
 	function update(){
-		counter += 0.01;
-		tempLat = Math.sin(counter) / 800 + 52.033318;
-		tempLong = Math.cos(counter) / 800 + 5.337372;
-
-		//app.map.markers[0].setPosition( new google.maps.LatLng( tempLat, tempLong ) );
-
-		// console.log(app.map.markers[0].getPosition().lat())
-		// app.map.mapObj.fitBounds(app.map.bounds);
 		requestAnimationFrame(update);
 	}
 
@@ -108,65 +105,14 @@ Omdat het moest
 		init();
 	}
 
-
 	var dataInputStr = "";
 	socket.on('dataClient', function(data){
-
 		var lat = parseFloat(data.lat);
 		var lon = parseFloat(data.lon);
 		console.log(lat + "  " + lon)
 		app.map.markers[0].setPosition( new google.maps.LatLng( lat, lon ) );
 
 	});
-
-
-	// socket.emit('idAvailable', $nickBox.val(),function(available){
-	// 	console.log(available);
-	// 	if(available){
-	// 		nickname = $nickBox.val();
-	// 		$('#nickWrap').hide();
-	// 		$('#controllerWrap').show();
-	// 		controller.bindEvents();
-	// 		controller.draw();
-	// 		console.log(canvas)
-	// 		text = "name: "+nickname;
-
-
-	// 	} else{
-	// 		$nickError.html('That name is already taken.');
-	// 	}
-
-	// 	sendData:function(){
-	// 		socket.emit('controllerInput',{
-	// 			'id':nickname,
-	// 			'leftButton': controller.direction.left,
-	// 			'rightButton': controller.direction.right,
-	// 			'upButton':controller.direction.up,
-	// 			'downButton':controller.direction.down,
-	// 			'radians':controller.stick.angle,
-	// 			'dash':controller.stick.dash,
-	// 			'distance':controller.stick.distance,
-	// 			'screenWidth':canvas.width,
-	// 			'tapped':controller.stick.tapped
-	// 		});
-	// 		console.log('sendData')
-	// 	},
-
-
-// // serverInput
-// socket.on('idsOnline', function(dataId,dataLoc){
-// 	idsOnline = dataId.length;
-// 	ids = dataId;
-// 	idsLoc = dataLoc;
-// });
-
-// socket.on('playerChangeColor', function(data){
-// 	if(data.id === nickname){
-// 		controller.playerColor = data.color;
-// 	}
-// });
-
-
 </script>
 </head>
 <body>

@@ -1,6 +1,7 @@
 *{
 	margin:0px;
 	padding:0px;
+
 }
 
 body, html {
@@ -9,5 +10,5 @@ body, html {
 }
 #mapDiv {
 	width:100%;
-	height:700px;
+	height:100%;
 }
