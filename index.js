@@ -2,6 +2,9 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var $ = require('jquery');
+require('bootstrap');
+
 var express  = require('express');
 
 app.use(express.static(__dirname + '/public'));

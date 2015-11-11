@@ -1,11 +1,20 @@
 {
-  "name": "byobController",
+  "name": "Trainer_Overview",
   "version": "0.0.2",
+  "license": "ISC",
   "dependencies": {
     "express": "x",
-    "socket.io": "x"
+    "socket.io": "x",
+    "jquery" : "x",
+    "bootstrap" : "x"
   },
+
   "engines": {
     "node": "0.10.x"
+  },
+
+  "repository": {
+  "type": "git",
+  "url": "git://github.com/Badreend/traineroverview.git"
   }
 }
