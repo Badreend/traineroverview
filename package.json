@@ -3,6 +3,9 @@
   "version": "0.0.2",
   "dependencies": {
     "express": "x",
+    "express3-handlebars": "^0.5.2",
+    "handlebars": "^4.0.4",
+    "jade": "^1.11.0",
     "socket.io": "x"
   },
   "engines": {
