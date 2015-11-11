@@ -1,0 +1,74 @@
+
+<html>
+<head>
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+	<title>Revalidanten</title>
+
+	<script src="jquery-1.10.1.min.js"></script>
+      <style>
+            .canvas {
+                  width: 100%
+            }
+      </style>
+</head>
+<body>
+	<div class="center">
+		<canvas id="rehabCanvas" class="canvas"></canvas>
+	</div>
+	
+	<script>
+      var canvas = document.getElementById('rehabCanvas');
+      canvas.width = window.innerWidth;
+      var context = canvas.getContext('2d');
+      var centerX = canvas.width / 2;
+      var centerY = canvas.height / 2;
+      var radius = 70;
+      
+      
+      var models = {{{json model}}};
+      
+      for(var i=0; i<models.length; i++){ 
+            var posX = centerX - radius * models.length + 3 * radius * i;
+            if(models[i].picture_url != null){
+                  
+                  loadImg(models[i].picture_url, posX, function(img, newX){
+                        context.save();
+                        context.beginPath();
+                        context.arc(newX, centerY, radius, 0, 2 * Math.PI, false);
+                        context.closePath();
+                        context.clip();
+                        context.drawImage(img,newX-radius,0, 140, 140);
+                        context.lineWidth = 10;
+                        context.strokeStyle = '#003300';
+                        context.stroke();
+                        context.restore();
+                  });
+            }else{
+                  loadImg('https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/718smiley.svg/200px-718smiley.svg.png', posX, function(img, newX){
+                        context.save();
+                        context.beginPath();
+                        context.arc(newX, centerY, radius, 0, 2 * Math.PI, false);
+                        context.closePath();
+                        context.clip();
+                        context.drawImage(img,newX-radius,0, 140, 140);
+                        context.lineWidth = 10;
+                        context.strokeStyle = '#003300';
+                        context.stroke();
+                        context.restore();
+                  });
+            }
+            //context.clip();
+       }
+
+      
+      function loadImg(url, posX, callback){
+            var img = new Image();
+            img.onload = function(){
+                  //context.drawImage(this,posX,posY, 140, 140);
+                  callback(this, posX);
+            };
+            img.src = url;
+      }
+    </script>
+</body>
+</html>
