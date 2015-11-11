@@ -105,11 +105,18 @@ Omdat het moest
 		init();
 	}
 
+	socket.on('dataBeep', function(data){
+		console.log('beep');
+	});
+
 	var dataInputStr = "";
+	
 	socket.on('dataClient', function(data){
+		var device_id = parseInt(data.device_id);
 		var lat = parseFloat(data.lat);
 		var lon = parseFloat(data.lon);
-		console.log(lat + "  " + lon)
+
+		console.log("id: " + device_id + " - position: " + lat + "  " + lon);
 		app.map.markers[0].setPosition( new google.maps.LatLng( lat, lon ) );
 
 	});

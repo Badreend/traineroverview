@@ -11,10 +11,19 @@ app.get('/', function(req, res){
 
 
 io.on('connection', function(socket){
+
+	socket.on('requestID', function(){
+		console.log("ID is requested");
+
+		var id_num = 1; // ID van device
+		socket.emit("receiveID", { device_id: id_num, user_id: "Maikel"});
+	})
+
 	socket.on("dataTransfer", function(data){
-		console.log(data);
+		//console.log(data);
 		io.sockets.emit("dataClient",data);
-});
+	});
+	
 
 socket.on('disconnect',function(data){
 		io.sockets.emit('disconnect','disconnected');
