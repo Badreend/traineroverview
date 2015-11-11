@@ -4,6 +4,19 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 var express  = require('express');
+var expressHbs = require('express3-handlebars');
+
+var hbs = expressHbs.create({
+    helpers: {
+        json: function(context) {
+            return JSON.stringify(context);
+        }
+    }
+});
+
+//app.engine('html', require('consolidate').handlebars);
+app.engine('html', hbs.engine);
+app.set('view engine', 'html');
 
 app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res){
@@ -12,10 +25,19 @@ app.get('/', function(req, res){
 
 
 io.on('connection', function(socket){
+
+	socket.on('requestID', function(){
+		console.log("ID is requested");
+
+		var id_num = 1; // ID van device
+		socket.emit("receiveID", { device_id: id_num, user_id: "Maikel"});
+	})
+
 	socket.on("dataTransfer", function(data){
-		console.log(data);
+		//console.log(data);
 		io.sockets.emit("dataClient",data);
-});
+	});
+	
 
 socket.on('disconnect',function(data){
 		io.sockets.emit('disconnect','disconnected');
@@ -24,6 +46,30 @@ socket.on('disconnect',function(data){
 
 });
 
+var pg = require('pg');
+var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/Geert';
+
+app.get('/rehabilitants', function(req, res){
+    var results = [];
+    
+	pg.connect(connectionString, function(err, client, done) {
+
+	    var query = client.query("SELECT * FROM rehabilitant WHERE active = TRUE ORDER BY id ASC");
+		
+        // Stream results back one row at a time
+        query.on('row', function(row) {
+            results.push(row);
+        });
+
+        // After all data is returned, close connection and return results
+        query.on('end', function() {
+            done();
+            //return res.json(results);
+            //return res.sendfile('rehabilitants.html');
+            res.render('rehabilitants', { model: results });
+        });
+	});
+});
 
 
 var port = process.env.PORT || 5000;
