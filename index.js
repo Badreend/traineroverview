@@ -14,7 +14,6 @@ var hbs = expressHbs.create({
     }
 });
 
-//app.engine('html', require('consolidate').handlebars);
 app.engine('html', hbs.engine);
 app.set('view engine', 'html');
 
@@ -54,7 +53,7 @@ socket.on('disconnect',function(data){
 });
 
 var pg = require('pg');
-var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/Geert';
+var connectionString = process.env.DATABASE_URL;
 
 app.get('/rehabilitants', function(req, res){
     var results = [];
@@ -63,16 +62,12 @@ app.get('/rehabilitants', function(req, res){
 
 	    var query = client.query("SELECT * FROM rehabilitant WHERE active = TRUE ORDER BY id ASC");
 		
-        // Stream results back one row at a time
         query.on('row', function(row) {
             results.push(row);
         });
 
-        // After all data is returned, close connection and return results
         query.on('end', function() {
             done();
-            //return res.json(results);
-            //return res.sendfile('rehabilitants.html');
             res.render('rehabilitants', { model: results });
         });
 	});
