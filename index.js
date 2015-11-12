@@ -19,10 +19,17 @@ app.engine('html', hbs.engine);
 app.set('view engine', 'html');
 
 app.use(express.static(__dirname + '/public'));
-app.get('/', function(req, res){
+app.get('/map', function(req, res){
   res.sendfile('index.html');
 });
 
+app.get('/', function(req, res){
+    res.sendfile('views/splash.html');
+});
+
+app.get('/login', function(req, res){
+    res.sendfile('views/login.html');
+});
 
 io.on('connection', function(socket){
 
