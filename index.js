@@ -11,7 +11,9 @@ var hbs = expressHbs.create({
         json: function(context) {
             return JSON.stringify(context);
         }
-    }
+    },
+    layoutsDir: 'views/layouts/',
+    defaultLayout: 'main.html'
 });
 
 app.engine('html', hbs.engine);
@@ -19,15 +21,15 @@ app.set('view engine', 'html');
 
 app.use(express.static(__dirname + '/public'));
 app.get('/map', function(req, res){
-  res.sendfile('index.html');
+    res.render('map');
 });
 
 app.get('/', function(req, res){
-    res.sendfile('views/splash.html');
+    res.render('splash', {layout: null});
 });
 
 app.get('/login', function(req, res){
-    res.sendfile('views/login.html');
+    res.render('login');
 });
 
 io.on('connection', function(socket){
