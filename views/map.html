@@ -126,7 +126,10 @@ Badr Ismaili 2013-2014
 		var lat = parseFloat(data.lat);
 		var lon = parseFloat(data.lon);
 
+		var heartrate = parseInt(data.heartrate);
+
 		console.log("id: " + device_id + " - position: " + lat + "  " + lon);
+		console.log("heartrate: " + heartrate);
 		app.map.markers[0].setPosition( new google.maps.LatLng( lat, lon ) );
 
 	});
