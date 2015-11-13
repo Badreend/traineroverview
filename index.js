@@ -21,7 +21,7 @@ app.set('view engine', 'html');
 
 app.use(express.static(__dirname + '/public'));
 app.get('/map', function(req, res){
-    res.render('map');
+    res.render('map', {layout: null});
 });
 
 app.get('/', function(req, res){
