@@ -9,7 +9,8 @@
     "jade": "^1.11.0",
     "socket.io": "x",
     "jquery" : "x",
-    "bootstrap" : "x"
+    "bootstrap" : "x",
+    "pg" : "x"
   },
 
   "engines": {
