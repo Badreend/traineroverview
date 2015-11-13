@@ -1,19 +1,50 @@
-
-	<div class="center">
-		<table>
-			<thead>
-				<tr>
-					<th>username</th>
-					<th>password</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><input type="text"/></td>
-					<td><input type="password" /></td>
-					<td><input type="submit" value="login" onclick="window.location = '/rehabilitants'"/></td>
-				</tr>
-			</tbody>
-		</table>
+<div id="container">
+	<div class="row">
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+				<a href="test">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+				<a href="test">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+				</a>
+			</div>
+		</div>
 	</div>
+</div>
+
+<script src="js/jquery-1.10.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+<style>
+.row{
+	margin:0px;
+	padding-top:80px;
+}
+.trainer{
+	margin:10px;
+	background: #fff;
+	height: 390px;
+	text-align: center;
+}
+
+</style>
+
+<script type="text/javascript">
+var trainers = [
+{firstname:"Fleur",familyname:"Heisenberg"},
+{firstname:"Badr",familyname:"Vis"},
+{firstname:"Maikel",familyname:"Djoek"},
+{firstname:"Inge",familyname:"Kalkoen"},
+{firstname:"Sinter",familyname:"Klaas"},
+{firstname:"Jan",familyname:"Willem"},
+{firstname:"Le",familyname:"Lo"}
+];
+</script>
