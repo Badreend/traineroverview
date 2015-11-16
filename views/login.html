@@ -1,19 +1,87 @@
-
-	<div class="center">
-		<table>
-			<thead>
-				<tr>
-					<th>username</th>
-					<th>password</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><input type="text"/></td>
-					<td><input type="password" /></td>
-					<td><input type="submit" value="login" onclick="window.location = '/rehabilitants'"/></td>
-				</tr>
-			</tbody>
-		</table>
+<div id="container">
+	<div class="row">
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+			</div>
+		</div>
 	</div>
+</div>
+
+<style>
+.row{
+	margin:0px;
+	padding-top:120px;
+}
+.trainer{
+	margin:10px;
+	height: 390px;
+	text-align: center;
+	cursor: pointer;
+}
+.trainer img{
+	width:30%;
+}
+
+
+</style>
+
+<script type="text/javascript">
+	$(".trainer").click(function(){
+	$( this ).unbind( "click" );
+	 $(".trainer").not(this).animate({
+	 	opacity: 0.0,
+	  }, 300, function() {
+	  this.closest('div').remove();
+	 });
+	 // $( this ).parent().get( 0 ).css({
+		// position: 'absolute'
+
+	 // });
+	$($( this ).parent().get( 0 )).css({
+		 margin: 'auto',
+		 position: 'absolute',
+		 top: '150',
+		 left: '0',
+		 right: '0',
+		 bottom: '0'
+	});
+
+	$input = ('<input type="text" class="password" size="20" value="" placeholder="Password"/>')
+
+
+
+	$($( this ).get( 0 )).append($input);
+	})
+</script>
