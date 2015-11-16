@@ -1,41 +1,13 @@
 <div id="container">
 	<div class="row">
+		{{#each trainers}}
 		<div class="col-md-3 col-sm-6 trainer_col">
-			<div class="trainer">
-					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
-					<h2>Piet Heijn</h2>
+			<div class="trainer" data-id="{{this.id}}">
+				<img src="{{this.pictureUrl}}" data-pin-nopin="true">
+				<h2>{{this.GetFullName}}</h2>
 			</div>
 		</div>
-		<div class="col-md-3 col-sm-6 trainer_col">
-			<div class="trainer">
-					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
-					<h2>Piet Heijn</h2>
-			</div>
-		</div>
-		<div class="col-md-3 col-sm-6 trainer_col">
-			<div class="trainer">
-					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
-					<h2>Piet Heijn</h2>
-			</div>
-		</div>
-		<div class="col-md-3 col-sm-6 trainer_col">
-			<div class="trainer">
-					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
-					<h2>Piet Heijn</h2>
-			</div>
-		</div>
-		<div class="col-md-3 col-sm-6 trainer_col">
-			<div class="trainer">
-					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
-					<h2>Piet Heijn</h2>
-			</div>
-		</div>
-		<div class="col-md-3 col-sm-6 trainer_col">
-			<div class="trainer">
-					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
-					<h2>Piet Heijn</h2>
-			</div>
-		</div>
+		{{/each}}
 	</div>
 </div>
 
@@ -83,5 +55,28 @@
 
 
 	$($( this ).get( 0 )).append($input);
-	})
+	$(".password").on("keyup", function(e){
+		var code = e.which;
+		if(code ==13){
+			var trainerId = $(this).closest("div.trainer").data("id");
+			var password = $(this).val();
+			login(trainerId, password);
+		}
+	});
+	});
+	
+	function login(trainerId, password){
+		$.ajax({
+			url: "loginRequest",
+			method: "POST",
+			data: {trainerId: trainerId, password: password},
+			success:function(data) {
+				if(!data.valid){
+					alert(data.message);
+				}else{
+					window.location = data.redirect;
+				}
+			}
+		});
+	}
 </script>

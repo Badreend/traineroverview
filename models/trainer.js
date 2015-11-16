@@ -1,5 +1,5 @@
 var Trainer = function(){
-	this.id;
+	this.id = 0;
 	this.firstName = '';
 	this.lastName = '';
 	this.password = '';
@@ -10,3 +10,5 @@ var Trainer = function(){
 Trainer.prototype.GetFullName = function(){
 	return this.firstName + ' ' + this.lastName;
 }
+
+module.exports = Trainer;

@@ -5,6 +5,8 @@ var io = require('socket.io')(http);
 
 var express  = require('express');
 var expressHbs = require('express3-handlebars');
+var bodyParser = require("body-parser");
+
 var db = require('./database');
 
 var hbs = expressHbs.create({
@@ -21,6 +23,14 @@ app.engine('html', hbs.engine);
 app.set('view engine', 'html');
 
 app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+})); 
+
+var connectionString = process.env.DATABASE_URL;
+db.Init(connectionString);
+
 
 app.get('/ready', function(req, res){
     res.render('ready');
@@ -35,7 +45,22 @@ app.get('/', function(req, res){
 });
 
 app.get('/login', function(req, res){
-    res.render('login');
+    db.GetTrainers(function(trainers){
+        res.render('login', { trainers: trainers, test: 1});
+    });
+});
+
+app.post('/loginRequest', function(req, res){
+    var trainerId = req.body.trainerId;
+    var trainerPassword = req.body.password;
+    
+    db.ValidateLogin(trainerId, trainerPassword, function(valid){
+        if(!valid){
+            return res.send({valid: false, message: "Password incorrect!"});
+        }else{
+            return res.send({valid: true, message:"Correct!", redirect: "/rehabilitants"});
+        }
+    });
 });
 
 io.on('connection', function(socket){
@@ -63,13 +88,10 @@ socket.on('disconnect',function(data){
 
 });
 
-var connectionString = process.env.DATABASE_URL;
-db.Init(connectionString);
-
 app.get('/rehabilitants', function(req, res){
-    var rehabilitants = db.GetRehabilitants();
-	
-    res.render('rehabilitants', { model: rehabilitants });
+    db.GetRehabilitants(function(rehabilitants){
+        res.render('rehabilitants', { model: rehabilitants });
+    });
 });
 
 
