@@ -1,0 +1,25 @@
+<html>
+<head>
+<script src="js/jquery-1.10.1.min.js"></script>
+	<script src="js/plugins/mostrar_nav.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+
+	<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+
+var socket = io.connect();
+
+function sendstart(){
+		socket.emit('pressedStart',"aids");
+		console.log("pressed Start");
+}
+
+
+
+</script>
+
+</head>
+<body>
+	<button onClick = "sendstart()">Start</button>
+	</body>
+	</html>
