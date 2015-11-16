@@ -20,6 +20,11 @@ app.engine('html', hbs.engine);
 app.set('view engine', 'html');
 
 app.use(express.static(__dirname + '/public'));
+
+app.get('/ready', function(req, res){
+    res.render('ready');
+});
+
 app.get('/map', function(req, res){
     res.render('map');
 });
@@ -33,24 +38,27 @@ app.get('/login', function(req, res){
 });
 
 io.on('connection', function(socket){
-
 	socket.on('requestID', function(){
 		console.log("ID is requested");
 
 		var id_num = 1; // ID van device
-		socket.emit("receiveID", { device_id: id_num, user_id: "Maikel"});
+        var firstname = "Maikel";
+		io.emit("receiveID", { device_id: id_num, user_id: firstname});
 	})
+
+    socket.on("pressedStart", function(data){
+        io.emit("startGame");
+    })
 
 	socket.on("dataTransfer", function(data){
 		//console.log(data);
 		io.sockets.emit("dataClient",data);
 	});
 	
-
 socket.on('disconnect',function(data){
 		io.sockets.emit('disconnect','disconnected');
 		console.log('disconnect');
-	})
+	});
 
 });
 
