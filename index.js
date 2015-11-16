@@ -5,6 +5,7 @@ var io = require('socket.io')(http);
 
 var express  = require('express');
 var expressHbs = require('express3-handlebars');
+var db = require('database');
 
 var hbs = expressHbs.create({
     helpers: {
@@ -54,25 +55,13 @@ socket.on('disconnect',function(data){
 
 });
 
-var pg = require('pg');
 var connectionString = process.env.DATABASE_URL;
+db.Init(connectionString);
 
 app.get('/rehabilitants', function(req, res){
-    var results = [];
-    
-	pg.connect(connectionString, function(err, client, done) {
-
-	    var query = client.query("SELECT * FROM rehabilitant WHERE active = TRUE ORDER BY id ASC");
-		
-        query.on('row', function(row) {
-            results.push(row);
-        });
-
-        query.on('end', function() {
-            done();
-            res.render('rehabilitants', { model: results });
-        });
-	});
+    var rehabilitants = db.GetRehabilitants();
+	
+    res.render('rehabilitants', { model: rehabilitants });
 });
 
 
