@@ -5,7 +5,7 @@ var io = require('socket.io')(http);
 
 var express  = require('express');
 var expressHbs = require('express3-handlebars');
-var db = require('database');
+var db = require('./database');
 
 var hbs = expressHbs.create({
     helpers: {
