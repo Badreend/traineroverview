@@ -13,7 +13,7 @@ var hbs = expressHbs.create({
         }
     },
     layoutsDir: 'views/layouts/',
-    defaultLayout: 'main.html'
+    defaultLayout: 'main_layout.html',
 });
 
 app.engine('html', hbs.engine);
@@ -21,7 +21,7 @@ app.set('view engine', 'html');
 
 app.use(express.static(__dirname + '/public'));
 app.get('/map', function(req, res){
-    res.render('map', {layout: null});
+    res.render('map');
 });
 
 app.get('/', function(req, res){

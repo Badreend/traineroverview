@@ -1,6 +1,7 @@
 *{
 	margin:0px;
 	padding:0px;
+  font-family: helvetica;
 
 }
 
@@ -9,13 +10,18 @@ body, html {
   width: 100%;
 }
 body{
-	background: #222;
+	background: #fff;
+}
+
+h2{
+  font-size: 18px;
+  color:#222;
 }
 
 #navigation{
 	width:75px;
 	height:100%;
-	background: #222;
+	background: #fff;
 }
 #mapDiv {
 	width:100%;
@@ -33,6 +39,12 @@ body{
   width: 15em;
 }
 
+.password{
+  margin-top:35px;
+  width:175px;
+  height:30px;
+    vertical-align: middle;
+}
 .menu a {
   background: url(icons.png) no-repeat left top;
   color: #ddd;

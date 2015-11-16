@@ -2,49 +2,86 @@
 	<div class="row">
 		<div class="col-md-3 col-sm-6 trainer_col">
 			<div class="trainer">
-				<a href="test">
 					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
 					<h2>Piet Heijn</h2>
-				</a>
 			</div>
 		</div>
 		<div class="col-md-3 col-sm-6 trainer_col">
 			<div class="trainer">
-				<a href="test">
 					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
 					<h2>Piet Heijn</h2>
-				</a>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
+			</div>
+		</div>
+		<div class="col-md-3 col-sm-6 trainer_col">
+			<div class="trainer">
+					<img src="imgs/views/trainer_login/temp_photo.png" data-pin-nopin="true">
+					<h2>Piet Heijn</h2>
 			</div>
 		</div>
 	</div>
 </div>
 
-<script src="js/jquery-1.10.1.min.js"></script>
-<script src="bootstrap/js/bootstrap.min.js"></script>
-
-<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
 <style>
 .row{
 	margin:0px;
-	padding-top:80px;
+	padding-top:120px;
 }
 .trainer{
 	margin:10px;
-	background: #fff;
 	height: 390px;
 	text-align: center;
+	cursor: pointer;
 }
+.trainer img{
+	width:30%;
+}
+
 
 </style>
 
 <script type="text/javascript">
-var trainers = [
-{firstname:"Fleur",familyname:"Heisenberg"},
-{firstname:"Badr",familyname:"Vis"},
-{firstname:"Maikel",familyname:"Djoek"},
-{firstname:"Inge",familyname:"Kalkoen"},
-{firstname:"Sinter",familyname:"Klaas"},
-{firstname:"Jan",familyname:"Willem"},
-{firstname:"Le",familyname:"Lo"}
-];
+	$(".trainer").click(function(){
+	$( this ).unbind( "click" );
+	 $(".trainer").not(this).animate({
+	 	opacity: 0.0,
+	  }, 300, function() {
+	  this.closest('div').remove();
+	 });
+	 // $( this ).parent().get( 0 ).css({
+		// position: 'absolute'
+
+	 // });
+	$($( this ).parent().get( 0 )).css({
+		 margin: 'auto',
+		 position: 'absolute',
+		 top: '150',
+		 left: '0',
+		 right: '0',
+		 bottom: '0'
+	});
+
+	$input = ('<input type="text" class="password" size="20" value="" placeholder="Password"/>')
+
+
+
+	$($( this ).get( 0 )).append($input);
+	})
 </script>
