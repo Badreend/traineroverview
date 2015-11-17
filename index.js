@@ -25,6 +25,10 @@ app.get('/ready', function(req, res){
     res.render('ready');
 });
 
+app.get('/nulmeting', function(req, res){
+    res.render('nulmeting');
+});
+
 app.get('/map', function(req, res){
     res.render('map');
 });
@@ -48,6 +52,11 @@ io.on('connection', function(socket){
 
     socket.on("pressedStart", function(data){
         io.emit("startGame");
+    })
+
+    socket.on("updateWaterpas", function(data){
+        io.emit("waterpas", data);
+        console.log(data);
     })
 
 	socket.on("dataTransfer", function(data){
