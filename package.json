@@ -3,22 +3,21 @@
   "version": "0.0.2",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.14.1",
+    "bootstrap": "x",
     "express": "x",
     "express3-handlebars": "^0.5.2",
     "handlebars": "^4.0.4",
     "jade": "^1.11.0",
-    "socket.io": "x",
-    "jquery" : "x",
-    "bootstrap" : "x",
-    "pg" : "x"
+    "jquery": "x",
+    "pg": "x",
+    "socket.io": "x"
   },
-
   "engines": {
     "node": "0.10.x"
   },
-
   "repository": {
-  "type": "git",
-  "url": "git://github.com/Badreend/traineroverview.git"
+    "type": "git",
+    "url": "git://github.com/Badreend/traineroverview.git"
   }
 }

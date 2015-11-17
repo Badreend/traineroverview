@@ -17,9 +17,9 @@
    	app.map.locations = [];
    	app.map.markers = [];
    	locations = app.map.locations;
-   	locations.push ({name:"badr", LatLng: new google.maps.LatLng(52.033318, 5.337372)});
+   	locations.push ({name:"moniek", LatLng: new google.maps.LatLng(52.033318, 5.337372)});
    	locations.push ({name:"inge", LatLng: new google.maps.LatLng(52.035518, 5.337313)});
-   	locations.push ({name:"moniek", LatLng: new google.maps.LatLng(52.033518, 5.337378)});
+   	locations.push ({name:"badr", LatLng: new google.maps.LatLng(52.033518, 5.337378)});
    	var iconBase = 'imgs/heads/';
    	app.map.bounds = new google.maps.LatLngBounds();
    	for(var i = 0; i < locations.length;i++){
@@ -46,6 +46,14 @@
    	app.map.init();
    	app.map.markers[0]; 
 
+
+      //init temp_hartslag
+
+      var hartslagDiv = document.getElementById("temp_heartrate");
+      var hartslagTxt = undefined;
+
+
+
    }
 
    function update(){
@@ -66,6 +74,8 @@
 
    	console.log("id: " + device_id + " - position: " + lat + "  " + lon);
    	console.log("heartrate: " + heartrate);
+      hartslagTxt = "Heartrate: " + heartrate;
+      hartslagDiv.innerHTML = hartslagDiv; 
    	app.map.markers[0].setPosition( new google.maps.LatLng( lat, lon ) );
 
    });
