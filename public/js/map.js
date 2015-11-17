@@ -3,6 +3,10 @@
    	mapOptions: undefined,
    	locations:'test'
    }
+
+
+         var hartslagDiv = document.getElementById("temp_heartrate");
+      var hartslagTxt = undefined;
 	app.map.init = function(){
    	mapDiv = document.getElementById("mapDiv"),
    	mapOptions = {
@@ -49,8 +53,7 @@
 
       //init temp_hartslag
 
-      var hartslagDiv = document.getElementById("temp_heartrate");
-      var hartslagTxt = undefined;
+
 
 
 
@@ -75,7 +78,7 @@
    	console.log("id: " + device_id + " - position: " + lat + "  " + lon);
    	console.log("heartrate: " + heartrate);
       hartslagTxt = "Heartrate: " + heartrate;
-      hartslagDiv.innerHTML = hartslagDiv; 
+      hartslagDiv.innerHTML = hartslagTxt; 
    	app.map.markers[0].setPosition( new google.maps.LatLng( lat, lon ) );
 
    });
