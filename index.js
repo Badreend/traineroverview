@@ -28,7 +28,8 @@ app.use(bodyParser.urlencoded({
     extended: true
 })); 
 
-var connectionString = process.env.DATABASE_URL;
+//var connectionString = process.env.DATABASE_URL
+var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
 db.Init(connectionString);
 
 
@@ -58,7 +59,7 @@ app.post('/loginRequest', function(req, res){
         if(!valid){
             return res.send({valid: false, message: "Password incorrect!"});
         }else{
-            return res.send({valid: true, message:"Correct!", redirect: "/rehabilitants"});
+            return res.send({valid: true, message:"Correct!", redirect: "/group-overview"});
         }
     });
 });
@@ -93,7 +94,6 @@ app.get('/rehabilitants', function(req, res){
         res.render('rehabilitants', { model: rehabilitants });
     });
 });
-
 
 var port = process.env.PORT || 5000;
 
