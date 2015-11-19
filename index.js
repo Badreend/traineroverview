@@ -9,6 +9,13 @@ var bodyParser = require("body-parser");
 
 var db = require('./database');
 
+var devices = [];
+for (var i=0 ; i<9; i++){
+    devices.push(0);
+}
+
+var connectedDevices = 0;
+
 var hbs = expressHbs.create({
     helpers: {
         json: function(context) {
@@ -70,11 +77,27 @@ app.post('/loginRequest', function(req, res){
 io.on('connection', function(socket){
 	socket.on('requestID', function(){
 		console.log("ID is requested");
+        connectedDevices++;
+        devices.push(connectedDevices);
 
-		var id_num = 1; // ID van device
+        var i =0;
+        while(i == devices[i]){
+            i++;
+        }
+        devices[i] = i;
+
+		var id_num = devices[i]; // ID van device
         var firstname = "Maikel";
 		io.emit("receiveID", { device_id: id_num, user_id: firstname});
+
+        console.log(devices[0] + ", " + devices[1] + ", " + devices[2] + ", " + devices[3] + ", " + devices[4] + ", " + devices[5] + ", " + devices[6] + ", " + devices[7] + ", " +devices[8]);
 	})
+
+    socket.on("userClosedApp", function(data){
+        console.log("user closed the app ");
+        var remove_id = parseInt(data.remove_id);
+        devices[remove_id] =0;
+    })
 
     socket.on("pressedStart", function(data){
         io.emit("startGame");
