@@ -6,6 +6,7 @@
     "body-parser": "^1.14.1",
     "bootstrap": "x",
     "express": "x",
+    "express-session": "^1.12.1",
     "express3-handlebars": "^0.5.2",
     "handlebars": "^4.0.4",
     "jade": "^1.11.0",

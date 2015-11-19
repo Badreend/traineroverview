@@ -6,6 +6,7 @@ var io = require('socket.io')(http);
 var express  = require('express');
 var expressHbs = require('express3-handlebars');
 var bodyParser = require("body-parser");
+var session = require('express-session')
 
 var db = require('./database');
 
@@ -28,19 +29,25 @@ app.use(bodyParser.urlencoded({
     extended: true
 })); 
 
-var connectionString = process.env.DATABASE_URL;
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
+}));
+
+var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true';
 db.Init(connectionString);
 
 
-app.get('/ready', function(req, res){
+app.get('/ready', checkAuth, function(req, res){
     res.render('ready');
 });
 
-app.get('/nulmeting', function(req, res){
+app.get('/nulmeting', checkAuth,function(req, res){
     res.render('nulmeting');
 });
 
-app.get('/map', function(req, res){
+app.get('/map', checkAuth, function(req, res){
     res.render('map');
 });
 
@@ -49,10 +56,19 @@ app.get('/', function(req, res){
 });
 
 app.get('/login', function(req, res){
-    db.GetTrainers(function(trainers){
-        res.render('login', { trainers: trainers, test: 1});
-    });
+    if (!req.session.user_id) {
+        db.GetTrainers(function(trainers){
+            res.render('login', { trainers: trainers, test: 1});
+        });
+    }else{
+        res.redirect('/rehabilitants');
+    }
 });
+
+app.get('/logout', function (req, res) {
+    delete req.session.user_id;
+    res.redirect('/login');
+});    
 
 app.post('/loginRequest', function(req, res){
     var trainerId = req.body.trainerId;
@@ -62,8 +78,15 @@ app.post('/loginRequest', function(req, res){
         if(!valid){
             return res.send({valid: false, message: "Password incorrect!"});
         }else{
+            req.session.user_id = trainerId;
             return res.send({valid: true, message:"Correct!", redirect: "/rehabilitants"});
         }
+    });
+});
+
+app.get('/rehabilitants', checkAuth, function(req, res){
+    db.GetRehabilitants(function(rehabilitants){
+        res.render('rehabilitants', { model: rehabilitants });
     });
 });
 
@@ -97,12 +120,6 @@ socket.on('disconnect',function(data){
 
 });
 
-app.get('/rehabilitants', function(req, res){
-    db.GetRehabilitants(function(rehabilitants){
-        res.render('rehabilitants', { model: rehabilitants });
-    });
-});
-
 
 var port = process.env.PORT || 5000;
 
@@ -110,3 +127,14 @@ http.listen(port, function(){
   console.log('Server is Online');
 });
 
+function checkAuth(req, res, next) {
+    if (!req.session.user_id) {
+        //res.statusCode = 403; //forbidden
+        //res.header('Location', '/login');
+        //res.end('Not authorized');
+        res.redirect('/login');
+    } else {
+        res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+        next();
+    }
+}
