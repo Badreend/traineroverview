@@ -114,7 +114,6 @@ io.on('connection', function(socket){
 	});
 	
 socket.on('disconnect',function(data){
-		io.sockets.emit('disconnect','disconnected');
 		console.log('disconnect');
 	});
 
