@@ -103,6 +103,10 @@ app.get('/rehabilitants', checkAuth, function(req, res){
     });
 });
 
+app.get('/map_v2', checkAuth, function(req, res){
+    res.render('map_v2');
+});
+
 io.on('connection', function(socket){
 	socket.on('requestID', function(){
 		console.log("ID is requested");
@@ -157,6 +161,8 @@ http.listen(port, function(){
 });
 
 function checkAuth(req, res, next) {
+    //TODO: uncomment de regel hier onder
+    return next();
     if (!req.session.user_id) {
         //res.statusCode = 403; //forbidden
         //res.header('Location', '/login');

@@ -7,6 +7,7 @@
     "bootstrap": "x",
     "express": "x",
     "express3-handlebars": "^0.5.2",
+    "express-session": "x",
     "handlebars": "^4.0.4",
     "jade": "^1.11.0",
     "jquery": "x",
