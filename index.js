@@ -37,10 +37,15 @@ app.get('/ready', function(req, res){
     res.render('ready');
 });
 
+app.get('/group-overview', function(req, res){
+    res.render('group-overview');
+});
+app.get('/overview', function(req, res){
+    res.render('overview');
+});
 app.get('/map', function(req, res){
     res.render('map');
 });
-
 app.get('/', function(req, res){
     res.render('splash', {layout: null});
 });

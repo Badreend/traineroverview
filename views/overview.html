@@ -1,0 +1,120 @@
+<div id="rev_list">
+    <ul id="draglist" style="height:280px">
+
+        <li   class="drag_box" userID="1231" >
+            <img src="imgs/heads/moniek.png">
+            <h2>Momo Niek</h2>   
+        </li>
+
+        <li   class="drag_box" userID="1231" >
+            <img src="imgs/heads/inge.png">
+            <h2>Ings</h2>     
+        </li>
+
+        <li   class="drag_box" userID="1231">
+         <img src="imgs/heads/inge.png">
+         <h2>Ings</h2>     
+     </li>
+
+     <li   class="drag_box" userID="1231">
+        <img src="imgs/heads/inge.png">
+        <h2>Ings</h2>    
+    </li>
+
+    <li   class="drag_box" userID="1231">
+        <img src="imgs/heads/badr.png">
+        <h2>Bada man</h2>    
+    </li>
+
+    <li   class="drag_box" userID="1231">
+     <img src="imgs/heads/badr.png">
+     <h2>Ings</h2>     
+ </li>
+
+ <li   class="drag_box" userID="1231">
+    <img src="imgs/heads/inge.png">
+    <h2>Ings</h2>      
+</li>
+
+<li   class="drag_box" userID="1231">
+    <img src="imgs/heads/inge.png">
+    <h2>Ings</h2>      
+</li>
+</ul>
+</div>
+<div id='available_pods'>
+    <div class="drop_box_container">
+        <p>
+            SUITE 1
+        </p>
+        <ul class="drop_box">
+        </ul>
+    </div>
+    <div class="drop_box_container">
+        <p>
+            SUITE 2
+        </p>
+        <ul class="drop_box">
+        </ul>
+    </div>
+    <div class="drop_box_container">
+        <p>
+         SUITE 3
+     </p>
+     <ul class="drop_box">
+     </ul>
+ </div>
+ <div class="drop_box_container">
+    <p>
+        SUITE 5
+    </p>
+    <ul class="drop_box">
+    </ul>
+</div>
+ <div class="drop_box_container">
+    <p>
+        SUITE 5
+    </p>
+    <ul class="drop_box">
+    </ul>
+</div>
+ <div class="drop_box_container">
+    <p>
+        SUITE 5
+    </p>
+    <ul class="drop_box">
+    </ul>
+</div>
+</div>
+
+
+<script src="js/Sortable.js"></script>
+
+
+<script type="text/javascript">
+
+
+$(document).ready(function(){
+
+    $('ul').sortable({
+        connectWith: "ul",
+        revert:true,
+        receive: function(event, ui)
+        {
+            var list = $(this);
+            if (list.attr('id') != "draglist") {
+                console.log(list.children())
+                if (list.children().length > 1) {
+                                // move item back to main_list
+                                $(ui.sender).sortable('cancel');
+                            }
+                        }
+                    }
+                }).disableSelection();
+
+
+});
+
+
+
+</script>
