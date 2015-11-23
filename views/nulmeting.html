@@ -1,0 +1,63 @@
+<html>
+<head>
+	<style>
+		.content{
+			margin: 200px;
+			width: 400px;
+			height:400px;
+		}
+	</style>
+<script src="js/jquery-1.10.1.min.js"></script>
+	<script src="js/plugins/mostrar_nav.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+
+	<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+
+var socket = io.connect();
+
+/*
+GELD NU VOOR IEDEREEN DIE CONNECTED IS MET DE SERVER, NIET PER PERSOON
+
+*/
+
+
+//function updateWaterpas(){
+		//socket.emit('pressedStart',"aids");
+//		var minHR =
+//		console.log("pressed Start");
+//}
+var minHR=0;
+var maxHR=200;
+
+function updateMinHR(val) {
+	minHR = parseInt(val);
+    document.getElementById("minHR_text").innerHTML = "minimum HeartRate: " + minHR;
+}
+
+function updateMaxHR(val) {
+	maxHR = parseInt(val);
+	document.getElementById("maxHR_text").innerHTML = "maximum HeartRate: " + maxHR;
+}
+
+function updateWaterpas(){
+	socket.emit('updateWaterpas', {minimum_HR: minHR, maximum_HR: maxHR});
+	console.log("min HR: " + minHR + " - max HR: " + maxHR);
+}
+
+
+</script>
+
+</head>
+<body>
+	<div class="content">
+	 <input type="range" name="minHeartRate" min="0" max="100" onchange="updateMinHR(this.value);">
+	 <p id ="minHR_text"></p>
+
+	 <input type="range" name="maxHeartRate" min="100" max="200" onchange="updateMaxHR(this.value);">
+	 <p id="maxHR_text"></p>
+
+	 <button onclick="updateWaterpas()">Opslaan</button>
+	</div>
+	</body>
+	</html>
