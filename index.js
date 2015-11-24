@@ -71,7 +71,7 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
     if (!req.session.user_id) {
         db.GetTrainers(function(trainers){
-            res.render('login', { trainers: trainers, test: 1});
+            res.render('login', { trainers: trainers, layout:null});
         });
     }else{
         res.redirect('/rehabilitants');

@@ -20,14 +20,16 @@ body{
   margin:0px;
   padding-top:40px;
 }
+.trainer_profile{
+  float:left;
+}
 .trainer{
   margin:10px;
   height: 390px;
-  text-align: center;
   cursor: pointer;
 }
 .trainer img{
-  width:30%;
+  width:50px;
 }
 #header{
   position: absolute;
@@ -117,11 +119,46 @@ body{
   }
 
   .password{
-    margin-top:35px;
-    width:175px;
-    height:30px;
+    margin-left:50px;
+    margin-top:25px;
+    width:220px;
+    height:50px;
     vertical-align: middle;
+    font-size:30px;
+    background: none;
+    border:none;
+    border-bottom:2px dashed;
+    color:#fff;
   }
+
+
+#password_container{
+  float:left;
+  height: 100px;
+  width: 440px;
+  background: url(../imgs/views/trainer_login/passwordBg.png) no-repeat left top;
+   background-repeat: no-repeat;
+  background-size: 100%; 
+
+}
+#login_container{
+    float:left;
+
+  height: 100px;
+  width: 440px;
+
+  background: url(../imgs/views/trainer_login/loginBg.png) no-repeat left top;
+     background-repeat: no-repeat;
+  background-size: 100%; 
+}
+
+#login_container h4{
+  padding-top:30px;
+  padding-left:30px;
+   margin-top:20px;
+  font-size:30px;
+  color:#fff; 
+}
   .menu a {
     background: url(icons.png) no-repeat left top;
     color: #ddd;
