@@ -1,0 +1,155 @@
+<script>
+
+function readURL(input) {
+	if (input.files && input.files[0]) {
+		var reader = new FileReader();
+		reader.onload = function (e) {
+			$('#profile_pic')
+			.attr('src', e.target.result)
+		};
+		reader.readAsDataURL(input.files[0]);
+	}
+}
+
+var cluster;
+function updateCluster(val) {
+	cluster = parseInt(val);
+	document.getElementById("cluster_text").innerHTML = "Gekozen cluster: " + cluster;
+}
+
+</script>
+<link class="jsbin" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script class="jsbin" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js"></script>
+
+
+<style type="text/css">
+.center_content{margin: 0px auto;  display: block;}
+.form_container{width: auto;height:auto; max-height: 85%; min-width: 1052px; background-color: #fafafa; border:1px solid #ededed; display: inline-block; margin: 0px auto; overflow:scroll; margin-top:10px; margin-bottom: 10px; font-size: 12px;}
+.form_wrapper{width: 350px; overflow:hidden; float: left; border-left: 1px solid #ffffff; border-right: 1px solid #ededed; padding:20px;}
+.img_container{width:150px; height:150px; overflow: hidden; border: 5px solid #dedede; border-radius: 50%; font-size: 12px;}
+
+img{width: 100%; height:auto; vertical-align: middle; border:0; background-color: #dedede; }
+table{ font-size: 12px;}
+td{padding: 5px;}
+input[type="submit"]{width: auto; border:0;padding: 10px 50px 10px 50px;}
+input[type="submit"]:hover{background-color: #464646; color:#ffffff;}
+hr{border-top: 1px solid #ffffff; border-bottom: 1px solid #ebebeb; width:90%;}
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+textarea{resize:none;}
+</style>
+
+
+<center>
+
+
+	<div class= "form_container">
+		<form>
+			<div class="form_wrapper">
+
+
+				<!-- BASIS INFO -->
+				<div class="img_container">
+
+					<img id="profile_pic" src="#" alt=""/>
+				</div>
+				<br>
+				<br>
+<span class="btn btn-default btn-file">
+				Upload foto<input type='file' onchange="readURL(this);"/>
+			</span>
+
+			</div>
+			<div class="form_wrapper">
+				<table >  
+					<tr>
+						<td>Voornaam:</td>
+						<td><input type="text" name="voornaam" class="form-control"></td>
+					</tr>
+					<tr>
+						<td>Achternaam:</td>
+						<td><input type="text" name="achternaam" class="form-control"></td>
+					</tr>
+					<tr>
+						<td>Geboortedatum:</td>
+						<td><input type="date" name="geboortedatum" class="form-control"></td>
+					</tr>
+					<tr>
+						<td>Geslacht:</td>
+						<td><div class="btn-group" data-toggle="buttons"> <label class="btn btn-default"> <input type="radio" name="geslacht" value="man" /> Man </label>
+							<label class="btn btn-default"> <input type="radio" name="geslacht" value="vrouw" /> Vrouw </label>
+						</div>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Trajectduur: </td>
+					<td>
+						<div class="btn-group" data-toggle="buttons">
+							<label class="btn btn-default"> <input type="radio" name="trajectduur" value="8"/>8 weken </label>
+							<label class="btn btn-default"> <input type="radio" name="trajectduur" value="15"/>15 weken </label>
+						</div>
+					</td>
+				</tr>
+
+				<tr>
+					<td>Cluster:</td>
+					<td>
+						<div class="btn-group" data-toggle="buttons">
+							<label class="btn btn-default"> <input type="radio" name="cluster" value="1" /> 1 </label>
+							<label class="btn btn-default"> <input type="radio" name="cluster" value="2" /> 2 </label>
+							<label class="btn btn-default"> <input type="radio" name="cluster" value="3" /> 3 </label>
+						
+							<label class="btn btn-default"> <input type="radio" name="cluster" value="4" /> 4 </label>
+							<label class="btn btn-default"> <input type="radio" name="cluster" value="5" /> 5 </label>
+							<label class="btn btn-default"> <input type="radio" name="cluster" value="6" /> 6 </label>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<!-- CLUSTER EN KLACHTEN -->
+		<div class= "form_wrapper" style="text-align:left;">
+			<table width="100%">
+				<tr><td>
+					Diagnose: <textarea name="diagnose" class="form-control" rows="3"></textarea>
+				</td></tr>
+				<tr><td>
+					Functie:<input type="text" name="functie" class="form-control">
+				</td></tr>
+				<tr><td>
+					Doel:<textarea name="doel" class="form-control" rows="3"></textarea>
+				</td></tr>
+			</table>
+
+			<center>
+				<br>
+			<input type="submit" value="Opslaan" class="btn btn-primary"/>
+		</center>
+		</div>
+
+	</div><br>
+		
+	</form>
+
+
+</center>
