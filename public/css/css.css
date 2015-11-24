@@ -215,7 +215,7 @@ nav.active { left: 0; }
   position: relative;
   float:left;
   width: calc(100% - 180px);
-  height:100%;
+  height:calc(100% - 50px)%;
 }
 #rev_list { 
   position:relative;
