@@ -1,8 +1,20 @@
 
 <script src="js/plugins/panzoom.js"></script>
+<script src="js/plugins/pointertouch.js"></script>
+
 <section id="inverted-contain">
 	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
-		<img class="panzoom" src="imgs/views/map/MRC.jpg" height="900" width="900">
+		<div class="panzoom">
+			<div class="marker" device-id="1">
+				<div>
+					<img src="imgs/heads/badr.png">
+				</div>
+				<div>
+					<span class="heartrate-text">Heartrate</span>
+				</div>
+			</div>
+			<img src="imgs/views/map/MRC.jpg">
+		</div>
 	</div>
 	<div class="buttons">
 		<button class="zoom-in">Zoom In</button>
@@ -11,14 +23,29 @@
 		<button class="reset">Reset</button>
 	</div>
 	<style>
-		#inverted-contain .panzoom 
+		#inverted-contain .panzoom-parent
 		{ 
 			width: 100%; 
 			height: 90%; 
 		}
+		.marker{
+			transform: matrix(0.2, 0, 0, 0.2, 500, 400);
+			cursor: pointer;
+			position: absolute; 
+			z-index: 999;
+			text-align: center;
+		}
+		.marker .heartrate-text{
+			color: red;
+		}
 	</style>
 	<script>
-	(function() {
+		var pixelMeterRatio = 1.44;
+		var originX = 530;
+		var originY = 900;
+		var markerScale = 0.5;
+		
+	(function() {	
 		var $section = $('#inverted-contain');
 		$section.find('.panzoom').panzoom({
 			$zoomIn: $section.find(".zoom-in"),
@@ -28,8 +55,57 @@
 			startTransform: 'scale(1.1)',
 			increment: 0.1,
 			minScale: 1,
-			contain: 'invert'
+			contain: 'invert',
+			onChange: function(e, panzoom){
+				scale = panzoom.getMatrix()[0];
+				$(".marker").each(function(idx, elem){
+					var mat = matrixToArray($(elem).css("transform"));
+				
+					//scaleX
+					mat[0] =0.5 * 1/scale;
+					//scaleY
+					mat[3] =0.5 * 1/scale;
+	
+					$(elem).css("transform", arrayToMatrix(mat));
+					//test({device_id: 1, heartrate: 89, x: 47.15, y:-41.17});
+				});
+			}
 		}).panzoom('zoom');
 	})();
+	function matrixToArray(str) {
+		return str.match(/(-?[0-9\.]+)/g);
+	}
+	function arrayToMatrix(arr){
+		var str = "matrix(";
+		return str + arr[0] +","+arr[1]+","+arr[2]+","+arr[3]+","+arr[4]+","+arr[5]+")";
+	}
+	
+	socket.on('dataClient', function(data){
+		var device_id = parseInt(data.device_id);
+		//var lat = parseFloat(data.lat);
+		//var lon = parseFloat(data.lon);
+		var x = parseFloat(data.x);
+		var y = parseFloat(data.y);
+		
+		var heartrate = parseInt(data.heartrate);
+		
+		console.log("id: " + device_id + " - position: " + x + "  " + y);
+		console.log("heartrate: " + heartrate);
+		
+		var deviceMarker = $(".marker[device-id='"+device_id+"']");
+		$(deviceMarker).find(".heartrate-text").text(heartrate); 
+		
+		var mat = matrixToArray($(deviceMarker).css("transform"));
+				
+		//posX
+		mat[4] = originX + x * pixelMeterRatio - $(deviceMarker).width() * markerScale;
+		//posY
+		mat[5] = originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
+
+		$(deviceMarker).css("transform", arrayToMatrix(mat));	
+	});
+
+	//[ "1.1",	"0", 	"0", 	"1.1", 	"-87.65", 	"62" ]
+	//scaleX	skewX	skewY	scaleY	posX		posY
 	</script>
 </section>
