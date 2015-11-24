@@ -51,6 +51,10 @@ app.get('/ready', checkAuth, function(req, res){
     res.render('ready');
 });
 
+app.get('/add_person', function(req, res){
+    res.render('add_person');
+});
+
 app.get('/group-overview', function(req, res){
     res.render('group-overview');
 });
