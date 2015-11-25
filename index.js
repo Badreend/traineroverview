@@ -51,11 +51,34 @@ app.get('/ready', checkAuth, function(req, res){
     res.render('ready');
 });
 
-app.get('/group-overview', function(req, res){
-    res.render('group-overview');
+app.get('/group-overview', checkAuth, function(req, res){
+    db.GetGroups(function(groups){
+        res.render('group-overview',{ groups: groups });
+    });
 });
-app.get('/overview', function(req, res){
-    res.render('overview');
+app.get('/overview', checkAuth, function(req, res){
+    var groupId = req.query.group_id;
+    var trainerId = req.session.user_id;
+    
+    if(!req.session.game_id){
+        db.CreateNewGame(trainerId, function(game){
+            req.session.game_id = game.id;
+            load(game);
+        });
+    }else{
+        db.GetGame(req.session.game_id, function(game){
+            load(game);
+        });
+    }
+    
+    function load(game){
+        db.GetRehabilitantGroup(groupId, function(rehabilitants){
+            res.render('overview', { 
+                rehabilitants: rehabilitants,
+                game: game//{connectedDevices: [{id:1},{id:2}]}
+            });
+        });
+    }
 });
 app.get('/nulmeting', checkAuth,function(req, res){
     res.render('nulmeting');
@@ -91,8 +114,8 @@ app.post('/loginRequest', function(req, res){
         if(!valid){
             return res.send({valid: false, message: "Password incorrect!"});
         }else{
-            return res.send({valid: true, message:"Correct!", redirect: "/group-overview"});
             req.session.user_id = trainerId;
+            return res.send({valid: true, message:"Correct!", redirect: "/group-overview"});
         }
     });
 });
@@ -109,6 +132,7 @@ app.get('/map_v2', checkAuth, function(req, res){
 
 io.on('connection', function(socket){
 	socket.on('requestID', function(){
+        //TODO: hoe weet je hier met welk device je praat? Als je hieronder io.emit() doet dan stuur je een device_id naar ALLE socket clients
 		console.log("ID is requested");
         connectedDevices++;
         devices.push(connectedDevices);
@@ -161,8 +185,8 @@ http.listen(port, function(){
 });
 
 function checkAuth(req, res, next) {
-    //TODO: uncomment de regel hier onder
-    return next();
+    //TODO: remove de regel hier onder
+    //return next();
     if (!req.session.user_id) {
         //res.statusCode = 403; //forbidden
         //res.header('Location', '/login');
