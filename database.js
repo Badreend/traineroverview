@@ -142,7 +142,7 @@ module.exports = {
                 :   "SELECT g.id \"game_id\", t.* \
                     FROM game g \
                     INNER JOIN trainer t ON t.id = g.trainer_id \
-                    ORDER BY id DESC \
+                    ORDER BY g.id DESC \
                     LIMIT 1";
                     
             var query = client.query(gameSql);
@@ -163,13 +163,13 @@ module.exports = {
                     "SELECT cd.id \"connected_device_id\", r.* \
                     FROM game g \
                     INNER JOIN connected_device cd ON cd.game_id = g.id \
-                    INNER JOIN rehabilitant r ON r.id = cd.rehabilitant_id \
+                    LEFT JOIN rehabilitant r ON r.id = cd.rehabilitant_id \
                     WHERE g.id = " + game.id);
                 
                 var connDevices = [];
                 q2.on('row', function(row) {
                     var connectedDevice = new ConnectedDevice();
-                    Map(connectedDevice, row);
+                    Map(connectedDevice, row, 'connected_device_');
                     var rehabilitant = new Rehabilitant();
                     Map(rehabilitant, row);
                     connectedDevice.rehabilitant = rehabilitant;

@@ -58,7 +58,7 @@ socket.on('newDeviceConnected', function(connectedDeviceId){
         <ul class="drop_box"> \
         </ul> \
     </div>';
-     $("#available_pods").append(templatePodHtml.replace('%id%', 1));
+     $("#available_pods").append(templatePodHtml.replace('%id%', connectedDeviceId));
      resort();
 });
 
