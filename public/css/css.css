@@ -26,10 +26,10 @@ body{
 .trainer{
   margin:10px;
   height: 200px;
-  width: 600px;
+  width: 250px;
   text-align: center;
   cursor: pointer;
-  overflow: hidden;
+  overflow: visible;
 }
 .trainer img{
   width:50px;
@@ -143,18 +143,24 @@ body{
 }
 
 .login_img_container{
-  width: 200px;
-  height:200px;
-  overflow: hidden; border: 5px solid #dedede; border-radius: 50%;
-}
+  width: 225px;
+  height:225px;
 
-.login_img_container:hover{
-  border:5px solid #ffc21b;
 }
 
 .login_img_container img{
-  width: 200px;
+  width: 225px;
+  height: 200px;
 }
+
+ .polygon-clip-hexagon {
+
+        -webkit-clip-path: url("#polygon-clip-hexagon");
+        clip-path: url("#polygon-clip-hexagon");
+    }
+
+
+
 
 #password_container{
   float:left;
@@ -315,7 +321,7 @@ nav.active { left: 0; }
   background: #dddddd;
   color: #ddd; 
   text-align: center;
-  overflow: auto;
+  overflow: scroll;
   position: static;
 }
 .drag_box {
@@ -332,10 +338,12 @@ nav.active { left: 0; }
 
 #available_pods .drag_box{
   width:140px;
+  overflow: scroll;
 }
 
 #available_pods{
-  margin-top:100px;
+  height: 100%;
+  overflow: scroll;
 }
 .drop_box_container{
     text-align: center;
@@ -353,13 +361,13 @@ nav.active { left: 0; }
   float:left;
 }
 .drop_box_container p{
-  position:absolute;
   margin-left:auto;
   margin-right:auto;
   margin-left:10px;
   margin-top:50px;
    background-color: rgba(255, 255, 255, 0.6);
   width:130px;
+  float: left;
 }
 ul
 {

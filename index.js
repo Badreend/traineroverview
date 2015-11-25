@@ -51,6 +51,10 @@ app.get('/ready', checkAuth, function(req, res){
     res.render('ready');
 });
 
+app.get('/test', function(req, res){
+    res.render('test');
+});
+
 app.get('/add_person', function(req, res){
     res.render('add_person');
 });
@@ -58,6 +62,11 @@ app.get('/add_person', function(req, res){
 app.get('/group-overview', function(req, res){
     res.render('group-overview');
 });
+
+app.get('/group-activity', function(req, res){
+    res.render('group-activity');
+});
+
 app.get('/overview', function(req, res){
     res.render('overview');
 });
@@ -75,7 +84,8 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
     if (!req.session.user_id) {
         db.GetTrainers(function(trainers){
-            res.render('login', { trainers: trainers, layout:null});
+            res.render('login', {trainers: trainers, layout:null});
+            //res.render('login', { trainers: [{id:1, firstName:'maikel', lastName: 'bla', pictureUrl:'https://s-media-cache-ak0.pinimg.com/736x/d1/a6/64/d1a664bca214bf785a293cbc87950fc4.jpg'}], layout:null});
         });
     }else{
         res.redirect('/rehabilitants');
