@@ -127,7 +127,6 @@ app.post('/loginRequest', function(req, res){
 });
 
 app.get('/rehabilitants', checkAuth, function(req, res){
-    test();
     db.GetRehabilitants(function(rehabilitants){
         res.render('rehabilitants', { model: rehabilitants });
     });
@@ -137,8 +136,8 @@ app.get('/map_v2', checkAuth, function(req, res){
     res.render('map_v2');
 });
 
-function test(){
-	//socket.on('requestID', function(){
+io.on('connection', function(socket){
+	socket.on('requestID', function(){
         //TODO: hoe weet je hier met welk device je praat? Als je hieronder io.emit() doet dan stuur je een device_id naar ALLE socket clients
         //TODO: gameId staat nu op eerst gevonden game. Echter, de unity client moet de mogelijkheid hebben om de verschillende games te bekijken 
         // en er 1 te selecteren
@@ -151,8 +150,8 @@ function test(){
                 io.sockets.emit("newDeviceConnected", connectedDevice.id);
             });
         });
-	}
-io.on('connection', function(socket){
+	})
+
     socket.on("userClosedApp", function(data){
         console.log("user closed the app ");
         var remove_id = parseInt(data.remove_id);
