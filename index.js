@@ -38,6 +38,7 @@ app.use(bodyParser.urlencoded({
 
 //var connectionString = process.env.DATABASE_URL
 var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
+
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -138,21 +139,17 @@ app.get('/map_v2', checkAuth, function(req, res){
 io.on('connection', function(socket){
 	socket.on('requestID', function(){
         //TODO: hoe weet je hier met welk device je praat? Als je hieronder io.emit() doet dan stuur je een device_id naar ALLE socket clients
-		console.log("ID is requested");
-        connectedDevices++;
-        devices.push(connectedDevices);
-
-        var i =0;
-        while(i == devices[i]){
-            i++;
-        }
-        devices[i] = i;
-
-		var id_num = devices[i]; // ID van device
-        var firstname = "Maikel";
-		io.emit("receiveID", { device_id: id_num, user_id: firstname});
-
-        console.log(devices[0] + ", " + devices[1] + ", " + devices[2] + ", " + devices[3] + ", " + devices[4] + ", " + devices[5] + ", " + devices[6] + ", " + devices[7] + ", " +devices[8]);
+        //TODO: gameId staat nu op eerst gevonden game. Echter, de unity client moet de mogelijkheid hebben om de verschillende games te bekijken 
+        // en er 1 te selecteren
+        
+        db.GetGame(null, function(game){
+            var gameId = game.id; 
+           
+            db.NewConnectedDevice(gameId, function(connectedDevice){
+                io.emit("receiveID", { device_id: connectedDevice.id, user_id: ''});
+                io.sockets.emit("newDeviceConnected", connectedDevice.id);
+            });
+        });
 	})
 
     socket.on("userClosedApp", function(data){
