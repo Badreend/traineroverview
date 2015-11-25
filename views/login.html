@@ -31,8 +31,10 @@
 		{{#each trainers}}
 		<div class="col-md-3 col-sm-6 trainer_col">
 			<div class="trainer" data-id="{{this.id}}">
-				<div id="trainer_profile">
-					<img src="{{this.pictureUrl}}" data-pin-nopin="true">
+				<div class="trainer_profile">
+					<div class="login_img_container">
+						<img src="{{this.pictureUrl}}" data-pin-nopin="true">
+					</div>
 					<h2>{{this.GetFullName}}</h2>
 				</div>
 			</div>
@@ -67,7 +69,7 @@
 		 bottom: '0'
 	});
 
-	$input = ('<div id="password_container"> <input type="password" class="password" size="20" value="" placeholder="Password"/></div><div id="login_container"><h2>Login</h2></div>')
+	$input = ('<div id="loginform_placeholder"><div id="password_container"> <input type="password" class="password" size="20" value="" placeholder="Password"/></div><div id="login_container"><h2>Login</h2></div></div>')
 
 
 

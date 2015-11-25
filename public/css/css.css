@@ -25,8 +25,11 @@ body{
 }
 .trainer{
   margin:10px;
-  height: 390px;
+  height: 200px;
+  width: 600px;
+  text-align: center;
   cursor: pointer;
+  overflow: hidden;
 }
 .trainer img{
   width:50px;
@@ -132,6 +135,27 @@ body{
   }
 
 
+#loginform_placeholder{
+  width:400px;
+  height:200px;
+  overflow: hidden;
+  float:left;
+}
+
+.login_img_container{
+  width: 200px;
+  height:200px;
+  overflow: hidden; border: 5px solid #dedede; border-radius: 50%;
+}
+
+.login_img_container:hover{
+  border:5px solid #ffc21b;
+}
+
+.login_img_container img{
+  width: 200px;
+}
+
 #password_container{
   float:left;
   height: 100px;
@@ -139,8 +163,18 @@ body{
   background: url(../imgs/views/trainer_login/passwordBg.png) no-repeat left top;
    background-repeat: no-repeat;
   background-size: 100%; 
+  text-align: center;
 
 }
+
+#password_container input[type="password"]{
+  margin-left:0;
+  color:#ffffff;
+  
+  text-align: center;
+  width: 200px;
+}
+
 #login_container{
     float:left;
 
@@ -150,6 +184,15 @@ body{
   background: url(../imgs/views/trainer_login/loginBg.png) no-repeat left top;
      background-repeat: no-repeat;
   background-size: 100%; 
+  text-align: center;
+}
+
+#login_container h2{
+  font-size: 35px;
+  margin-top: 30px;
+  color: #ffffff;
+  font-family: Impact, Verdana, sans-serif;
+  text-transform: uppercase;
 }
 
 #login_container h4{
