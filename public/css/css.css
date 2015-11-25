@@ -20,21 +20,33 @@ body{
   margin:0px;
   padding-top:40px;
 }
+.trainer_profile{
+  float:left;
+}
 .trainer{
   margin:10px;
-  height: 390px;
+  height: 200px;
+  width: 600px;
   text-align: center;
   cursor: pointer;
+  overflow: hidden;
 }
 .trainer img{
-  width:30%;
+  width:50px;
 }
 #header{
-  position: absolute;;
-  width:100%;
-  text-align: center;
-    font-size: 20px
-
+  position: absolute;
+  width:300px;
+  z-index:99;
+      left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
+    text-align: center;
+}
+#header h1{
+  font-size: 20px;
+  background: #fff;
 }
 #menu{
   width:100%;
@@ -110,11 +122,86 @@ body{
   }
 
   .password{
-    margin-top:35px;
-    width:175px;
-    height:30px;
+    margin-left:50px;
+    margin-top:25px;
+    width:220px;
+    height:50px;
     vertical-align: middle;
+    font-size:30px;
+    background: none;
+    border:none;
+    border-bottom:2px dashed;
+    color:#fff;
   }
+
+
+#loginform_placeholder{
+  width:400px;
+  height:200px;
+  overflow: hidden;
+  float:left;
+}
+
+.login_img_container{
+  width: 200px;
+  height:200px;
+  overflow: hidden; border: 5px solid #dedede; border-radius: 50%;
+}
+
+.login_img_container:hover{
+  border:5px solid #ffc21b;
+}
+
+.login_img_container img{
+  width: 200px;
+}
+
+#password_container{
+  float:left;
+  height: 100px;
+  width: 440px;
+  background: url(../imgs/views/trainer_login/passwordBg.png) no-repeat left top;
+   background-repeat: no-repeat;
+  background-size: 100%; 
+  text-align: center;
+
+}
+
+#password_container input[type="password"]{
+  margin-left:0;
+  color:#ffffff;
+  
+  text-align: center;
+  width: 200px;
+}
+
+#login_container{
+    float:left;
+
+  height: 100px;
+  width: 440px;
+
+  background: url(../imgs/views/trainer_login/loginBg.png) no-repeat left top;
+     background-repeat: no-repeat;
+  background-size: 100%; 
+  text-align: center;
+}
+
+#login_container h2{
+  font-size: 35px;
+  margin-top: 30px;
+  color: #ffffff;
+  font-family: Impact, Verdana, sans-serif;
+  text-transform: uppercase;
+}
+
+#login_container h4{
+  padding-top:30px;
+  padding-left:30px;
+   margin-top:20px;
+  font-size:30px;
+  color:#fff; 
+}
   .menu a {
     background: url(icons.png) no-repeat left top;
     color: #ddd;
@@ -215,7 +302,7 @@ nav.active { left: 0; }
   position: relative;
   float:left;
   width: calc(100% - 180px);
-  height:calc(100% - 50px)%;
+  height:100%;
 }
 #rev_list { 
   position:relative;
@@ -223,7 +310,7 @@ nav.active { left: 0; }
   width:180px;
   height: 100%;
   background: #111;
-  padding-top:50px;
+  padding-top:20px;
   float: left; 
   background: #dddddd;
   color: #ddd; 

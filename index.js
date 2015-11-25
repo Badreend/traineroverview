@@ -55,7 +55,11 @@ app.get('/group-overview', checkAuth, function(req, res){
     db.GetGroups(function(groups){
         res.render('group-overview',{ groups: groups });
     });
+
+app.get('/add_person', function(req, res){
+    res.render('add_person');
 });
+
 app.get('/overview', checkAuth, function(req, res){
     var groupId = req.query.group_id;
     var trainerId = req.session.user_id;
@@ -94,7 +98,7 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
     if (!req.session.user_id) {
         db.GetTrainers(function(trainers){
-            res.render('login', { trainers: trainers, test: 1});
+            res.render('login', { trainers: trainers, layout:null});
         });
     }else{
         res.redirect('/rehabilitants');
