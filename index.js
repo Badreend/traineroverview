@@ -55,6 +55,7 @@ app.get('/group-overview', checkAuth, function(req, res){
     db.GetGroups(function(groups){
         res.render('group-overview',{ groups: groups });
     });
+});
 
 app.get('/add_person', function(req, res){
     res.render('add_person');
