@@ -1,5 +1,7 @@
+var Game = require('./game')
+
 var Rehabilitant = function(){
-	this.id;
+	this.id = 0;
 	this.firstName = '';
 	this.lastName = '';
 	this.pictureUrl = '';
@@ -7,7 +9,7 @@ var Rehabilitant = function(){
 	this.note = '';
 	this.heartRate = 0;
 	this.heartRateLevel = 0;
-	this.states = new Array<RehabilitantState>();
+	this.states = [];
 };
 
 Rehabilitant.prototype.GetFullName = function(){
@@ -21,9 +23,9 @@ Rehabilitant.prototype.GetCurrentHeartRate = function(){
 }
 
 var RehabilitantState = function(){
-	this.id;
-	this.game = new Game();
-	this.rehabilitant = new Rehabilitant();
+	this.id = 0;
+	//this.game = new Game();
+	//this.rehabilitant = new Rehabilitant();
 	this.heartRate = 0;
 	this.heartRateLevel = 0;
 	this.gpsLat = 0.0;
@@ -33,3 +35,6 @@ var RehabilitantState = function(){
 	this.state = '';
 	this.timestamp = new Date();
 }
+
+module.exports = Rehabilitant;
+//module.exports = RehabilitantState;

@@ -38,6 +38,7 @@ app.use(bodyParser.urlencoded({
 
 //var connectionString = process.env.DATABASE_URL
 var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
+//var connectionString = 'postgres://localhost:5432/Geert';
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -51,24 +52,59 @@ app.get('/ready', checkAuth, function(req, res){
     res.render('ready');
 });
 
+//<<<<<<< HEAD
 app.get('/test', function(req, res){
     res.render('test');
+//=======
 });
+app.get('/group-overview', checkAuth, function(req, res){
+    db.GetGroups(function(groups){
+        res.render('group-overview',{ groups: groups });
+    });
+});
+//>>>>>>> b0021c5d74a723b38de8a9955650a972a381ca9d
+
 
 app.get('/add_person', function(req, res){
     res.render('add_person');
 });
 
-app.get('/group-overview', function(req, res){
-    res.render('group-overview');
-});
+//<<<<<<< HEAD
+//app.get('/group-overview', function(req, res){
+//    res.render('group-overview');
+//});
 
 app.get('/group-activity', function(req, res){
     res.render('group-activity');
 });
 
-app.get('/overview', function(req, res){
-    res.render('overview');
+//app.get('/overview', function(req, res){
+//    res.render('overview');
+//=======
+app.get('/overview', checkAuth, function(req, res){
+    var groupId = req.query.group_id;
+    var trainerId = req.session.user_id;
+    
+    if(!req.session.game_id){
+        db.CreateNewGame(trainerId, function(game){
+            req.session.game_id = game.id;
+            load(game);
+        });
+    }else{
+        db.GetGame(req.session.game_id, function(game){
+            load(game);
+        });
+    }
+    
+    function load(game){
+        db.GetRehabilitantGroup(groupId, function(rehabilitants){
+            res.render('overview', { 
+                rehabilitants: rehabilitants,
+                game: game//{connectedDevices: [{id:1},{id:2}]}
+            });
+        });
+    }
+//>>>>>>> b0021c5d74a723b38de8a9955650a972a381ca9d
 });
 app.get('/nulmeting', checkAuth,function(req, res){
     res.render('nulmeting');
@@ -105,8 +141,8 @@ app.post('/loginRequest', function(req, res){
         if(!valid){
             return res.send({valid: false, message: "Password incorrect!"});
         }else{
-            return res.send({valid: true, message:"Correct!", redirect: "/group-overview"});
             req.session.user_id = trainerId;
+            return res.send({valid: true, message:"Correct!", redirect: "/group-overview"});
         }
     });
 });
@@ -123,21 +159,18 @@ app.get('/map_v2', checkAuth, function(req, res){
 
 io.on('connection', function(socket){
 	socket.on('requestID', function(){
-		console.log("ID is requested");
-        connectedDevices++;
-        devices.push(connectedDevices);
-
-        var i =0;
-        while(i == devices[i]){
-            i++;
-        }
-        devices[i] = i;
-
-		var id_num = devices[i]; // ID van device
-        var firstname = "Maikel";
-		io.emit("receiveID", { device_id: id_num, user_id: firstname});
-
-        console.log(devices[0] + ", " + devices[1] + ", " + devices[2] + ", " + devices[3] + ", " + devices[4] + ", " + devices[5] + ", " + devices[6] + ", " + devices[7] + ", " +devices[8]);
+        //TODO: hoe weet je hier met welk device je praat? Als je hieronder io.emit() doet dan stuur je een device_id naar ALLE socket clients
+        //TODO: gameId staat nu op eerst gevonden game. Echter, de unity client moet de mogelijkheid hebben om de verschillende games te bekijken 
+        // en er 1 te selecteren
+        
+        db.GetGame(null, function(game){
+            var gameId = game.id; 
+           
+            db.NewConnectedDevice(gameId, function(connectedDevice){
+                io.emit("receiveID", { device_id: connectedDevice.id, user_id: ''});
+                io.sockets.emit("newDeviceConnected", connectedDevice.id);
+            });
+        });
 	})
 
     socket.on("userClosedApp", function(data){
@@ -175,8 +208,8 @@ http.listen(port, function(){
 });
 
 function checkAuth(req, res, next) {
-    //TODO: uncomment de regel hier onder
-    return next();
+    //TODO: remove de regel hier onder
+    //return next();
     if (!req.session.user_id) {
         //res.statusCode = 403; //forbidden
         //res.header('Location', '/login');

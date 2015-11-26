@@ -1,90 +1,24 @@
 <div id="rev_list">
     <ul id="draglist" style="height:280px">
-
-        <li   class="drag_box" userID="1231" >
-            <img src="imgs/heads/moniek.png">
-            <h2>Momo Niek</h2>   
+        
+        {{#each rehabilitants}}
+        <li class="drag_box" userID="{{this.id}}" >
+            <img src="{{this.pictureUrl}}">
+            <h2>{{this.GetFullName}}</h2>   
         </li>
-
-        <li   class="drag_box" userID="1231" >
-            <img src="imgs/heads/inge.png">
-            <h2>Ings</h2>     
-        </li>
-
-        <li   class="drag_box" userID="1231">
-           <img src="imgs/heads/inge.png">
-           <h2>Ings</h2>     
-       </li>
-
-       <li   class="drag_box" userID="1231">
-        <img src="imgs/heads/inge.png">
-        <h2>Ings</h2>    
-    </li>
-
-    <li   class="drag_box" userID="1231">
-        <img src="imgs/heads/badr.png">
-        <h2>Bada man</h2>    
-    </li>
-
-    <li   class="drag_box" userID="1231">
-       <img src="imgs/heads/badr.png">
-       <h2>Ings</h2>     
-   </li>
-
-   <li   class="drag_box" userID="1231">
-    <img src="imgs/heads/inge.png">
-    <h2>Ings</h2>      
-</li>
-
-<li   class="drag_box" userID="1231">
-    <img src="imgs/heads/inge.png">
-    <h2>Ings</h2>      
-</li>
-</ul>
+        {{/each}}
+    </ul>
 </div>
 <div id='available_pods'>
+    {{#each game.connectedDevices}}
     <div class="drop_box_container">
         <p>
-            SUITE 1
+            {{this.id}}
         </p>
         <ul class="drop_box">
         </ul>
     </div>
-    <div class="drop_box_container">
-        <p>
-            SUITE 2
-        </p>
-        <ul class="drop_box">
-        </ul>
-    </div>
-    <div class="drop_box_container">
-        <p>
-           SUITE 3
-       </p>
-       <ul class="drop_box">
-       </ul>
-   </div>
-   <div class="drop_box_container">
-    <p>
-        SUITE 5
-    </p>
-    <ul class="drop_box">
-    </ul>
-</div>
-<div class="drop_box_container">
-    <p>
-        SUITE 5
-    </p>
-    <ul class="drop_box">
-    </ul>
-</div>
-<div class="drop_box_container">
-    <p>
-        SUITE 5
-    </p>
-    <ul class="drop_box">
-    </ul>
-</div>
+    {{/each}}
 </div>
 
 
@@ -95,7 +29,10 @@
 
 
 $(document).ready(function(){
+    resort();
+});
 
+function resort(){
     $('ul').sortable({
         connectWith: "ul",
         revert:true,
@@ -105,16 +42,24 @@ $(document).ready(function(){
             if (list.attr('id') != "draglist") {
                 console.log(list.children())
                 if (list.children().length > 1) {
-                                // move item back to main_list
-                                $(ui.sender).sortable('cancel');
-                            }
-                        }
-                    }
-                }).disableSelection();
+                    // move item back to main_list
+                    $(ui.sender).sortable('cancel');
+                }
+            }
+        }
+    }).disableSelection();
+}
 
-
+socket.on('newDeviceConnected', function(connectedDeviceId){
+    var templatePodHtml = '<div class="drop_box_container"> \
+        <p> \
+            %id% \
+        </p> \
+        <ul class="drop_box"> \
+        </ul> \
+    </div>';
+     $("#available_pods").append(templatePodHtml.replace('%id%', connectedDeviceId));
+     resort();
 });
-
-
 
 </script>

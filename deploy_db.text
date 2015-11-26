@@ -1,0 +1,5 @@
+#psql in PATH doen:
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/9.4/bin
+
+#local db deployen:
+heroku pg:push Geert DATABASE --app traineroverview
