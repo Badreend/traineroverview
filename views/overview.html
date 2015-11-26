@@ -32,9 +32,6 @@ $(document).ready(function(){
     resort();
 });
 
-//<<<<<<< HEAD
-//    $('.drag_box').sortable({
-//=======
 function resort(){
     $('.drag_box').sortable({
         connectWith: "ul",
@@ -54,7 +51,7 @@ function resort(){
 }
 
 socket.on('newDeviceConnected', function(connectedDeviceId){
-    var templatePodHtml = '<div class="drop_box_container"> \
+    var templatePodHtml = '<div data-device-id="%id%" class="drop_box_container"> \
         <p> \
             %id% \
         </p> \
@@ -63,6 +60,11 @@ socket.on('newDeviceConnected', function(connectedDeviceId){
     </div>';
      $("#available_pods").append(templatePodHtml.replace('%id%', connectedDeviceId));
      resort();
+});
+
+socket.on('deviceDisconnected', function(deviceId){
+    $("#available_pods div[data-device-id='"+deviceId+"']").remove();
+    resort();
 });
 
 </script>

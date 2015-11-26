@@ -10,13 +10,6 @@ var session = require('express-session')
 
 var db = require('./database');
 
-var devices = [];
-for (var i=0 ; i<9; i++){
-    devices.push(0);
-}
-
-var connectedDevices = 0;
-
 var hbs = expressHbs.create({
     helpers: {
         json: function(context) {
@@ -52,35 +45,28 @@ app.get('/ready', checkAuth, function(req, res){
     res.render('ready');
 });
 
-//<<<<<<< HEAD
-app.get('/test', function(req, res){
+
+app.get('/test', checkAuth, function(req, res){
     res.render('test');
-//=======
 });
+
 app.get('/group-overview', checkAuth, function(req, res){
     db.GetGroups(function(groups){
         res.render('group-overview',{ groups: groups });
     });
 });
-//>>>>>>> b0021c5d74a723b38de8a9955650a972a381ca9d
 
 
-app.get('/add_person', function(req, res){
+app.get('/add_person', checkAuth, function(req, res){
     res.render('add_person');
 });
 
-//<<<<<<< HEAD
-//app.get('/group-overview', function(req, res){
-//    res.render('group-overview');
-//});
-
-app.get('/group-activity', function(req, res){
-    res.render('group-activity');
+app.get('/group-activity', checkAuth, function(req, res){
+    var groupId = req.query.group_id;
+    
+    res.render('group-activity', { groupId: groupId });
 });
 
-//app.get('/overview', function(req, res){
-//    res.render('overview');
-//=======
 app.get('/overview', checkAuth, function(req, res){
     var groupId = req.query.group_id;
     var trainerId = req.session.user_id;
@@ -104,8 +90,8 @@ app.get('/overview', checkAuth, function(req, res){
             });
         });
     }
-//>>>>>>> b0021c5d74a723b38de8a9955650a972a381ca9d
 });
+
 app.get('/nulmeting', checkAuth,function(req, res){
     res.render('nulmeting');
 });
@@ -113,6 +99,7 @@ app.get('/nulmeting', checkAuth,function(req, res){
 app.get('/map', checkAuth, function(req, res){
     res.render('map');
 });
+
 app.get('/', function(req, res){
     res.render('splash', {layout: null});
 });
@@ -175,8 +162,8 @@ io.on('connection', function(socket){
 
     socket.on("userClosedApp", function(data){
         console.log("user closed the app ");
-        var remove_id = parseInt(data.remove_id);
-        devices[remove_id] =0;
+        db.RemoveConnectedDevice(data.remove_id);
+        io.sockets.emit("deviceDisconnected", data.remove_id);
     })
 
     socket.on("pressedStart", function(data){
@@ -209,7 +196,7 @@ http.listen(port, function(){
 
 function checkAuth(req, res, next) {
     //TODO: remove de regel hier onder
-    return next();
+    //return next();
     if (!req.session.user_id) {
         //res.statusCode = 403; //forbidden
         //res.header('Location', '/login');
