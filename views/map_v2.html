@@ -1,64 +1,69 @@
 <script src="js/plugins/panzoom.js"></script>
 <script src="js/plugins/pointertouch.js"></script>
-<div id="rev_list">
-	<ul id="draglist" style="height:280px">
+<div id="rev_colulmn">
+	<div id="groupName"> Groep Wo/Vr</div>
+	<div id="rev_list">
+		<ul id="draglist" style="height:280px">
 
-		<li   class="drag_box" userID="1231" >
-			<img src="imgs/heads/moniek.png">
-			<h2>Momo Niek</h2>   
-		</li>
+			<li   class="drag_box" device-id="1" >
+				<img src="imgs/heads/moniek.png">
+				<h3>Momo Niek</h3>   
+			</li>
 
-		<li   class="drag_box" userID="1231" >
-			<img src="imgs/heads/inge.png">
-			<h2>Ings</h2>     
-		</li>
+			<li   class="drag_box" device-id="2" >
+				<img src="imgs/heads/inge.png">
+				<h3>Ings</h3>     
+			</li>
 
-		<li   class="drag_box" userID="1231">
-			<img src="imgs/heads/inge.png">
-			<h2>Ings</h2>     
-		</li>
+			<li   class="drag_box" device-id="3">
+				<img src="imgs/heads/inge.png">
+				<h3>Ings</h3>     
+			</li>
 
-		<li   class="drag_box" userID="1231">
-			<img src="imgs/heads/inge.png">
-			<h2>Ings</h2>    
-		</li>
+			<li   class="drag_box" device-id="4">
+				<img src="imgs/heads/inge.png">
+				<h3>Ings</h3>    
+			</li>
 
-		<li   class="drag_box" userID="1231">
-			<img src="imgs/heads/badr.png">
-			<h2>Bada man</h2>    
-		</li>
+			<li   class="drag_box" device-id="5">
+				<img src="imgs/heads/badr.png">
+				<h3>Bada man</h3>    
+			</li>
 
-		<li   class="drag_box" userID="1231">
-			<img src="imgs/heads/badr.png">
-			<h2>Ings</h2>     
-		</li>
+			<li   class="drag_box" device-id="6">
+				<img src="imgs/heads/badr.png">
+				<h3>Ings</h3>     
+			</li>
 
-		<li   class="drag_box" userID="1231">
-			<img src="imgs/heads/inge.png">
-			<h2>Ings</h2>      
-		</li>
+			<li   class="drag_box" device-id="7">
+				<img src="imgs/heads/inge.png">
+				<h3>Ings</h3>      
+			</li>
 
-		<li   class="drag_box" userID="1231">
-			<img src="imgs/heads/inge.png">
-			<h2>Ings</h2>      
-		</li>
-	</ul>
+			<li   class="drag_box" device-id="8">
+				<img src="imgs/heads/inge.png">
+				<h3>Ings</h3>      
+			</li>
+		</ul>
+	</div>
 </div>
-
 <div id="right_column">
 	<div id="header">
-		<h1>Overzicht</h1>
+		<h1>Speloverzicht</h1>
 	</div>
 	<div id="map_info_column">
-		<h1> Groep A </h1>
-		<div id="game_timer">
-			20:01
-		</div>
+	
 		<div id="info">
+			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
+			 -->
 		</div>
 	</div>
 	<div id="legend">
+			<div id="game_timer">
+			20:01
+		</div>
+		<div>
 		<div id="phase1">
 			KOUD
 		</div>
@@ -68,6 +73,7 @@
 		<div id="phase3">
 			WARM
 		</div>
+		</div>
 	</div>
 
 
@@ -76,7 +82,6 @@
 			<div class="panzoom">
 				<div class="marker" device-id="1">
 					<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8">
-	
 					</div>
 					<div>
 						<span class="heartrate-text">Heartrate</span>
@@ -93,7 +98,7 @@
 
 		#legend{
 			width:200px;
-			height:50px;
+			height:110px;
 			position: absolute;
 			z-index: 99;
 			bottom:0px;
@@ -132,15 +137,11 @@
 			z-index: 99;
 			background: rgba(255,255,255,.8);
 			margin-top:50px;
-			padding-bottom:50px;
+			padding-bottom:20px;
 
-			padding-top:20px;
 			padding-left:10px;
 		}
-		#map_info_column h1{
-			margin:0px;
-			font-size:24px;
-		}
+
 		#info{
 			margin-top:20px;
 			width:calc(100% - 10px);
@@ -149,7 +150,8 @@
 			font-size:12px;
 		}
 		#game_timer{
-			margin-top:20px;
+			margin-top:10px;
+			margin-bottom:10px;
 			width:calc(100% - 10px);
 			border-bottom:1px solid;
 			border-top:1px solid;
@@ -176,6 +178,43 @@
 		}
 	</style>
 	<script>
+		var temp_data = [];
+		temp_data = [
+			{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug"},
+			{id:2,name:"Ings",diagnose:"Diagnose: knie & rug"}
+		];
+		console.log(temp_data)
+		//Temp 
+		//High light the right face in the list
+			$('.marker').click(function(){
+				var markerId = $(this).attr('device-id');
+					$('.drag_box').each(function(){
+						var dragBoxId = $(this).attr('device-id');
+						if(dragBoxId === markerId){
+							//-- change player info
+							for(var i = 0; i < temp_data.length; i++){
+								console.log(temp_data[i].id);
+								if(temp_data[i].id === parseInt(markerId)){
+									console.log(temp_data[i]);
+									$('#info').empty();
+									$('#info').append("<h3>" + temp_data[i].name + "</h3>");
+									$('#info').append("<p>" + temp_data[i].diagnose + "</p>");
+
+								}
+							}
+							//
+							$(this).css('opacity', '1');
+						}else{
+							$(this).css('opacity', '.3');
+						}
+						
+					});
+			})
+		//----
+
+
+
+
 		var pixelMeterRatio = 1.44;
 		var originX = 530;
 		var originY = 900;
