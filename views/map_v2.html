@@ -12,46 +12,12 @@
 	<div id="groupName"> Groep Wo/Vr</div>
 	<div id="rev_list">
 		<ul id="draglist" style="height:280px">
-
-			<li   class="drag_box" device-id="1" >
-				<img src="imgs/heads/moniek.png">
-				<h3>Momo Niek</h3>   
+			{{#each connectedDevices}}
+			<li   class="drag_box" device-id="{{this.id}}" >
+				<img src="{{this.rehabilitant.pictureUrl}}">
+				<h3>{{this.rehabilitant.GetFullName}}</h3>   
 			</li>
-
-			<li   class="drag_box" device-id="2" >
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="3">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="4">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>    
-			</li>
-
-			<li   class="drag_box" device-id="5">
-				<img src="imgs/heads/badr.png">
-				<h3>Bada man</h3>    
-			</li>
-
-			<li   class="drag_box" device-id="6">
-				<img src="imgs/heads/badr.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="7">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>      
-			</li>
-
-			<li   class="drag_box" device-id="8">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>      
-			</li>
+			{{/each}}
 		</ul>
 	</div>
 </div>

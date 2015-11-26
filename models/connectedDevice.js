@@ -3,7 +3,7 @@ var Rehabilitant = require('./rehabilitant')
 var ConnectedDevice = function(){
 	this.id = 0;
 	this.rehabilitant = new Rehabilitant();
-	//this.game = new Game();
+	this.rehabilitant_id = 0;
 }
 
 ConnectedDevice.prototype.ToString = function(){

@@ -141,7 +141,15 @@ app.get('/rehabilitants', checkAuth, function(req, res){
 });
 
 app.get('/map_v2', checkAuth, function(req, res){
-    res.render('map_v2');
+    var gameId = req.session.game_id;
+    
+    if(gameId == null){
+        return res.redirect('/group-overview');
+    }
+    
+    db.GetFullGame(gameId, function(connectedDevices){
+        res.render('map_v2', { connectedDevices: connectedDevices });
+    });
 });
 
 io.on('connection', function(socket){
