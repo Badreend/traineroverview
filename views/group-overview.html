@@ -1,0 +1,13 @@
+
+<div id="container">
+    <div class="row">
+        {{#each groups}}
+        <div class="col-md-3 col-sm-6 group">
+            <a href="/overview?group_id={{this.id}}">
+                <img src="{{this.GetIcon}}"/>
+                <h2>{{this.name}}</h2>
+            </a>
+        </div>
+        {{/each}}
+    </div>
+</div>

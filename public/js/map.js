@@ -3,6 +3,10 @@
    	mapOptions: undefined,
    	locations:'test'
    }
+
+
+         var hartslagDiv = document.getElementById("temp_heartrate");
+      var hartslagTxt = undefined;
 	app.map.init = function(){
    	mapDiv = document.getElementById("mapDiv"),
    	mapOptions = {
@@ -20,6 +24,8 @@
    	locations.push ({name:"moniek", LatLng: new google.maps.LatLng(52.033318, 5.337372)});
    	locations.push ({name:"inge", LatLng: new google.maps.LatLng(52.035518, 5.337313)});
    	locations.push ({name:"badr", LatLng: new google.maps.LatLng(52.033518, 5.337378)});
+
+
    	var iconBase = 'imgs/heads/';
    	app.map.bounds = new google.maps.LatLngBounds();
    	for(var i = 0; i < locations.length;i++){
@@ -31,16 +37,36 @@
    			options: {
    				icon: {
    					url: iconBase+locations[i].name+".png",
-   					scaledSize: new google.maps.Size(40, 40), 
+   					scaledSize: new google.maps.Size(45, 45), 
    				}
-   			}
+   			},
+               draggable: true,
+    
+             Anchor: new google.maps.Point(10, 10),
+             labelClass: "label", // the CSS class for the label
    		});         
    		app.map.bounds.extend (locations[i].LatLng);
    	}
    	app.map.markers.push(marker);
    	app.map.mapObj.fitBounds(app.map.bounds);
 
-   }
+
+      var overlay = new CustomMarker(
+         new google.maps.LatLng(52.033518, 5.337378), 
+         app.map.mapObj,
+         {
+            marker_id: '123',
+            colour: 'Red'
+         }
+      );
+
+      console.log(overlay.getPosition());
+
+
+
+
+
+   }//init
 
    function init(){
    	app.map.init();
@@ -49,8 +75,8 @@
 
       //init temp_hartslag
 
-      var hartslagDiv = document.getElementById("temp_heartrate");
-      var hartslagTxt = undefined;
+      console.log(app.map.markers[0])
+
 
 
 
@@ -74,9 +100,10 @@
 
    	console.log("id: " + device_id + " - position: " + lat + "  " + lon);
    	console.log("heartrate: " + heartrate);
-      hartslagTxt = "Heartrate: " + heartrate;
-      hartslagDiv.innerHTML = hartslagDiv; 
+      hartslagTxt = "Heart rate: " + heartrate;
+      hartslagDiv.innerHTML = hartslagTxt; 
    	app.map.markers[0].setPosition( new google.maps.LatLng( lat, lon ) );
+
 
    });
 
