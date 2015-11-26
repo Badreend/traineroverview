@@ -1,4 +1,38 @@
+<style>
 
+.groups_container{
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+}
+.group_wrapper{
+    margin:50px;
+    width:250px;
+    height:250px;
+    position: relative;
+    float: left;
+    overflow: hidden;
+    text-align: center;
+}
+
+</style>
+
+<div class="groups_container">
+        {{#each groups}}
+        <div class="group_wrapper">
+            <a href="/overview?group_id={{this.id}}">
+                <div class="img_container">
+                    <img src="{{this.GetIcon}}" class = "hexagon"/>
+                </div>
+                <h3>{{this.name}}</h3>
+            </a>
+        </div>
+        {{/each}}
+</div>
+
+
+
+<!--
 <div id="container">
     <div class="row">
         {{#each groups}}
@@ -11,3 +45,4 @@
         {{/each}}
     </div>
 </div>
+-->
