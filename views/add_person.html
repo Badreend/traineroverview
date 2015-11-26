@@ -44,10 +44,7 @@ document.getElementById("hartslag_range").innerHTML = "Minimale hartslag: " + ui
 <style type="text/css">
 .center_content{margin: 0px auto;  display: block;}
 .form_container{width: auto;height:auto; max-height: 85%; min-width: 1052px; background-color: #fafafa; border:1px solid #ededed; display: inline-block; margin: 0px auto; overflow:scroll; margin-top:10px; margin-bottom: 10px; font-size: 12px;}
-.form_wrapper{width: 350px; overflow:hidden; float: left; border-left: 1px solid #ffffff; border-right: 1px solid #ededed; padding:20px;}
-.img_container{width:150px; height:150px; overflow: hidden; border: 5px solid #dedede; border-radius: 50%; font-size: 12px;}
-
-img{width: 100%; height:auto; vertical-align: middle; border:0; background-color: #dedede; }
+.form_wrapper{width: 350px; overflow:hidden; float: left; padding:20px;}
 table{ font-size: 12px;}
 td{padding: 5px;}
 input[type="submit"]{width: auto; border:0;padding: 10px 50px 10px 50px;}
@@ -87,14 +84,13 @@ textarea{resize:none;}
 				<!-- BASIS INFO -->
 				<div class="img_container">
 
-					<img id="profile_pic" src="#" alt=""/>
+					<img id="profile_pic" src="#" alt="" class="hexagon"/>
 				</div>
 				<br>
 				<br>
-<span class="btn btn-default btn-file">
+			<span class="btn btn-default btn-file">
 				Upload foto<input type='file' onchange="readURL(this);"/>
 			</span>
-
 			</div>
 			<div class="form_wrapper">
 				<table >  
@@ -144,7 +140,7 @@ textarea{resize:none;}
 				</tr>
 			</table>
 		</div>
-
+<div class="vertical_line"></div>
 		<!-- CLUSTER EN KLACHTEN -->
 		<div class= "form_wrapper" style="text-align:left;">
 			<table width="100%">
