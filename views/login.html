@@ -24,6 +24,7 @@
     <link rel="stylesheet" type="text/css" href="css/css.css">
 
 </head>
+ 
 
 
 <div id="container">
@@ -32,8 +33,8 @@
 		<div class="col-md-3 col-sm-6 trainer_col">
 			<div class="trainer" data-id="{{this.id}}">
 				<div class="trainer_profile">
-					<div class="login_img_container">
-						<img src="{{this.pictureUrl}}" data-pin-nopin="true">
+					<div class="login_img_container" >
+						<img src="{{this.pictureUrl}}" data-pin-nopin="true" class="polygon-clip-hexagon">
 					</div>
 					<h2>{{this.GetFullName}}</h2>
 				</div>
@@ -66,7 +67,12 @@
 		 top: '150',
 		 left: '0',
 		 right: '0',
-		 bottom: '0'
+		 bottom: '0',
+		 width: '625'
+	});
+
+	$($( this ).get( 0 )).css({
+		 width: '625'
 	});
 
 	$input = ('<div id="loginform_placeholder"><div id="password_container"> <input type="password" class="password" size="20" value="" placeholder="Password"/></div><div id="login_container"><h2>Login</h2></div></div>')
@@ -100,5 +106,16 @@
 	}
 </script>
 
+<div style="height:0;">
+<svg class="clip-svg">
+    <defs>
+        <clipPath id="polygon-clip-hexagon" stroke="#ededed" stroke-width="3" clipPathUnits="objectBoundingBox">
+         <!--<polygon points="0.5 0, 1 0.25, 1 0.75, 0.5 1, 0 0.75, 0 0.25" />-->
+         <polygon points="0 0.5, 0.25 0, 0.75 0, 1 0.5, 0.75 1, 0.25 1" />
+
+        </clipPath>
+     </defs>
+</svg> 
+</div>
     </body>
 </html>

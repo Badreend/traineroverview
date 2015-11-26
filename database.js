@@ -133,19 +133,20 @@ module.exports = {
     
     GetGame: function(gameId, callback){
         pg.connect(this.connectionString, function(err, client, done) {
-            var query = client.query(
-                "SELECT g.id \"game_id\", t.* \
-                FROM game g \
-                INNER JOIN trainer t ON t.id = g.trainer_id \
-                WHERE g.id = " + gameId);
-
-            var q2 = client.query(
-                "SELECT cd.id \"connected_device_id\", r.* \
-                FROM game g \
-                INNER JOIN connected_device cd ON cd.game_id = g.id \
-                INNER JOIN rehabilitant r ON r.id = cd.rehabilitant_id \
-                WHERE g.id = " + gameId);
             
+            var gameSql = gameId != null
+                ?   "SELECT g.id \"game_id\", t.* \
+                    FROM game g \
+                    INNER JOIN trainer t ON t.id = g.trainer_id \
+                    WHERE g.id = " + gameId
+                :   "SELECT g.id \"game_id\", t.* \
+                    FROM game g \
+                    INNER JOIN trainer t ON t.id = g.trainer_id \
+                    ORDER BY g.id DESC \
+                    LIMIT 1";
+                    
+            var query = client.query(gameSql);
+ 
             var game = new Game();
             var trainer = new Trainer();
             
@@ -154,36 +155,53 @@ module.exports = {
                 Map(trainer, row);
             });
             
-            var connDevices = [];
-            q2.on('row', function(row) {
-                var connectedDevice = new ConnectedDevice();
-                Map(connectedDevice, row);
-                var rehabilitant = new Rehabilitant();
-                Map(rehabilitant, row);
-                connectedDevice.rehabilitant = rehabilitant;
-                connDevices.push(connectedDevice);
-            });
-            
-            var wait = true;
-            
             query.on('end', function() {
                 done();
                 game.trainer = trainer;
-                if(wait){
-                    wait = false;
-                }else{
+               
+                var q2 = client.query(
+                    "SELECT cd.id \"connected_device_id\", r.* \
+                    FROM game g \
+                    INNER JOIN connected_device cd ON cd.game_id = g.id \
+                    LEFT JOIN rehabilitant r ON r.id = cd.rehabilitant_id \
+                    WHERE g.id = " + game.id);
+                
+                var connDevices = [];
+                q2.on('row', function(row) {
+                    var connectedDevice = new ConnectedDevice();
+                    Map(connectedDevice, row, 'connected_device_');
+                    var rehabilitant = new Rehabilitant();
+                    Map(rehabilitant, row);
+                    connectedDevice.rehabilitant = rehabilitant;
+                    connDevices.push(connectedDevice);
+                });
+                
+                q2.on('end', function() {
+                    done();
+                
                     game.connectedDevices = connDevices;
                     callback(game);
-                }
+                });
             });
-            q2.on('end', function() {
+        });
+    },
+    
+    NewConnectedDevice: function(gameId, callback){
+        pg.connect(this.connectionString, function(err, client, done) {
+            var query = client.query(
+                "INSERT INTO connected_device(\"game_id\") " +
+                "VALUES('"+gameId+"') " +
+                "RETURNING \"id\", \"rehabilitant_id\", \"game_id\";");
+            
+            var connDevice = new ConnectedDevice();
+            
+            query.on('row', function(row) {
+                Map(connDevice, row);
+            });
+    
+            query.on('end', function() {
                 done();
-                if(wait){
-                    wait = false;
-                }else{
-                    game.connectedDevices = connDevices;
-                    callback(game);
-                }
+                callback(connDevice);
             });
         });
     }
@@ -192,7 +210,10 @@ module.exports = {
 function Map(obj1, obj2, prefix){
     for(var key in obj1){
         for(var key2 in obj2){
-            if((prefix == null || key.lastIndexOf(prefix, 0) === 0) && key.toLowerCase().replace('_','') == key2.toLowerCase().replace('_','')){
+            if(prefix && key2.lastIndexOf(prefix, 0) !== 0) continue;
+            var compareKey = prefix != null ? key2.toLowerCase().replace(prefix,'') : key2;
+            
+            if(key.toLowerCase().replace('_','') == compareKey.toLowerCase().replace('_','')){
                 obj1[key] = obj2[key2];
             }
         }

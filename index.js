@@ -38,6 +38,7 @@ app.use(bodyParser.urlencoded({
 
 //var connectionString = process.env.DATABASE_URL
 var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
+//var connectionString = 'postgres://localhost:5432/Geert';
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -51,16 +52,35 @@ app.get('/ready', checkAuth, function(req, res){
     res.render('ready');
 });
 
+//<<<<<<< HEAD
+app.get('/test', function(req, res){
+    res.render('test');
+//=======
+});
 app.get('/group-overview', checkAuth, function(req, res){
     db.GetGroups(function(groups){
         res.render('group-overview',{ groups: groups });
     });
 });
+//>>>>>>> b0021c5d74a723b38de8a9955650a972a381ca9d
+
 
 app.get('/add_person', function(req, res){
     res.render('add_person');
 });
 
+//<<<<<<< HEAD
+//app.get('/group-overview', function(req, res){
+//    res.render('group-overview');
+//});
+
+app.get('/group-activity', function(req, res){
+    res.render('group-activity');
+});
+
+//app.get('/overview', function(req, res){
+//    res.render('overview');
+//=======
 app.get('/overview', checkAuth, function(req, res){
     var groupId = req.query.group_id;
     var trainerId = req.session.user_id;
@@ -84,6 +104,7 @@ app.get('/overview', checkAuth, function(req, res){
             });
         });
     }
+//>>>>>>> b0021c5d74a723b38de8a9955650a972a381ca9d
 });
 app.get('/nulmeting', checkAuth,function(req, res){
     res.render('nulmeting');
@@ -99,7 +120,8 @@ app.get('/', function(req, res){
 app.get('/login', function(req, res){
     if (!req.session.user_id) {
         db.GetTrainers(function(trainers){
-            res.render('login', { trainers: trainers, layout:null});
+            res.render('login', {trainers: trainers, layout:null});
+            //res.render('login', { trainers: [{id:1, firstName:'maikel', lastName: 'bla', pictureUrl:'https://s-media-cache-ak0.pinimg.com/736x/d1/a6/64/d1a664bca214bf785a293cbc87950fc4.jpg'}], layout:null});
         });
     }else{
         res.redirect('/rehabilitants');
@@ -138,21 +160,17 @@ app.get('/map_v2', checkAuth, function(req, res){
 io.on('connection', function(socket){
 	socket.on('requestID', function(){
         //TODO: hoe weet je hier met welk device je praat? Als je hieronder io.emit() doet dan stuur je een device_id naar ALLE socket clients
-		console.log("ID is requested");
-        connectedDevices++;
-        devices.push(connectedDevices);
-
-        var i =0;
-        while(i == devices[i]){
-            i++;
-        }
-        devices[i] = i;
-
-		var id_num = devices[i]; // ID van device
-        var firstname = "Maikel";
-		io.emit("receiveID", { device_id: id_num, user_id: firstname});
-
-        console.log(devices[0] + ", " + devices[1] + ", " + devices[2] + ", " + devices[3] + ", " + devices[4] + ", " + devices[5] + ", " + devices[6] + ", " + devices[7] + ", " +devices[8]);
+        //TODO: gameId staat nu op eerst gevonden game. Echter, de unity client moet de mogelijkheid hebben om de verschillende games te bekijken 
+        // en er 1 te selecteren
+        
+        db.GetGame(null, function(game){
+            var gameId = game.id; 
+           
+            db.NewConnectedDevice(gameId, function(connectedDevice){
+                io.emit("receiveID", { device_id: connectedDevice.id, user_id: ''});
+                io.sockets.emit("newDeviceConnected", connectedDevice.id);
+            });
+        });
 	})
 
     socket.on("userClosedApp", function(data){
