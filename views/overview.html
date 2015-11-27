@@ -1,6 +1,6 @@
 <div id="rev_list">
+    
     <ul id="draglist" style="height:280px">
-        
         {{#each rehabilitants}}
         <li class="drag_box" userID="{{this.id}}" >
             <img src="{{this.pictureUrl}}">
@@ -12,14 +12,18 @@
 <div id='available_pods'>
     {{#each game.connectedDevices}}
     <div data-device-id="{{this.id}}" class="drop_box_container">
-        <p>
+        <p style="position:fixed">
             {{this.id}}
         </p>
         <ul class="drop_box">
         </ul>
     </div>
     {{/each}}
+
 </div>
+<div style="position:fixed; bottom:0; width:100%; text-align:center;"><a href="/map_v2"><button class="btn btn-primary">Start Game</button></div>
+
+
 
 
 <script src="js/Sortable.js"></script>
@@ -33,7 +37,7 @@ $(document).ready(function(){
 });
 
 function resort(){
-    $('.drag_box').sortable({
+    $('ul').sortable({
         connectWith: "ul",
         revert:true,
         receive: function(event, ui)
