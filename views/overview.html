@@ -11,7 +11,7 @@
 </div>
 <div id='available_pods'>
     {{#each game.connectedDevices}}
-    <div class="drop_box_container">
+    <div data-device-id="{{this.id}}" class="drop_box_container">
         <p>
             {{this.id}}
         </p>
@@ -32,9 +32,6 @@ $(document).ready(function(){
     resort();
 });
 
-//<<<<<<< HEAD
-//    $('.drag_box').sortable({
-//=======
 function resort(){
     $('.drag_box').sortable({
         connectWith: "ul",
@@ -54,15 +51,20 @@ function resort(){
 }
 
 socket.on('newDeviceConnected', function(connectedDeviceId){
-    var templatePodHtml = '<div class="drop_box_container"> \
+    var templatePodHtml = '<div data-device-id="%id%" class="drop_box_container"> \
         <p> \
             %id% \
         </p> \
         <ul class="drop_box"> \
         </ul> \
     </div>';
-     $("#available_pods").append(templatePodHtml.replace('%id%', connectedDeviceId));
+     $("#available_pods").append(templatePodHtml.replace(/%id%/g, connectedDeviceId));
      resort();
+});
+
+socket.on('deviceDisconnected', function(deviceId){
+    $("#available_pods div[data-device-id='"+deviceId+"']").remove();
+    resort();
 });
 
 </script>

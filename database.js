@@ -204,6 +204,16 @@ module.exports = {
                 callback(connDevice);
             });
         });
+    },
+    
+    RemoveConnectedDevice: function(deviceId){
+        pg.connect(this.connectionString, function(err, client, done){
+           var query = client.query("DELETE FROM connected_device WHERE id = " + deviceId);
+           
+           query.on('end', function(){
+               done();
+           });
+        });
     }
 };
 

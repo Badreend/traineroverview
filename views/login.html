@@ -42,8 +42,27 @@
 		</div>
 </div>
 
-<style>
+<div class="loadingOverlay">
+	<div class="loadingHolder">
+		<img width="100" src="/imgs/shared/ajax_loader_gray.gif"/>
+	</div>
+</div>
 
+<style>
+	.loadingOverlay{
+		display: none; 
+		position: fixed; 
+		width: 100%; 
+		height: 100%; 
+		align-items: center; 
+		top: 0px; 
+		background-color: rgba(0, 0, 0, 0.5);
+	}
+	
+	.loadingHolder{
+		display: flex; 
+		margin: 0px auto;
+	}
 
 </style>
 
@@ -97,12 +116,16 @@
 	}
 	
 	function login(trainerId, password){
+		$(".loadingOverlay").show();
+		$(".loadingOverlay").css("display", "flex");
+		
 		$.ajax({
 			url: "loginRequest",
 			method: "POST",
 			data: {trainerId: trainerId, password: password},
 			success:function(data) {
 				if(!data.valid){
+					$(".loadingOverlay").hide();
 					alert(data.message);
 				}else{
 					window.location = data.redirect;
