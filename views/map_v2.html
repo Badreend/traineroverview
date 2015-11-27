@@ -230,6 +230,7 @@ console.log(temp_data)
 
 
 		$('.drag_box').bind('tap click', function(){
+			console.log('clicked on dragBox');
 			var dragBoxId = $(this).attr('device-id');
 				for(var i = 0; i < temp_data.length; i++){
 						if(temp_data[i].id === parseInt(dragBoxId)){
