@@ -207,7 +207,7 @@ console.log(temp_data)
 	
 		//
 
-		$('.marker').bind('tap click', function(){
+		$('.marker').bind('touchstart click', function(){
 			var markerId = $(this).attr('device-id');
 			$('.drag_box').each(function(){
 				var dragBoxId = $(this).attr('device-id');
