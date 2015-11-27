@@ -95,7 +95,7 @@
 					<span class="heartrate-text">Heartrate</span>
 				</div>
 			</div>
-			<img src="imgs/views/map/MRC.jpg">
+			<img id="map" src="imgs/views/map/MRC.jpg">
 		</div>
 	</div>
 </div>
@@ -198,16 +198,16 @@ console.log(temp_data)
 		//Temp 
 		//High light the right face in the list
 		//clear info when clicked elsewhere
-			$('body').bind('dblclick tap', function(){
-				console.log('a')
-				$('#info').empty();
-										$(this).css('opacity', '1');
 
-			});
-	
 		//
+				$('#map').bind('touchstart', function(){
+					console.log('clear')
+					$('.drag_box').css('opacity', '1');
+					$('#info').empty();
 
-		$('.marker').bind('touchstart click', function(){
+				});
+
+		$('.marker').bind('touchend click', function(){
 			var markerId = $(this).attr('device-id');
 			$('.drag_box').each(function(){
 				var dragBoxId = $(this).attr('device-id');
@@ -232,7 +232,6 @@ console.log(temp_data)
 		$('.drag_box').bind('tap click', function(){
 			var dragBoxId = $(this).attr('device-id');
 				for(var i = 0; i < temp_data.length; i++){
-						console.log(temp_data[i].id);
 						if(temp_data[i].id === parseInt(dragBoxId)){
 						displayInfo(temp_data[i]);
 					}
