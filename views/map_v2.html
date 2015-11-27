@@ -60,18 +60,18 @@
 		<h1>Speloverzicht</h1>
 	</div>
 	<div id="map_info_column">
-	
+
 		<div id="info">
 			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
-			 -->
-		</div>
+		-->
 	</div>
-	<div id="legend">
-			<div id="game_timer">
-			20:01
-		</div>
-		<div>
+</div>
+<div id="legend">
+	<div id="game_timer">
+		20:01
+	</div>
+	<div>
 		<div id="phase1">
 			KOUD
 		</div>
@@ -81,162 +81,142 @@
 		<div id="phase3">
 			WARM
 		</div>
-		</div>
 	</div>
+</div>
 
 
-	<section id="inverted-contain">
-		<div style="overflow: hidden; position: relative;" class="panzoom-parent">
-			<div class="panzoom">
-				<div class="marker" device-id="1" >
-					<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8;">
-					</div>
-					<div>
-						<span class="heartrate-text">Heartrate</span>
-					</div>
+<section id="inverted-contain">
+	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
+		<div class="panzoom">
+			<div class="marker" device-id="1" >
+				<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8;">
 				</div>
-				<img src="imgs/views/map/MRC.jpg">
+				<div>
+					<span class="heartrate-text">Heartrate</span>
+				</div>
 			</div>
+			<img src="imgs/views/map/MRC.jpg">
 		</div>
 	</div>
-
-	
-
-	<style>
-
-		#legend{
-			width:200px;
-			height:110px;
-			position: absolute;
-			z-index: 99;
-			bottom:0px;
-			background: rgba(255,255,255,.9);
-			padding-left:10px;
-			text-align: center;
-			padding-top:10px;
-		}
-		#phase1{
-			width:58px;
-			position: relative;
-			float:left;
-			border-top:10px solid #77a4d6;
-			color:#77a4d6;
-			font-weight:bold;			
-		}
-		#phase2{
-			width:58px;
-			position: relative;
-			float:left;
-			border-top:10px solid #fddf29;
-			color:#fddf29;
-			font-weight:bold;
-		}
-		#phase3{
-			width:58px;
-			position: relative;
-			float:left;
-			border-top:10px solid #c66958;
-			color:#c66958;
-			font-weight:bold;
-		}
-		#map_info_column{
-			width:200px;
-			position: absolute;
-			z-index: 99;
-			background: rgba(255,255,255,.8);
-			margin-top:50px;
-			padding-bottom:20px;
-
-			padding-left:10px;
-		}
-
-		#info{
-			margin-top:20px;
-			width:calc(100% - 10px);
-			border-bottom:1px solid;
-			text-align: left;
-			font-size:12px;
-		}
-		#game_timer{
-			margin-top:10px;
-			margin-bottom:10px;
-			width:calc(100% - 10px);
-			border-bottom:1px solid;
-			border-top:1px solid;
-
-			text-align: center;
-			font-size:32px;
-		}
+</div>
 
 
-		#inverted-contain .panzoom-parent
-		{ 
-			width: 100%; 
-			height: 100%; 
-		}
-		.marker{
-			transform: matrix(0.2, 0, 0, 0.2, 500, 400);
-			cursor: pointer;
-			position: absolute; 
-			z-index: 999;
-			text-align: center;
-		}
-		.marker .heartrate-text{
-			color: red;
-		}
-	</style>
-	<script>
-	// function clickMarker(){
-	// 		console.log('h');
-	// 		console.log($(this)[0]);
-	// 			var markerId = $(this).attr('device-id');
-	// 				$('.drag_box').each(function(){
-	// 					var dragBoxId = $(this).attr('device-id');
-	// 					if(dragBoxId === markerId){
-	// 						//-- change player info
-	// 						for(var i = 0; i < temp_data.length; i++){
-	// 							console.log(temp_data[i].id);
-	// 							if(temp_data[i].id === parseInt(markerId)){
-	// 								console.log(temp_data[i]);
-	// 								$('#info').empty();
-	// 								$('#info').append("<h3>" + temp_data[i].name + "</h3>");
-	// 								$('#info').append("<p>" + temp_data[i].diagnose + "</p>");
 
-	// 							}
-	// 						}
-	// 						//
-	// 						$(this).css('opacity', '1');
-	// 					}else{
-	// 						$(this).css('opacity', '.3');
-	// 					}
-						
-	// 				});
+<style>
 
-	// }
+#legend{
+	width:200px;
+	height:110px;
+	position: absolute;
+	z-index: 99;
+	bottom:0px;
+	background: rgba(255,255,255,.9);
+	padding-left:10px;
+	text-align: center;
+	padding-top:10px;
+}
+#phase1{
+	width:58px;
+	position: relative;
+	float:left;
+	border-top:10px solid #77a4d6;
+	color:#77a4d6;
+	font-weight:bold;			
+}
+#phase2{
+	width:58px;
+	position: relative;
+	float:left;
+	border-top:10px solid #fddf29;
+	color:#fddf29;
+	font-weight:bold;
+}
+#phase3{
+	width:58px;
+	position: relative;
+	float:left;
+	border-top:10px solid #c66958;
+	color:#c66958;
+	font-weight:bold;
+}
+#map_info_column{
+	width:200px;
+	position: absolute;
+	z-index: 99;
+	background: rgba(255,255,255,.8);
+	margin-top:50px;
+	padding-bottom:20px;
 
-		var temp_data = [];
-		temp_data = [
-			{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug"},
-			{id:2,name:"Ings",diagnose:"Diagnose: knie & rug"}
-		];
-		console.log(temp_data)
+	padding-left:10px;
+}
+
+#info{
+	margin-top:20px;
+	width:calc(100% - 10px);
+	border-bottom:1px solid;
+	text-align: left;
+	font-size:12px;
+}
+#game_timer{
+	margin-top:10px;
+	margin-bottom:10px;
+	width:calc(100% - 10px);
+	border-bottom:1px solid;
+	border-top:1px solid;
+
+	text-align: center;
+	font-size:32px;
+}
+
+
+#inverted-contain .panzoom-parent
+{ 
+	width: 100%; 
+	height: 100%; 
+}
+.marker{
+	transform: matrix(0.2, 0, 0, 0.2, 500, 400);
+	cursor: pointer;
+	position: absolute; 
+	z-index: 999;
+	text-align: center;
+}
+.marker .heartrate-text{
+	color: red;
+}
+</style>
+<script>
+var temp_data = [];
+temp_data = [
+{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug"},
+{id:2,name:"Ings",diagnose:"Diagnose: knie & rug"}
+];
+
+var all_revs = [];
+
+console.log(temp_data)
 		//Temp 
 		//High light the right face in the list
-			$('.marker').bind('touchstart click', function(){
-				console.log('h')
-				var markerId = $(this).attr('device-id');
-					$('.drag_box').each(function(){
-						var dragBoxId = $(this).attr('device-id');
-						if(dragBoxId === markerId){
+		//clear info when clicked elsewhere
+			$('body').bind('dblclick tap', function(){
+				console.log('a')
+				$('#info').empty();
+										$(this).css('opacity', '1');
+
+			});
+	
+		//
+
+		$('.marker').bind('tap click', function(){
+			var markerId = $(this).attr('device-id');
+			$('.drag_box').each(function(){
+				var dragBoxId = $(this).attr('device-id');
+				if(dragBoxId === markerId){
 							//-- change player info
 							for(var i = 0; i < temp_data.length; i++){
 								console.log(temp_data[i].id);
 								if(temp_data[i].id === parseInt(markerId)){
-									console.log(temp_data[i]);
-									$('#info').empty();
-									$('#info').append("<h3>" + temp_data[i].name + "</h3>");
-									$('#info').append("<p>" + temp_data[i].diagnose + "</p>");
-
+									displayInfo(temp_data[i]);
 								}
 							}
 							//
@@ -246,7 +226,38 @@
 						}
 						
 					});
-			})
+		});
+
+
+		$('.drag_box').bind('tap click', function(){
+			var dragBoxId = $(this).attr('device-id');
+				for(var i = 0; i < temp_data.length; i++){
+						console.log(temp_data[i].id);
+						if(temp_data[i].id === parseInt(dragBoxId)){
+						displayInfo(temp_data[i]);
+					}
+				}
+				if(temp_data.length < parseInt(dragBoxId)){
+					$('#info').empty();
+				}
+				$('.drag_box').each(function(){
+					if(dragBoxId === $(this).attr('device-id')){
+						$(this).css('opacity', '1');
+					}else{
+						$(this).css('opacity', '.3');
+	
+					}
+				});
+		});
+
+
+		function displayInfo(_idData){
+			$('#info').empty();
+			$('#info').append("<h3>" + _idData.name + "</h3>");
+			$('#info').append("<p>" + _idData.diagnose + "</p>");
+			//			$('#info').append("<p>" + _idData.diagnose + "</p>");
+
+		}
 		//----
 
 
@@ -319,5 +330,5 @@ socket.on('dataClient', function(data){
 
 	//[ "1.1",	"0", 	"0", 	"1.1", 	"-87.65", 	"62" ]
 	//scaleX	skewX	skewY	scaleY	posX		posY
-</script>
+	</script>
 </section>
