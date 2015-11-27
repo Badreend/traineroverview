@@ -28,9 +28,8 @@
 
 
 <div id="container">
-	<div class="row">
-		{{#each trainers}}
-		<div class="col-md-3 col-sm-6 trainer_col">
+		<div class="groups_container">
+			{{#each trainers}}
 			<div class="trainer" data-id="{{this.id}}">
 				<div class="trainer_profile">
 					<div class="img_container" >
@@ -39,9 +38,8 @@
 					<h2>{{this.GetFullName}}</h2>
 				</div>
 			</div>
+			{{/each}}
 		</div>
-		{{/each}}
-	</div>
 </div>
 
 <style>
@@ -64,15 +62,19 @@
 	$($( this ).parent().get( 0 )).css({
 		 margin: 'auto',
 		 position: 'absolute',
-		 top: '150',
+		 top: '25%',
 		 left: '0',
 		 right: '0',
 		 bottom: '0',
-		 width: '650'
+		 width: '700',
+		 height: 'auto'
 	});
 
 	$($( this ).get( 0 )).css({
-		 width: '650'
+		 width: '700',
+	});
+	$($('.trainer_profile').get(0)).css({
+		margin: '0'
 	});
 
 	$input = ('<div id="loginform_placeholder"><div id="password_container"> <input type="password" class="password" size="20" value="" placeholder="Password"/></div><div id="login_container" onclick="checkLogin()"><h2>Login</h2></div></div>')
