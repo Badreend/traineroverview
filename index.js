@@ -209,28 +209,42 @@ io.on('connection', function(socket){
         console.log("user closed the app ");
         db.RemoveConnectedDevice(data.remove_id);
         io.sockets.emit("deviceDisconnected", data.remove_id);
-    })
+    });
 
     socket.on("pressedStart", function(data){
         io.emit("startGame");
-    })
+    });
 
     socket.on("updateWaterpas", function(data){
         io.emit("waterpas", data);
         console.log(data);
-    })
+    });
 
 	socket.on("dataTransfer", function(data){
 		//console.log(data);
 		io.sockets.emit("dataClient",data);
 	});
-	
+
+
+
+ //    function dataClientTest(){
+ //        var devices = [];
+ //        //fill devices[]
+ //        for(var i = 0; i < 4;i++){
+ //           var device = {device_id:i,x:52.033518,y:5.337378,heartrate:120};
+ //            devices.push(device);
+ //        }
+ //        for(var i = 0; i < devices.length; i++){
+ //            io.sockets.emit("dataClient",devices[i]);
+ //        }
+ //    }
+	// setTimeout(dataClientTest, 3000);
+
 socket.on('disconnect',function(data){
 		console.log('disconnect');
 	});
 
 });
-
 
 
 var port = process.env.PORT || 5000;
