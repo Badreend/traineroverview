@@ -43,8 +43,8 @@ app.use(bodyParser.urlencoded({
 })); 
 
 //var connectionString = process.env.DATABASE_URL
-//var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
-var connectionString = 'postgres://localhost:5432/Geert';
+var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
+//var connectionString = 'postgres://localhost:5432/Geert';
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
