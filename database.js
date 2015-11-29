@@ -42,7 +42,9 @@ module.exports = {
                 //GL: wtf? dateOfBirth is off by one day, while the database contains correct date..
                 Map(rehabilitant, row);
 
-                rehabilitant.dateOfBirth = rehabilitant.dateOfBirth.addDays(1);
+                rehabilitant.dateOfBirth = rehabilitant.dateOfBirth != null 
+                    ? rehabilitant.dateOfBirth.addDays(1) 
+                    : rehabilitant.dateOfBirth;
             });
     
             query.on('end', function() {
@@ -332,7 +334,8 @@ WHERE cd.id IN (" + commaDelimitedDeviceIds + ")");
                 , \"goal\" \
                 , \"min_heartrate\" \
                 , \"max_heartrate\" \
-                , \"course_duration\") \
+                , \"course_duration\" \
+                , \"date_of_birth\") \
                VALUES( \
                 '{0}' \
                 , '{1}' \
@@ -345,10 +348,11 @@ WHERE cd.id IN (" + commaDelimitedDeviceIds + ")");
                 , '{7}' \
                 , '{8}' \
                 , '{9}' \
-                , '{10}') \
+                , '{10}' \
+                , '{11}') \
                RETURNING \"id\", \"first_name\", \"last_name\", \"picture_url\", \"active\", \"gender\", \"cluster\", \"diagnosis\", \"function\", \"goal\", \"min_heartrate\", \"max_heartrate\", \"course_duration\";"     
             .format(newRehabilitant.firstName, newRehabilitant.lastName, newRehabilitant.pictureUrl, newRehabilitant.gender, newRehabilitant.cluster, newRehabilitant.diagnosis, newRehabilitant.function,
-                newRehabilitant.goal, newRehabilitant.minHeartRate, newRehabilitant.maxHeartRate, newRehabilitant.courseDuration));
+                newRehabilitant.goal, newRehabilitant.minHeartRate, newRehabilitant.maxHeartRate, newRehabilitant.courseDuration, newRehabilitant.dateOfBirth));
            
            var insertedId;
            query.on('row', function(row){
