@@ -6,11 +6,12 @@
     "body-parser": "^1.14.1",
     "bootstrap": "x",
     "express": "x",
-    "express3-handlebars": "^0.5.2",
     "express-session": "x",
+    "express3-handlebars": "^0.5.2",
     "handlebars": "^4.0.4",
     "jade": "^1.11.0",
     "jquery": "x",
+    "multer": "^1.1.0",
     "pg": "x",
     "socket.io": "x"
   },

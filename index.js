@@ -7,6 +7,19 @@ var express  = require('express');
 var expressHbs = require('express3-handlebars');
 var bodyParser = require("body-parser");
 var session = require('express-session')
+var multer  = require('multer')
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, __dirname + '/public/uploads')
+    },
+    filename: function (req, file, cb) { 
+        cb(null, file.fieldname + '-' + Date.now() + '.' + file.mimetype.replace('image/','').replace('+xml', ''))
+    }
+})
+var upload = multer({ 
+    //dest: 'public/uploads/',
+    storage: storage
+}).single('avatar')
 
 var db = require('./database');
 
@@ -30,8 +43,8 @@ app.use(bodyParser.urlencoded({
 })); 
 
 //var connectionString = process.env.DATABASE_URL
-var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
-//var connectionString = 'postgres://localhost:5432/Geert';
+//var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
+var connectionString = 'postgres://localhost:5432/Geert';
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -57,8 +70,32 @@ app.get('/group-overview', checkAuth, function(req, res){
 });
 
 
-app.get('/add_person', checkAuth, function(req, res){
-    res.render('add_person');
+app.get('/rehabilitant', checkAuth, function(req, res){
+    var rehabilitantId = req.query.id;
+    
+    if(rehabilitantId != null){
+        db.GetRehabilitant(rehabilitantId, function(rehabilitant){
+            res.render('rehabilitant', rehabilitant);
+        });
+    }else{
+        res.render('rehabilitant');
+    }
+});
+
+app.post('/add_rehabilitant', checkAuth, function(req, res){
+    var rehabilitant = req.body;
+    
+    db.NewRehabilitant(rehabilitant, function(id){
+        res.redirect('/rehabilitant?id=' + id);
+    });
+});
+
+app.post('/update_rehabilitant', checkAuth, function(req, res){
+    var rehabilitant = req.body;
+    
+    db.UpdateRehabilitant(rehabilitant, function(id){
+        res.redirect('/rehabilitant?id=' + id);
+     });
 });
 
 app.get('/group-activity', checkAuth, function(req, res){
@@ -134,9 +171,9 @@ app.post('/loginRequest', function(req, res){
     });
 });
 
-app.get('/rehabilitants', checkAuth, function(req, res){
-    db.GetRehabilitants(function(rehabilitants){
-        res.render('rehabilitants', { model: rehabilitants });
+app.post('/upload', function(req, res){
+    upload(req, res, function (err) {
+        res.send({err: err, path: '/uploads/' + req.file.filename});
     });
 });
 
