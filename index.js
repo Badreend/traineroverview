@@ -31,6 +31,8 @@ var hbs = expressHbs.create({
     },
     layoutsDir: 'views/layouts/',
     defaultLayout: 'main_layout.html',
+    partialsDir: 'views/partials/',
+    extname: '.html'
 });
 
 app.engine('html', hbs.engine);
@@ -43,8 +45,8 @@ app.use(bodyParser.urlencoded({
 })); 
 
 //var connectionString = process.env.DATABASE_URL
-var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
-//var connectionString = 'postgres://localhost:5432/Geert';
+//var connectionString = 'postgres://wwrrqmxvkcxlqc:-1-0qme7DQUKoZ8BzHd0GrTzqK@ec2-54-204-6-113.compute-1.amazonaws.com:5432/d7u84okn0tjfn1?ssl=true'
+var connectionString = 'postgres://localhost:5432/Geert';
 app.use(session({
   secret: 'keyboard cat',
   resave: false,
@@ -75,10 +77,10 @@ app.get('/rehabilitant', checkAuth, function(req, res){
     
     if(rehabilitantId != null){
         db.GetRehabilitant(rehabilitantId, function(rehabilitant){
-            res.render('rehabilitant', rehabilitant);
+            res.render('rehabilitant', {rehabilitant:rehabilitant, layout: null});
         });
     }else{
-        res.render('rehabilitant');
+        res.render('rehabilitant', {layout: null});
     }
 });
 
@@ -86,7 +88,8 @@ app.post('/add_rehabilitant', checkAuth, function(req, res){
     var rehabilitant = req.body;
     
     db.NewRehabilitant(rehabilitant, function(id){
-        res.redirect('/rehabilitant?id=' + id);
+        //res.redirect('/rehabilitant?id=' + id);
+        res.redirect('back');
     });
 });
 
@@ -94,14 +97,25 @@ app.post('/update_rehabilitant', checkAuth, function(req, res){
     var rehabilitant = req.body;
     
     db.UpdateRehabilitant(rehabilitant, function(id){
-        res.redirect('/rehabilitant?id=' + id);
+        //res.redirect('/rehabilitant?id=' + id);
+        res.redirect('back');
      });
 });
 
 app.get('/group-activity', checkAuth, function(req, res){
     var groupId = req.query.group_id;
+    var gameId = req.session.game_id;
+    res.cookie('currentGroup', groupId);
     
-    res.render('group-activity', { groupId: groupId });
+    db.GetRehabilitantsInGroup(groupId, function(rehabilitants){
+        res.render('group-activity', { 
+            groupId: groupId, 
+            groupname: 'test', 
+            rehabilitants: rehabilitants,
+            gameId: gameId
+        });
+    });
+    
 });
 
 app.get('/overview', checkAuth, function(req, res){
@@ -111,6 +125,7 @@ app.get('/overview', checkAuth, function(req, res){
     if(!req.session.game_id){
         db.CreateNewGame(trainerId, function(game){
             req.session.game_id = game.id;
+            res.cookie('gameBusy','true');
             load(game);
         });
     }else{
@@ -120,8 +135,9 @@ app.get('/overview', checkAuth, function(req, res){
     }
     
     function load(game){
-        db.GetRehabilitantGroup(groupId, function(rehabilitants){
-            res.render('overview', { 
+        db.GetRehabilitantsInGroup(groupId, function(rehabilitants){
+            res.render('overview', {
+                groupname: 'test',
                 rehabilitants: rehabilitants,
                 game: game//{connectedDevices: [{id:1},{id:2}]}
             });
@@ -148,12 +164,13 @@ app.get('/login', function(req, res){
             //res.render('login', { trainers: [{id:1, firstName:'maikel', lastName: 'bla', pictureUrl:'https://s-media-cache-ak0.pinimg.com/736x/d1/a6/64/d1a664bca214bf785a293cbc87950fc4.jpg'}], layout:null});
         });
     }else{
-        res.redirect('/rehabilitants');
+        res.redirect('/group-overview');
     }
 });
 
 app.get('/logout', function (req, res) {
     delete req.session.user_id;
+    delete req.session.game_id;
     res.redirect('/login');
 });    
 
@@ -166,6 +183,9 @@ app.post('/loginRequest', function(req, res){
             return res.send({valid: false, message: "Password incorrect!"});
         }else{
             req.session.user_id = trainerId;
+            delete req.session.game_id;
+            res.clearCookie('gameBusy');
+            res.clearCookie('currentGroup');
             return res.send({valid: true, message:"Correct!", redirect: "/group-overview"});
         }
     });
@@ -187,6 +207,21 @@ app.get('/map_v2', checkAuth, function(req, res){
     db.GetFullGame(gameId, function(connectedDevices){
         res.render('map_v2', { connectedDevices: connectedDevices });
     });
+});
+
+app.get('/exit_game', checkAuth, function(req, res){
+    var gameId = req.query.id;
+    
+    if(gameId){
+        db.ExitGame(gameId, function(){
+            delete req.session.game_id;
+            res.clearCookie('gameBusy');
+            res.redirect('/group-overview');
+        });
+    }else{
+        res.redirect('/group-overview');
+    }
+    
 });
 
 io.on('connection', function(socket){

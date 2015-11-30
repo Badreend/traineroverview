@@ -8,7 +8,7 @@
 
 </style>
 
-<div id="rev_colulmn">
+<!--div id="rev_colulmn">
 	<div id="groupName"> Groep Wo/Vr</div>
 	<div id="rev_list">
 		<ul id="draglist" style="height:280px">
@@ -20,7 +20,10 @@
 			{{/each}}
 		</ul>
 	</div>
-</div>
+</div-->
+
+{{> rehabilitantlist }}
+
 <div id="right_column">
 	<div id="header">
 		<h1>Speloverzicht</h1>
@@ -54,14 +57,16 @@
 <section id="inverted-contain">
 	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
 		<div class="panzoom">
-			<div class="marker" device-id="1" >
+			{{#each connectedDevices}}
+			<div class="marker" device-id="{{this.id}}" >
 				<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8;">
 				</div>
 				<div>
 					<span class="heartrate-text">Heartrate</span>
 				</div>
 			</div>
-			<img id="map" src="imgs/views/map/MRC.jpg">
+			{{/each}}
+			<img id="map" src="imgs/views/map/Kaart.svg">
 		</div>
 	</div>
 </div>
@@ -152,6 +157,22 @@
 }
 </style>
 <script>
+	function updateClock ( ){
+		var currentTime = new Date ( );
+		var currentHours = currentTime.getHours ( );
+		var currentMinutes = currentTime.getMinutes ( );
+		currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+	
+		var currentTimeString = currentHours + ":" + currentMinutes;
+		
+		$("#game_timer").html(currentTimeString);
+	}
+
+	$(document).ready(function()
+	{
+		setInterval('updateClock()', 1000);
+	});
+	
 var temp_data = [];
 temp_data = [
 {id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug"},
@@ -229,9 +250,9 @@ console.log(temp_data)
 
 
 
-		var pixelMeterRatio = 1.44;
-		var originX = 530;
-		var originY = 900;
+		var pixelMeterRatio = 1.73;
+		var originX = 745;
+		var originY = 918;
 		var markerScale = 0.5;
 		
 		(function() {	

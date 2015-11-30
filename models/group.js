@@ -1,17 +1,18 @@
 var Group = function(){
+	var context = this;
 	this.id = 0;
 	this.name = '';
 	this.active = true;
 	this.icon = '';
 	this.rehabilitants = [];
-}
-
-Group.prototype.NumRehabilitants = function(){
-	return this.rehabilitants.length;
-}
-
-Group.prototype.GetIcon = function(){
-	return this.icon || 'imgs/shared/portraitFrame.png';
+	
+	this.NumRehabilitants = function(){
+		return context.rehabilitants.length;
+	};
+	
+	this.GetIcon = function(){
+		return context.icon || 'imgs/shared/portraitFrame.png';
+	};
 }
 
 module.exports = Group;
