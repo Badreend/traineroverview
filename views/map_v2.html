@@ -76,7 +76,7 @@
 			KOUD
 		</div>
 		<div id="phase2">
-			MID
+			GOED
 		</div>
 		<div id="phase3">
 			WARM
@@ -91,9 +91,7 @@
 			<div class="marker" device-id="1" >
 				<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8;">
 				</div>
-				<div>
-					<span class="heartrate-text">Heartrate</span>
-				</div>
+		
 			</div>
 			<img id="map" src="imgs/views/map/MRC.jpg">
 		</div>
@@ -200,7 +198,7 @@ console.log(temp_data)
 		//clear info when clicked elsewhere
 
 		//
-				$('#map').bind('tap', function(){
+				$('#map').bind('click', function(){
 					console.log('clear')
 					$('.drag_box').css('opacity', '1');
 					$('#info').empty();
@@ -208,8 +206,8 @@ console.log(temp_data)
 				});
 
 		$('.marker').bind('touchend click', function(){
-			var markerId = $(this).attr('device-id');
-			$('.drag_box').each(function(){
+			var markerId = $(this).attr('device-id')
+;			$('.drag_box').each(function(){
 				var dragBoxId = $(this).attr('device-id');
 				if(dragBoxId === markerId){
 							//-- change player info
