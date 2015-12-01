@@ -51,17 +51,24 @@
 			<li   class="drag_box" device-id="8">
 				<img src="imgs/heads/inge.png">
 				<h3>Ings</h3>      
-			</li>
-		</ul>
+				{{#each connectedDevices}}
+				<li   class="drag_box" device-id="{{this.id}}" >
+					<img src="{{this.rehabilitant.pictureUrl}}">
+					<h3>{{this.rehabilitant.GetFullName}}</h3>   
+				</li>
+				{{/each}}
+			</ul>
+		</div>
 	</div>
-</div>
-<div id="right_column">
-	<div id="header">
-		<h1>Speloverzicht</h1>
-	</div>
-	<div id="map_info_column">
 
-		<div id="info">
+
+	<div id="right_column">
+		<div id="header">
+			<h1>Speloverzicht</h1>
+		</div>
+		<div id="map_info_column">
+
+			<div id="info">
 			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
 		-->
@@ -88,10 +95,11 @@
 <section id="inverted-contain">
 	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
 		<div class="panzoom">
+			<div id="paths">
+			</div>
 			<div class="marker" device-id="1" >
 				<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8;">
 				</div>
-		
 			</div>
 			<img id="map" src="imgs/views/map/MRC.jpg">
 		</div>
@@ -151,7 +159,6 @@
 #info{
 	margin-top:20px;
 	width:calc(100% - 10px);
-	border-bottom:1px solid;
 	text-align: left;
 	font-size:12px;
 }
@@ -172,6 +179,14 @@
 	width: 100%; 
 	height: 100%; 
 }
+.path{
+	background: red;
+	position:absolute;
+
+	z-index:999;
+	width:100%;
+	height:100%;
+}
 .marker{
 	transform: matrix(0.2, 0, 0, 0.2, 500, 400);
 	cursor: pointer;
@@ -185,31 +200,53 @@
 </style>
 <script>
 var temp_data = [];
+var tempHeartRate = [90,99,93,90,90,94,95,98,99,101,102,103,103]
 temp_data = [
-{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug"},
+{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",loc:[{x:500,y:450},{x:450,y:435},{x:432,y:455},{x:422,y:510},{x:390,y:450},{x:380,y:470},{x:362,y:455}],hr:tempHeartRate},
 {id:2,name:"Ings",diagnose:"Diagnose: knie & rug"}
 ];
 
 var all_revs = [];
 
-console.log(temp_data)
-		//Temp 
-		//High light the right face in the list
-		//clear info when clicked elsewhere
+var colors = ["#66B3FF,#3B68FF","#FF5959","#FF8C8C","#E8D056"]
 
-		//
-				$('#map').bind('click', function(){
-					console.log('clear')
-					$('.drag_box').css('opacity', '1');
-					$('#info').empty();
+for(var i = 0; i < temp_data[0].loc.length;i++){
+	console.log(i)
+	//createPath(temp_data[0]);
+}
+		$('#paths').append('<svg width="500px" height="500px" style="position:absolute"> <path'+' d="'+createPath(temp_data[0])+'"stroke="'+(colors[Math.round(Math.random()*4)])+'" stroke-width="10" fill="none" />');
 
-				});
+	function createPath(_userData){
 
-		$('.marker').bind('touchend click', function(){
-			var markerId = $(this).attr('device-id')
-;			$('.drag_box').each(function(){
-				var dragBoxId = $(this).attr('device-id');
-				if(dragBoxId === markerId){
+
+		var path = "";
+
+		for(var i = 0; i < _userData.loc.length; i++){
+			if(i < 1){
+				path += " M";
+			}else{
+				path += " L";
+			}
+			path += _userData.loc[i].x+" ";
+			path += _userData.loc[i].y;
+		}
+		path += " ";
+		return path;
+	};
+
+
+$('#map').bind('click', function(){
+	console.log('clear')
+	$('.drag_box').css('opacity', '1');
+	$('#info').empty();
+
+});
+
+$('.marker').bind('touchend click', function(){
+	var markerId = $(this).attr('device-id')
+	;			$('.drag_box').each(function(){
+		var dragBoxId = $(this).attr('device-id');
+		if(dragBoxId === markerId){
 							//-- change player info
 							for(var i = 0; i < temp_data.length; i++){
 								console.log(temp_data[i].id);
@@ -224,35 +261,35 @@ console.log(temp_data)
 						}
 						
 					});
-		});
+});
 
 
-		$('.drag_box').bind('tap click', function(){
-			console.log('clicked on dragBox');
-			var dragBoxId = $(this).attr('device-id');
-				for(var i = 0; i < temp_data.length; i++){
-						if(temp_data[i].id === parseInt(dragBoxId)){
-						displayInfo(temp_data[i]);
-					}
-				}
-				if(temp_data.length < parseInt(dragBoxId)){
-					$('#info').empty();
-				}
-				$('.drag_box').each(function(){
-					if(dragBoxId === $(this).attr('device-id')){
-						$(this).css('opacity', '1');
-					}else{
-						$(this).css('opacity', '.3');
-	
-					}
-				});
-		});
+$('.drag_box').bind('tap click', function(){
+	console.log('clicked on dragBox');
+	var dragBoxId = $(this).attr('device-id');
+	for(var i = 0; i < temp_data.length; i++){
+		if(temp_data[i].id === parseInt(dragBoxId)){
+			displayInfo(temp_data[i]);
+		}
+	}
+	if(temp_data.length < parseInt(dragBoxId)){
+		$('#info').empty();
+	}
+	$('.drag_box').each(function(){
+		if(dragBoxId === $(this).attr('device-id')){
+			$(this).css('opacity', '1');
+		}else{
+			$(this).css('opacity', '.3');
+
+		}
+	});
+});
 
 
-		function displayInfo(_idData){
-			$('#info').empty();
-			$('#info').append("<h3>" + _idData.name + "</h3>");
-			$('#info').append("<p>" + _idData.diagnose + "</p>");
+function displayInfo(_idData){
+	$('#info').empty();
+	$('#info').append("<h3>" + _idData.name + "</h3>");
+	$('#info').append("<p>" + _idData.diagnose + "</p>");
 			//			$('#info').append("<p>" + _idData.diagnose + "</p>");
 
 		}

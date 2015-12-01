@@ -4,6 +4,10 @@
   font-family: 'Open Sans', sans-serif;
   color:#333;
 }
+@font-face {
+    font-family: bebas;
+    src: url(../fonts/BebasNeue.otf);
+}
 body, html {
   height: 100%;
   width: 100%;
@@ -16,7 +20,10 @@ body{
   background: #fdfdfd;
 }
 
-h1{}
+h1{    
+    font-family: bebas, impact, sans-serif;
+    font-size: 24px;
+    color:#689595;}
 h2{
     font-family: bebas, impact, sans-serif;
     font-size: 35px;
@@ -28,11 +35,6 @@ h3{
   font-size: 18px;
 }
 
-
-@font-face {
-    font-family: bebas;
-    src: url(../fonts/BebasNeue.otf);
-}
 .vertical_line{
   height: 100%;
   border-left: 1px solid #ffffff;
@@ -68,10 +70,6 @@ h3{
     margin-left:auto;
     margin-right:auto;
     text-align: center;
-}
-#header h1{
-  font-size: 20px;
-  background: #fff;
 }
 #menu_top{
   width:100%;

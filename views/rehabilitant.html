@@ -1,0 +1,263 @@
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+<style type="text/css">
+	.center_content{
+		margin: 0px auto;  
+		display: block;
+	}
+	.form_container{
+		width: auto;
+		height:auto; 
+		min-width: 1052px; 
+		background-color: #fafafa; 
+		border:1px solid #ededed; 
+		display: inline-block; 
+		margin-left: 0px auto; 
+		margin-right: 0px auto; 
+		overflow:scroll; 
+		margin-top:10px; 
+		font-size: 12px;
+	}
+	.form_wrapper{
+		width: 350px; 
+		overflow:hidden; 
+		float: left; 
+		padding:20px;
+	}
+	table{ 
+		font-size: 12px;
+	}
+	td{
+		padding: 5px;
+	}
+	input[type="submit"]{
+		width: auto; 
+		border:0;
+		padding: 10px 50px 10px 50px;
+	}
+	input[type="submit"]:hover{
+		background-color: #464646; 
+		color:#ffffff;
+	}
+	input[type="radio"]{
+		visibility: hidden; 
+		margin-left: 0px; 
+		display: none;
+	}
+	hr{
+		border-top: 1px solid #ffffff; 
+		border-bottom: 1px solid #ebebeb; 
+		width:90%;
+	}
+	.btn-file {
+		position: relative;
+		overflow: hidden;
+	}
+	.btn-file input[type=file] {
+		position: absolute;
+		top: 0;
+		right: 0;
+		min-width: 100%;
+		min-height: 100%;
+		font-size: 100px;
+		text-align: right;
+		filter: alpha(opacity=0);
+		opacity: 0;
+		outline: none;
+		background: white;
+		cursor: inherit;
+		display: block;
+	}
+	textarea{
+		resize:none;
+	}
+</style>
+
+
+<center>
+	
+	<div class= "form_container">
+
+		{{#if this.id}}
+		<form action="/update_rehabilitant" method="post">
+		{{else}}
+		<form action="/add_rehabilitant" method="post">		
+		{{/if}}
+			<input type="hidden" name="id" value="{{this.id}}"/>
+			<div class="form_wrapper">
+
+				<div class="img_container">
+					<img id="profile_pic" src="{{this.pictureUrl}}" alt="" class="hexagon"/>
+					<input type="hidden" name="picture_url" value="{{this.pictureUrl}}"/>
+				</div>
+				<br>
+				<br>
+				<label class="btn btn-default">
+					Upload foto
+					<div style="height:0; overflow:hidden;">
+						<input id="fileUpload" name='avatar' type='file' accept="image/*" class="btn-file" style="height=0"/>
+					</div>
+				</label>
+			</div>
+			<div class="form_wrapper">
+				<table >  
+					<tr>
+						<td>Voornaam:</td>
+						<td><input type="text" name="first_name" class="form-control" value="{{this.firstName}}"></td>
+					</tr>
+					<tr>
+						<td>Achternaam:</td>
+						<td><input type="text" name="last_name" class="form-control" value="{{this.lastName}}"></td>
+					</tr>
+					<tr>
+						<td>Geboortedatum:</td>
+						<td><input type="date" name="date_of_birth" class="form-control" value="{{this.dateOfBirth}}"></td>
+					</tr>
+					<tr>
+						<td>Geslacht:</td>
+						<td>
+							<div data-toggle="buttons">
+								<label class="btn btn-default {{#if this.IsMale}}active{{/if}}"> <input type="radio" name="gender" value="M" {{#if this.IsMale}}checked{{/if}}/> Man </label>
+								<label class="btn btn-default {{#if this.IsFemale}}active{{/if}}"> <input type="radio" name="gender" value="F" {{#if this.IsFemale}}checked{{/if}}/> Vrouw </label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>Trajectduur: </td>
+						<td>
+							<div data-toggle="buttons">
+								<label class="btn btn-default {{#if this.DurationShort}}active{{/if}}"> <input type="radio" name="course_duration" value="8" {{#if this.DurationShort}}checked{{/if}}/>8 weken </label>
+								<label class="btn btn-default {{#if this.DurationLong}}active{{/if}}"> <input type="radio" name="course_duration" value="15" {{#if this.DurationLong}}checked{{/if}}/>15 weken </label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>Cluster:</td>
+						<td>
+							<div data-toggle="buttons">
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="1" /> 1 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="2" /> 2 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="3" /> 3 </label>
+							<br>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="4" /> 4 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="5" /> 5 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="6" /> 6 </label>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		<div class= "form_wrapper" style="text-align:left;">
+			<table width="100%">
+				<tr>
+					<td>Diagnose: 
+						<textarea name="diagnosis" class="form-control" rows="3">{{this.diagnosis}}</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>Functie:
+						<input type="text" name="function" class="form-control" value="{{this.function}}"/>
+					</td>
+				</tr>
+				<tr>
+					<td>Doel:
+						<textarea name="goal" class="form-control" rows="3">{{this.goal}}</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>
+							<label for="amount">Hartslag:</label>
+							<p id ="hartslag_range"></p>
+						</p>
+						<div id="slider-range"></div>
+						<input type="hidden" name="min_heartrate" value="{{this.minHeartRate}}"/>
+						<input type="hidden" name="max_heartrate" value="{{this.maxHeartRate}}"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<br>
+			<input type="submit" value="Opslaan" class="btn btn-primary"/>
+		</form>
+	</div>
+
+</center>
+
+<script>
+
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				$('#profile_pic').attr('src', e.target.result)
+				$('input[name="picture_url"]').val(e.target.result);
+			};
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+	
+	var cluster;
+	function updateCluster(val) {
+		cluster = parseInt(val);
+		document.getElementById("cluster_text").innerHTML = "Gekozen cluster: " + cluster;
+	}
+	
+	$(function() {
+		var minVal = $("input[name='min_heartrate']").val();
+		var maxVal = $("input[name='max_heartrate']").val();
+		
+		$( "#slider-range" ).slider({
+			range: true,
+			min: 0,
+			max: 250,
+			values: [ minVal, maxVal ], //GET VALUES
+			slide: function( event, ui ) {
+				setHeartRateValues(ui.values);
+			}
+		});
+		
+		setHeartRateValues($("#slider-range").slider("values"));
+		
+		function setHeartRateValues(values){
+			$("#hartslag_range").html("Minimale hartslag: " + values[0] + " - maximale hartslag: " + values[1]);
+				
+			$("input[name='min_heartrate']").val(values[0]);
+			$("input[name='max_heartrate']").val(values[1]);
+		}
+		
+		//prevent accidental form submit on enter
+		$(window).keydown(function(event){
+			if( (event.keyCode == 13) ) {
+				event.preventDefault();
+				return false;
+			}
+		});
+		
+		$("#fileUpload").on("change", function(e){
+			var formData = new FormData();
+			formData.append('avatar', $("#fileUpload")[0].files[0]);
+			
+			$.ajax({
+				type: 'POST',
+				data: formData,
+				url: '/upload',
+				contentType: false,	
+				processData: false,				
+				success: function(data) {
+					$('#profile_pic').attr('src', data.path);
+					$('input[name="picture_url"]').val(data.path);
+				},
+				error: function(err){
+					console.log(err);
+				}
+			});
+		});
+	});
+
+</script>
