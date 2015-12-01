@@ -1,6 +1,7 @@
 var Game = require('./game')
 
 var Rehabilitant = function(){
+	var context = this;
 	this.id = 0;
 	this.firstName = '';
 	this.lastName = '';
@@ -18,33 +19,34 @@ var Rehabilitant = function(){
 	this.goal = '';
 	this.courseDuration = 0;
 	this.dateOfBirth = new Date();
+	
+	this.GetFullName = function(){
+		return context.firstName + ' ' + context.lastName;
+	};
+	
+	this.IsMale = function(){
+		return context.gender == 'M';
+	};
+
+	this.IsFemale = function(){
+		return context.gender == 'F';
+	};
+
+	this.DurationShort = function(){
+		return context.courseDuration == 8;
+	};
+	
+	this.DurationLong = function(){
+		return context.courseDuration == 15;
+	};
+	
+	this.GetCurrentHeartRate = function(){
+		for(var i=0; i<context.states.length; i++){
+			
+		}
+	};
 };
 
-Rehabilitant.prototype.GetFullName = function(){
-	return this.firstName + ' ' + this.lastName;
-}
-
-Rehabilitant.prototype.GetCurrentHeartRate = function(){
-	for(var i=0; i<this.states.length; i++){
-		
-	}
-}
-
-Rehabilitant.prototype.IsMale = function(){
-	return this.gender == 'M';
-}
-
-Rehabilitant.prototype.IsFemale = function(){
-	return this.gender == 'F';
-}
-
-Rehabilitant.prototype.DurationShort = function(){
-	return this.courseDuration == 8;
-}
-
-Rehabilitant.prototype.DurationLong = function(){
-	return this.courseDuration == 15;
-}
 
 Date.prototype.toString = function(){
 	return this.toISOString().substring(0, 10);

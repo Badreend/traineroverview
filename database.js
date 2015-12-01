@@ -54,7 +54,7 @@ module.exports = {
         });
     },
     
-    GetRehabilitantGroup: function(groupId, callback){
+    GetRehabilitantsInGroup: function(groupId, callback){
         var results = [];
         
         pg.connect(this.connectionString, function(err, client, done) {
@@ -251,29 +251,9 @@ module.exports = {
                 var commaDelimitedDeviceIds = game.connectedDevices.map(function(device){ return device.id; }).join(",");
                 
                 var query = client.query(
-"SELECT cd.id \"connected_device_id\" \
- ,cd.rehabilitant_id \"connected_device_rehabilitant_id\" \
- ,r.id \"rehabilitant_id\" \
- ,r.first_name \"rehabilitant_first_name\" \
- ,r.last_name \"rehabilitant_last_name\" \
- ,r.picture_url \"rehabilitant_picture_url\" \
- ,r.active \"rehabilitant_active\" \
- ,r.note \"rehabilitant_note\" \
- ,rs.id \"state_id\" \
- ,rs.game_id \"state_game_id\" \
- ,rs.rehabilitant_id \"state_rehabilitant_id\" \
- ,rs.heart_rate \"state_heart_rate\" \
- ,rs.gps_lat \"state_gps_lat\" \
- ,rs.gps_lon \"state_gps_lon\" \
- ,rs.map_x \"state_map_x\" \
- ,rs.map_y \"state_map_y\" \
- ,rs.heart_rate_level \"state_heart_rate_level\" \
- ,rs.state \"state_state\" \
- ,rs.timestamp \"state_timestamp\" \
-FROM connected_device cd \
-INNER JOIN rehabilitant r ON r.id = cd.rehabilitant_id \
-LEFT JOIN rehabilitant_state rs ON rs.rehabilitant_id = r.id \
-WHERE cd.id IN (" + commaDelimitedDeviceIds + ")");
+                    "SELECT * \
+                    FROM v_map_states \
+                    WHERE connected_device_id IN (" + commaDelimitedDeviceIds + ")");
                 
                 //var group = new Group();
                 var connectedDevices = [];
@@ -399,6 +379,17 @@ WHERE cd.id IN (" + commaDelimitedDeviceIds + ")");
            query.on('end', function(){
                done();
                callback(updatedId);
+           });
+        });
+    },
+    
+    ExitGame: function(gameId, callback){
+        pg.connect(this.connectionString, function(err, client, done){
+           var query = client.query("UPDATE game SET active = FALSE WHERE id = " + gameId);
+           
+           query.on('end', function(){
+               done();
+               callback();
            });
         });
     }
