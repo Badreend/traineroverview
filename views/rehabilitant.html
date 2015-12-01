@@ -1,8 +1,10 @@
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
+<script src="/js/jquery.ui.touch-punch.min.js"></script>
+<script>$('.ui-slider-handle').draggable();</script>
 
 <style type="text/css">
 	.center_content{
@@ -34,15 +36,7 @@
 	td{
 		padding: 5px;
 	}
-	input[type="submit"]{
-		width: auto; 
-		border:0;
-		padding: 10px 50px 10px 50px;
-	}
-	input[type="submit"]:hover{
-		background-color: #464646; 
-		color:#ffffff;
-	}
+
 	input[type="radio"]{
 		visibility: hidden; 
 		margin-left: 0px; 
@@ -75,6 +69,8 @@
 	textarea{
 		resize:none;
 	}
+
+
 </style>
 
 
@@ -82,17 +78,21 @@
 	
 	<div class= "form_container">
 
-		{{#if this.id}}
+		{{#if rehabilitant.id}}
 		<form action="/update_rehabilitant" method="post">
 		{{else}}
 		<form action="/add_rehabilitant" method="post">		
 		{{/if}}
-			<input type="hidden" name="id" value="{{this.id}}"/>
+			<input type="hidden" name="id" value="{{rehabilitant.id}}"/>
 			<div class="form_wrapper">
 
 				<div class="img_container">
-					<img id="profile_pic" src="{{this.pictureUrl}}" alt="" class="hexagon"/>
-					<input type="hidden" name="picture_url" value="{{this.pictureUrl}}"/>
+
+					<div class="hexagon">
+						<img id="profile_pic" src="{{rehabilitant.pictureUrl}}" alt=""/>
+					</div>
+					<input type="hidden" name="picture_url" value="{{rehabilitant.pictureUrl}}"/>
+
 				</div>
 				<br>
 				<br>
@@ -107,31 +107,39 @@
 				<table >  
 					<tr>
 						<td>Voornaam:</td>
-						<td><input type="text" name="first_name" class="form-control" value="{{this.firstName}}"></td>
+						<td><input type="text" name="first_name" class="form-control" value="{{rehabilitant.firstName}}"></td>
 					</tr>
 					<tr>
 						<td>Achternaam:</td>
-						<td><input type="text" name="last_name" class="form-control" value="{{this.lastName}}"></td>
+						<td><input type="text" name="last_name" class="form-control" value="{{rehabilitant.lastName}}"></td>
 					</tr>
 					<tr>
 						<td>Geboortedatum:</td>
-						<td><input type="date" name="date_of_birth" class="form-control" value="{{this.dateOfBirth}}"></td>
+						<td><input type="date" name="date_of_birth" class="form-control" value="{{rehabilitant.dateOfBirth}}"></td>
 					</tr>
 					<tr>
 						<td>Geslacht:</td>
 						<td>
 							<div data-toggle="buttons">
-								<label class="btn btn-default {{#if this.IsMale}}active{{/if}}"> <input type="radio" name="gender" value="M" {{#if this.IsMale}}checked{{/if}}/> Man </label>
-								<label class="btn btn-default {{#if this.IsFemale}}active{{/if}}"> <input type="radio" name="gender" value="F" {{#if this.IsFemale}}checked{{/if}}/> Vrouw </label>
+								<label class="btn btn-default {{#if rehabilitant.IsMale}}active{{/if}}"> <input type="radio" name="gender" value="M" {{#if rehabilitant.IsMale}}checked{{/if}}/> Man </label>
+								<label class="btn btn-default {{#if rehabilitant.IsFemale}}active{{/if}}"> <input type="radio" name="gender" value="F" {{#if rehabilitant.IsFemale}}checked{{/if}}/> Vrouw </label>
 							</div>
 						</td>
 					</tr>
 					<tr>
+						<td>Functie:</td>
+						<td> <input type="text" name="function" class="form-control" value="{{rehabilitant.function}}"/></td>
+					</tr>
+					<tr>
+						<td>Doel:</td>
+						<td><textarea name="goal" class="form-control" rows="3">{{rehabilitant.goal}}</textarea></td>
+
+						<!--
 						<td>Trajectduur: </td>
 						<td>
 							<div data-toggle="buttons">
-								<label class="btn btn-default {{#if this.DurationShort}}active{{/if}}"> <input type="radio" name="course_duration" value="8" {{#if this.DurationShort}}checked{{/if}}/>8 weken </label>
-								<label class="btn btn-default {{#if this.DurationLong}}active{{/if}}"> <input type="radio" name="course_duration" value="15" {{#if this.DurationLong}}checked{{/if}}/>15 weken </label>
+								<label class="btn btn-default {{#if rehabilitant.DurationShort}}active{{/if}}"> <input type="radio" name="course_duration" value="8" {{#if rehabilitant.DurationShort}}checked{{/if}}/>8 weken </label>
+								<label class="btn btn-default {{#if rehabilitant.DurationLong}}active{{/if}}"> <input type="radio" name="course_duration" value="15" {{#if rehabilitant.DurationLong}}checked{{/if}}/>15 weken </label>
 							</div>
 						</td>
 					</tr>
@@ -147,7 +155,7 @@
 								<label class="btn btn-default"> <input type="radio" name="cluster" value="5" /> 5 </label>
 								<label class="btn btn-default"> <input type="radio" name="cluster" value="6" /> 6 </label>
 							</div>
-						</td>
+						</td>-->
 					</tr>
 				</table>
 			</div>
@@ -155,18 +163,28 @@
 			<table width="100%">
 				<tr>
 					<td>Diagnose: 
-						<textarea name="diagnosis" class="form-control" rows="3">{{this.diagnosis}}</textarea>
+						<textarea name="diagnosis" class="form-control" rows="3">{{rehabilitant.diagnosis}}</textarea>
 					</td>
 				</tr>
 				<tr>
-					<td>Functie:
-						<input type="text" name="function" class="form-control" value="{{this.function}}"/>
-					</td>
-				</tr>
-				<tr>
-					<td>Doel:
-						<textarea name="goal" class="form-control" rows="3">{{this.goal}}</textarea>
-					</td>
+					<td>Trajectduur:
+							<div data-toggle="buttons">
+								<label class="btn btn-default {{#if this.DurationShort}}active{{/if}}"> <input type="radio" name="course_duration" value="8" {{#if this.DurationShort}}checked{{/if}}/>8 weken </label>
+								<label class="btn btn-default {{#if this.DurationLong}}active{{/if}}"> <input type="radio" name="course_duration" value="15" {{#if this.DurationLong}}checked{{/if}}/>15 weken </label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>Cluster:
+							<div data-toggle="buttons">
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="1" /> 1 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="2" /> 2 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="3" /> 3 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="4" /> 4 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="5" /> 5 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="6" /> 6 </label>
+							</div>
+						</td>
 				</tr>
 				<tr>
 					<td>
@@ -175,21 +193,32 @@
 							<p id ="hartslag_range"></p>
 						</p>
 						<div id="slider-range"></div>
-						<input type="hidden" name="min_heartrate" value="{{this.minHeartRate}}"/>
-						<input type="hidden" name="max_heartrate" value="{{this.maxHeartRate}}"/>
+						<input type="hidden" name="min_heartrate" value="{{rehabilitant.minHeartRate}}"/>
+						<input type="hidden" name="max_heartrate" value="{{rehabilitant.maxHeartRate}}"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="selectedGroup">Selecteer groep:</label>
+						<select class="form-control" id="selectedGroup">
+    						<option value="maandagWoensdag" >Maandag - Woensdag</option>
+    						<option value="donderdagVrijdag">Donderdag - Vrijdag</option>
+  						</select>
 					</td>
 				</tr>
 			</table>
 		</div>
 
 		<br>
-			<input type="submit" value="Opslaan" class="btn btn-primary"/>
+		<input type="button" value="Annuleren" class="btn btn-default" data-dismiss="modal"/>
+		<input type="submit" value="Opslaan" class="btn btn-primary"/>
 		</form>
 	</div>
 
 </center>
 
 <script>
+
 
 	function readURL(input) {
 		if (input.files && input.files[0]) {
@@ -209,8 +238,15 @@
 	}
 	
 	$(function() {
-		var minVal = $("input[name='min_heartrate']").val();
-		var maxVal = $("input[name='max_heartrate']").val();
+		var minVal = 80;
+		var maxVal = 180;
+
+		{{#if this.id}}
+			minVal = $("input[name='min_heartrate']").val();
+			maxVal = $("input[name='max_heartrate']").val();
+		{{/if}}
+		
+
 		
 		$( "#slider-range" ).slider({
 			range: true,
@@ -259,5 +295,7 @@
 			});
 		});
 	});
+
+
 
 </script>

@@ -184,16 +184,27 @@ h3{
   padding: 19px;
   }
 
-.img_container img{
-  width: 210px;
-  height: 162px;
-}
 
  .hexagon {
+    width: 210px;
+    height: 162px;
+    -webkit-clip-path: url("#polygon-clip-hexagon");
+    clip-path: url("#polygon-clip-hexagon");
+    overflow: hidden;
+    margin:0 auto;
+  }
 
-        -webkit-clip-path: url("#polygon-clip-hexagon");
-        clip-path: url("#polygon-clip-hexagon");
-    }
+
+
+.hexagon img.tall {
+    width: 100%;
+    height: auto;
+}
+
+.hexagon img.wide {
+    height: 100%;
+    width: auto;
+}
 
 
 
@@ -312,6 +323,15 @@ nav.active { left: 0; }
   z-index: 30;
 }
 
+.groups_container {
+    display: table;
+    white-space: nowrap;
+    text-align: center;
+    margin: 0 auto;
+
+}
+
+/*
 .groups_container{
     width: 100%;
     float: left;
@@ -319,6 +339,7 @@ nav.active { left: 0; }
     overflow: scroll;
     padding:0 5% 0 5%;
 }
+*/
 .group_wrapper{
     margin:50px;
     width:250px;

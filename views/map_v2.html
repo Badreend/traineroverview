@@ -8,67 +8,29 @@
 
 </style>
 
-<div id="rev_colulmn">
+<!--div id="rev_colulmn">
 	<div id="groupName"> Groep Wo/Vr</div>
 	<div id="rev_list">
 		<ul id="draglist" style="height:280px">
-
-			<li   class="drag_box" device-id="1" >
-				<img src="imgs/heads/moniek.png">
-				<h3>Momo Niek</h3>   
+			{{#each connectedDevices}}
+			<li   class="drag_box" device-id="{{this.id}}" >
+				<img src="{{this.rehabilitant.pictureUrl}}">
+				<h3>{{this.rehabilitant.GetFullName}}</h3>   
 			</li>
-
-			<li   class="drag_box" device-id="2" >
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="3">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="4">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>    
-			</li>
-
-			<li   class="drag_box" device-id="5">
-				<img src="imgs/heads/badr.png">
-				<h3>Bada man</h3>    
-			</li>
-
-			<li   class="drag_box" device-id="6">
-				<img src="imgs/heads/badr.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="7">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>      
-			</li>
-
-			<li   class="drag_box" device-id="8">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>      
-				{{#each connectedDevices}}
-				<li   class="drag_box" device-id="{{this.id}}" >
-					<img src="{{this.rehabilitant.pictureUrl}}">
-					<h3>{{this.rehabilitant.GetFullName}}</h3>   
-				</li>
-				{{/each}}
-			</ul>
-		</div>
+			{{/each}}
+		</ul>
 	</div>
+</div-->
 
+{{> rehabilitantlist }}
 
-	<div id="right_column">
-		<div id="header">
-			<h1>Speloverzicht</h1>
-		</div>
-		<div id="map_info_column">
+<div id="right_column">
+	<div id="header">
+		<h1>Speloverzicht</h1>
+	</div>
+	<div id="map_info_column">
 
-			<div id="info">
+		<div id="info">
 			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
 		-->
@@ -95,13 +57,16 @@
 <section id="inverted-contain">
 	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
 		<div class="panzoom">
-			<div id="paths">
-			</div>
-			<div class="marker" device-id="1" >
+			{{#each connectedDevices}}
+			<div class="marker" device-id="{{this.id}}" >
 				<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8;">
 				</div>
+				<div>
+					<span class="heartrate-text">Heartrate</span>
+				</div>
 			</div>
-			<img id="map" src="imgs/views/map/MRC.jpg">
+			{{/each}}
+			<img id="map" src="imgs/views/map/Kaart.svg">
 		</div>
 	</div>
 </div>
@@ -199,6 +164,22 @@
 }
 </style>
 <script>
+	function updateClock ( ){
+		var currentTime = new Date ( );
+		var currentHours = currentTime.getHours ( );
+		var currentMinutes = currentTime.getMinutes ( );
+		currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
+	
+		var currentTimeString = currentHours + ":" + currentMinutes;
+		
+		$("#game_timer").html(currentTimeString);
+	}
+
+	$(document).ready(function()
+	{
+		setInterval('updateClock()', 1000);
+	});
+	
 var temp_data = [];
 var tempHeartRate = [90,99,93,90,90,94,95,98,99,101,102,103,103]
 temp_data = [
@@ -298,9 +279,9 @@ function displayInfo(_idData){
 
 
 
-		var pixelMeterRatio = 1.44;
-		var originX = 530;
-		var originY = 900;
+		var pixelMeterRatio = 1.73;
+		var originX = 745;
+		var originY = 918;
 		var markerScale = 0.5;
 		
 		(function() {	

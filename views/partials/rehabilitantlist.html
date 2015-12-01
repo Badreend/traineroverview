@@ -1,0 +1,23 @@
+<!-- This partial need the parent to have groupname = '', 
+	connectedDevices = [{id,rehabilitant},etc.] OR rehabilitants = [{first_name,last_name},etc.] -->
+<div id="rev_colulmn" style="z-index:999;">
+	<div id="groupName">{{this.groupname}}</div>
+	<div id="rev_list">
+		<ul id="draglist" style="height:280px">
+			{{#each connectedDevices}}
+			<li class="drag_box" device-id="{{this.id}}" >
+				<img src="{{this.rehabilitant.pictureUrl}}">
+				<h3>{{this.rehabilitant.GetFullName}}</h3>   
+			</li>
+			{{/each}}
+			{{#each rehabilitants}}
+			<li class="drag_box" device-id="" >
+				<a href="/rehabilitant?id={{this.id}}" data-toggle="modal" data-target="#myModal">
+					<img src="{{this.pictureUrl}}">
+					<h3>{{this.GetFullName}}</h3>
+				</a>
+			</li>
+			{{/each}}
+		</ul>
+	</div>
+</div>

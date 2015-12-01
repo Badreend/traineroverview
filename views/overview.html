@@ -19,12 +19,15 @@
         </ul>
     </div>
     {{/each}}
-
+    {{#unless game.connectedDevices}}
+    <center>
+        <h1>Wachten op devices...</h1>
+    </center>
+    {{/unless}}
 </div>
-<div style="position:fixed; bottom:0; width:100%; text-align:center;"><a href="/map_v2"><button class="btn btn-primary">Start Game</button></div>
-
-
-
+<div style="position:fixed; bottom:0; width:100%; text-align:center;">
+    <a href="javascript:sendstart();" class="btn btn-primary">Start Game</a>
+</div>
 
 <script src="js/Sortable.js"></script>
 
@@ -35,6 +38,13 @@
 $(document).ready(function(){
     resort();
 });
+
+var socket = io.connect();
+
+function sendstart(){
+    socket.emit('pressedStart',"aids");
+    window.location = '/map_v2';
+}
 
 function resort(){
     $('ul').sortable({
