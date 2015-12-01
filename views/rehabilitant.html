@@ -3,6 +3,10 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+<script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
+<script src="/js/jquery.ui.touch-punch.min.js"></script>
+<script>$('.ui-slider-handle').draggable();</script>
 
 <style type="text/css">
 	.center_content{
@@ -75,6 +79,8 @@
 	textarea{
 		resize:none;
 	}
+
+
 </style>
 
 
@@ -91,7 +97,9 @@
 			<div class="form_wrapper">
 
 				<div class="img_container">
-					<img id="profile_pic" src="{{this.pictureUrl}}" alt="" class="hexagon"/>
+					<div class="hexagon">
+						<img id="profile_pic" src="{{this.pictureUrl}}" alt=""/>
+					</div>
 					<input type="hidden" name="picture_url" value="{{this.pictureUrl}}"/>
 				</div>
 				<br>
@@ -127,6 +135,14 @@
 						</td>
 					</tr>
 					<tr>
+						<td>Functie:</td>
+						<td> <input type="text" name="function" class="form-control" value="{{this.function}}"/></td>
+					</tr>
+					<tr>
+						<td>Doel:</td>
+						<td><textarea name="goal" class="form-control" rows="3">{{this.goal}}</textarea></td>
+
+						<!--
 						<td>Trajectduur: </td>
 						<td>
 							<div data-toggle="buttons">
@@ -147,7 +163,7 @@
 								<label class="btn btn-default"> <input type="radio" name="cluster" value="5" /> 5 </label>
 								<label class="btn btn-default"> <input type="radio" name="cluster" value="6" /> 6 </label>
 							</div>
-						</td>
+						</td>-->
 					</tr>
 				</table>
 			</div>
@@ -159,14 +175,24 @@
 					</td>
 				</tr>
 				<tr>
-					<td>Functie:
-						<input type="text" name="function" class="form-control" value="{{this.function}}"/>
-					</td>
-				</tr>
-				<tr>
-					<td>Doel:
-						<textarea name="goal" class="form-control" rows="3">{{this.goal}}</textarea>
-					</td>
+					<td>Trajectduur:
+							<div data-toggle="buttons">
+								<label class="btn btn-default {{#if this.DurationShort}}active{{/if}}"> <input type="radio" name="course_duration" value="8" {{#if this.DurationShort}}checked{{/if}}/>8 weken </label>
+								<label class="btn btn-default {{#if this.DurationLong}}active{{/if}}"> <input type="radio" name="course_duration" value="15" {{#if this.DurationLong}}checked{{/if}}/>15 weken </label>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>Cluster:
+							<div data-toggle="buttons">
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="1" /> 1 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="2" /> 2 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="3" /> 3 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="4" /> 4 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="5" /> 5 </label>
+								<label class="btn btn-default"> <input type="radio" name="cluster" value="6" /> 6 </label>
+							</div>
+						</td>
 				</tr>
 				<tr>
 					<td>
@@ -177,6 +203,15 @@
 						<div id="slider-range"></div>
 						<input type="hidden" name="min_heartrate" value="{{this.minHeartRate}}"/>
 						<input type="hidden" name="max_heartrate" value="{{this.maxHeartRate}}"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="selectedGroup">Selecteer groep:</label>
+						<select class="form-control" id="selectedGroup">
+    						<option value="maandagWoensdag" >Maandag - Woensdag</option>
+    						<option value="donderdagVrijdag">Donderdag - Vrijdag</option>
+  						</select>
 					</td>
 				</tr>
 			</table>
@@ -190,6 +225,7 @@
 </center>
 
 <script>
+
 
 	function readURL(input) {
 		if (input.files && input.files[0]) {
@@ -209,8 +245,15 @@
 	}
 	
 	$(function() {
-		var minVal = $("input[name='min_heartrate']").val();
-		var maxVal = $("input[name='max_heartrate']").val();
+		var minVal = 80;
+		var maxVal = 180;
+
+		{{#if this.id}}
+			minVal = $("input[name='min_heartrate']").val();
+			maxVal = $("input[name='max_heartrate']").val();
+		{{/if}}
+		
+
 		
 		$( "#slider-range" ).slider({
 			range: true,
@@ -259,5 +302,7 @@
 			});
 		});
 	});
+
+
 
 </script>

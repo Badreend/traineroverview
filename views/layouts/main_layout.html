@@ -28,6 +28,8 @@
 
     <script type="text/javascript">
 
+
+
     if ( !window.requestAnimationFrame ) {
 
         window.requestAnimationFrame = ( function() {
@@ -50,6 +52,14 @@
             $('nav').toggleClass('active');
         });
     });
+
+
+$(window).load(function() {
+    $('.hexagon').find('img').each(function() {
+        var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
+        $(this).addClass(imgClass);
+    })
+})
 
 
 </script>
