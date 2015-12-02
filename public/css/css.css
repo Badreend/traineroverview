@@ -35,6 +35,8 @@ h3{
   font-size: 18px;
 }
 
+
+
 .vertical_line{
   height: 100%;
   border-left: 1px solid #ffffff;
@@ -184,6 +186,16 @@ h3{
   padding: 19px;
   }
 
+  .img_container_small{
+  width: 124px;
+  height: 102px;
+  background-image: url(../imgs/shared/Splash_Screen_Frame.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding: 10px;
+  margin: 0px auto;
+  }
+
 
  .hexagon {
     width: 210px;
@@ -192,16 +204,26 @@ h3{
     clip-path: url("#polygon-clip-hexagon");
     overflow: hidden;
     margin:0 auto;
+    z-index:10;
+  }
+
+.hexagon_small {
+    width: 100px;
+    height: 82px;
+    -webkit-clip-path: url("#polygon-clip-hexagon");
+    clip-path: url("#polygon-clip-hexagon");
+    overflow: hidden;
+    margin:0 auto;
+    z-index: 10;
   }
 
 
-
-.hexagon img.tall {
+.hexagon img.tall, .hexagon_small img.tall{
     width: 100%;
     height: auto;
 }
 
-.hexagon img.wide {
+.hexagon img.wide, .hexagon_small img.wide{
     height: 100%;
     width: auto;
 }
@@ -422,8 +444,6 @@ nav.active { left: 0; }
 }
 .drag_box img{
   width:100px;
-  border-radius: 50%;
-  border: 3px solid #ededed;
 }
 
 
@@ -437,28 +457,29 @@ nav.active { left: 0; }
   overflow: scroll;
 }
 .drop_box_container{
+  background-image: url(/imgs/shared/Spelopzet_Frame.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
     text-align: center;
   width:160px;
   height:145px;
-  margin:0 10 10 10;
   margin:50px;
   float:left;
-  border:1px solid #E8905D;
+  padding-top: 20px;
 }
 .drop_box {
     text-align: center;
-  width:160px;
+  width:165px;
   height:145px;
   float:left;
 }
 .drop_box_container p{
+  position: absolute;
   margin-left:auto;
   margin-right:auto;
-  margin-left:10px;
-  margin-top:50px;
-   background-color: rgba(255, 255, 255, 0.6);
-  width:130px;
-  float: left;
+  margin-top:40px;
+  width: 160px;
+
 }
 
 ul

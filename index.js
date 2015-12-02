@@ -68,6 +68,7 @@ app.get('/test', checkAuth, function(req, res){
 app.get('/group-overview', checkAuth, function(req, res){
     db.GetGroups(function(groups){
         res.render('group-overview',{ groups: groups });
+        //res.render('group-overview',{ groups: null });
     });
 });
 
@@ -77,6 +78,7 @@ app.get('/rehabilitant', checkAuth, function(req, res){
     
     if(rehabilitantId != null){
         db.GetRehabilitant(rehabilitantId, function(rehabilitant){
+            //res.render('rehabilitant', {rehabilitant:null, layout: null});
             res.render('rehabilitant', {rehabilitant:rehabilitant, layout: null});
         });
     }else{
@@ -155,6 +157,10 @@ app.get('/map', checkAuth, function(req, res){
 
 app.get('/', function(req, res){
     res.render('splash', {layout: null});
+});
+
+app.get('/unavailable', function(req, res){
+    res.render('unavailable', {layout:null});
 });
 
 app.get('/login', function(req, res){
@@ -287,6 +293,8 @@ var port = process.env.PORT || 5000;
 http.listen(port, function(){
   console.log('Server is Online');
 });
+
+
 
 function checkAuth(req, res, next) {
     //TODO: remove de regel hier onder
