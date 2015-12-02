@@ -1,5 +1,6 @@
 <script src="js/plugins/panzoom.js"></script>
 <script src="js/plugins/pointertouch.js"></script>
+<script src="js/d3.min.js"></script>
 <style type="text/css">
 
 .drag_box img{
@@ -8,29 +9,28 @@
 
 </style>
 
-<!--div id="rev_colulmn">
+<div id="rev_colulmn">
 	<div id="groupName"> Groep Wo/Vr</div>
 	<div id="rev_list">
-		<ul id="draglist" style="height:280px">
-			{{#each connectedDevices}}
-			<li   class="drag_box" device-id="{{this.id}}" >
-				<img src="{{this.rehabilitant.pictureUrl}}">
-				<h3>{{this.rehabilitant.GetFullName}}</h3>   
-			</li>
-			{{/each}}
-		</ul>
+		<ul id="draglist" style="height:280px">     
+				{{#each connectedDevices}}
+				<li   class="drag_box" device-id="{{this.id}}" >
+					<img src="{{this.rehabilitant.pictureUrl}}">
+					<h3>{{this.rehabilitant.GetFullName}}</h3>   
+				</li>
+				{{/each}}
+			</ul>
+		</div>
 	</div>
-</div-->
 
-{{> rehabilitantlist }}
 
-<div id="right_column">
-	<div id="header">
-		<h1>Speloverzicht</h1>
-	</div>
-	<div id="map_info_column">
+	<div id="right_column">
+		<div id="header">
+			<h1>Speloverzicht</h1>
+		</div>
+		<div id="map_info_column">
 
-		<div id="info">
+			<div id="info">
 			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
 		-->
@@ -57,12 +57,11 @@
 <section id="inverted-contain">
 	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
 		<div class="panzoom">
+			<svg width="500px" height="800px" style="position:absolute" id="paths">
+			</svg>
 			{{#each connectedDevices}}
 			<div class="marker" device-id="{{this.id}}" >
 				<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8;">
-				</div>
-				<div>
-					<span class="heartrate-text">Heartrate</span>
 				</div>
 			</div>
 			{{/each}}
@@ -164,58 +163,75 @@
 }
 </style>
 <script>
-	function updateClock ( ){
-		var currentTime = new Date ( );
-		var currentHours = currentTime.getHours ( );
-		var currentMinutes = currentTime.getMinutes ( );
-		currentMinutes = ( currentMinutes < 10 ? "0" : "" ) + currentMinutes;
-	
-		var currentTimeString = currentHours + ":" + currentMinutes;
-		
-		$("#game_timer").html(currentTimeString);
-	}
-
-	$(document).ready(function()
-	{
-		setInterval('updateClock()', 1000);
-	});
-	
 var temp_data = [];
-var tempHeartRate = [90,99,93,90,90,94,95,98,99,101,102,103,103]
 temp_data = [
-{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",loc:[{x:500,y:450},{x:450,y:435},{x:432,y:455},{x:422,y:510},{x:390,y:450},{x:380,y:470},{x:362,y:455}],hr:tempHeartRate},
+{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",min:90,max:135,loc:[{t:undefined,h:95,x:500,y:450},{t:undefined,h:150,x:450,y:435},{t:undefined,h:110,x:432,y:455},{t:undefined,h:120,x:422,y:510},{t:undefined,h:140,x:390,y:450},{t:undefined,h:145,x:380,y:470},{t:undefined,h:70,x:362,y:505},{t:undefined,h:30,x:322,y:500},]},
 {id:2,name:"Ings",diagnose:"Diagnose: knie & rug"}
 ];
 
 var all_revs = [];
 
-var colors = ["#66B3FF,#3B68FF","#FF5959","#FF8C8C","#E8D056"]
-
-for(var i = 0; i < temp_data[0].loc.length;i++){
-	console.log(i)
-	//createPath(temp_data[0]);
-}
-		$('#paths').append('<svg width="500px" height="500px" style="position:absolute"> <path'+' d="'+createPath(temp_data[0])+'"stroke="'+(colors[Math.round(Math.random()*4)])+'" stroke-width="10" fill="none" />');
-
-	function createPath(_userData){
+var colors = ["#0281A1","#FFFF03","#B80202"];
 
 
-		var path = "";
+createPath(temp_data[0]);
+function createPath(_userData){
+	var path = "";
+	var prevColor = undefined;
+	var prevHeartRate = undefined;
+	for(var i = 0; i < _userData.loc.length; i++){
+		var color = undefined;
 
-		for(var i = 0; i < _userData.loc.length; i++){
-			if(i < 1){
-				path += " M";
-			}else{
-				path += " L";
-			}
+		if(_userData.loc[i].h < _userData.min){
+			color = colors[0];
+			console.log('low')
+		}else if(_userData.loc[i].h > _userData.max){
+			color = colors[2];
+			console.log('high')
+
+		}else{
+			color = colors[1];
+			console.log('normal')
+
+		}
+
+		if(path === ""){
+			path += "M";
+			prevHeartRate = _userData.loc[i].h;
+		}else
+{			path += "L";
+		}
+		path += _userData.loc[i].x+" ";
+		path += _userData.loc[i].y+" ";
+		;
+
+		if(prevColor !== color || prevColor !== undefined){
+			drawPath(path,prevColor,prevHeartRate);
+			path = "";
+			path += "M";
 			path += _userData.loc[i].x+" ";
-			path += _userData.loc[i].y;
+			path += _userData.loc[i].y+" ";
 		}
 		path += " ";
-		return path;
-	};
+		prevColor = color;
+		console.log(" ");
+	}
 
+	//	drawPath(path,color);
+};
 
+function drawPath(_path,_color,_avrHeartrate){
+	var pathContainer = d3.select("#paths");
+	pathContainer.append("svg:path")
+	.attr("d",_path)
+	.attr("stroke",_color)
+	.attr("title",_avrHeartrate)
+	.attr("stroke-width",10)
+	.attr("fill","none")
+	.attr("stroke-linejoin","round")
+	.attr("stroke-linecap","round")
+	;
+}
 $('#map').bind('click', function(){
 	console.log('clear')
 	$('.drag_box').css('opacity', '1');
@@ -279,9 +295,9 @@ function displayInfo(_idData){
 
 
 
-		var pixelMeterRatio = 1.73;
-		var originX = 745;
-		var originY = 918;
+		var pixelMeterRatio = 1.44;
+		var originX = 530;
+		var originY = 900;
 		var markerScale = 0.5;
 		
 		(function() {	
@@ -348,3 +364,5 @@ socket.on('dataClient', function(data){
 	//scaleX	skewX	skewY	scaleY	posX		posY
 	</script>
 </section>
+
+
