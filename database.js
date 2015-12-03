@@ -252,6 +252,8 @@ module.exports = {
                 
                 if(client == null){
                     console.log("client null! " + err);
+                    callback([{id: 44, rehabilitant_id:1, rehabilitant: {id:1}}]);
+                    return;
                 }
                 
                 var query = client.query(
