@@ -9,136 +9,199 @@
 
 </style>
 
-<div id="rev_colulmn">
-	<div id="groupName"> Groep Wo/Vr</div>
-	<div id="rev_list">
-		<ul id="draglist" style="height:280px">
+{{> rehabilitantlist }}
 
-			<li   class="drag_box" device-id="1" >
-				<img src="imgs/heads/moniek.png">
-				<h3>Momo Niek</h3>   
-			</li>
-
-			<li   class="drag_box" device-id="2" >
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="3">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="4">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>    
-			</li>
-
-			<li   class="drag_box" device-id="5">
-				<img src="imgs/heads/badr.png">
-				<h3>Bada man</h3>    
-			</li>
-
-			<li   class="drag_box" device-id="6">
-				<img src="imgs/heads/badr.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="7">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>      
-			</li>
-
-			<li   class="drag_box" device-id="8">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>      
-				{{#each connectedDevices}}
-				<li   class="drag_box" device-id="{{this.id}}" >
-					<img src="{{this.rehabilitant.pictureUrl}}">
-					<h3>{{this.rehabilitant.GetFullName}}</h3>   
-				</li>
-				{{/each}}
-			</ul>
-		</div>
+<div id="right_column">
+	<div id="header">
+		<h1>Speloverzicht</h1>
 	</div>
+	<div id="map_info_column">
 
-
-	<div id="right_column">
-		<div id="header">
-			<h1>Speloverzicht</h1>
-		</div>
-		<div id="map_info_column">
-
-			<div id="info">
+		<div id="info">
 			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
 		-->
 	</div>
 </div>
+<div id="legend">
+	<div id="game_timer">
+		20:01
+	</div>
+	<div>
+		<div id="phase1">
+			KOUD
+		</div>
+		<div id="phase2">
+			GOED
+		</div>
+		<div id="phase3">
+			WARM
+		</div>
+	</div>
+</div>
+
 
 <section id="inverted-contain">
 	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
 		<div class="panzoom">
 			<svg width="500px" height="800px" style="position:absolute" id="paths">
-				
 			</svg>
-			<div class="marker" device-id="1" >
+			{{#each connectedDevices}}
+			<div class="marker" device-id="{{this.id}}" >
 				<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8;">
 				</div>
 			</div>
-			<img id="map" src="imgs/views/map/MRC.jpg">
+			{{/each}}
+			<img id="map" src="imgs/views/map/Kaart.svg">
 		</div>
 	</div>
 </div>
+
+
+
+<style>
+
+#legend{
+	width:200px;
+	height:110px;
+	position: absolute;
+	z-index: 99;
+	bottom:0px;
+	background: rgba(255,255,255,.9);
+	padding-left:10px;
+	text-align: center;
+	padding-top:10px;
+}
+#phase1{
+	width:58px;
+	position: relative;
+	float:left;
+	border-top:10px solid #77a4d6;
+	color:#77a4d6;
+	font-weight:bold;			
+}
+#phase2{
+	width:58px;
+	position: relative;
+	float:left;
+	border-top:10px solid #fddf29;
+	color:#fddf29;
+	font-weight:bold;
+}
+#phase3{
+	width:58px;
+	position: relative;
+	float:left;
+	border-top:10px solid #c66958;
+	color:#c66958;
+	font-weight:bold;
+}
+#map_info_column{
+	width:200px;
+	position: absolute;
+	z-index: 99;
+	background: rgba(255,255,255,.8);
+	margin-top:50px;
+	padding-bottom:20px;
+
+	padding-left:10px;
+}
+
+#info{
+	margin-top:20px;
+	width:calc(100% - 10px);
+	text-align: left;
+	font-size:12px;
+}
+#game_timer{
+	margin-top:10px;
+	margin-bottom:10px;
+	width:calc(100% - 10px);
+	border-bottom:1px solid;
+	border-top:1px solid;
+
+	text-align: center;
+	font-size:32px;
+}
+
+
+#inverted-contain .panzoom-parent
+{ 
+	width: 100%; 
+	height: 100%; 
+}
+.path{
+	background: red;
+	position:absolute;
+
+	z-index:999;
+	width:100%;
+	height:100%;
+}
+.marker{
+	transform: matrix(0.2, 0, 0, 0.2, 500, 400);
+	cursor: pointer;
+	position: absolute; 
+	z-index: 999;
+	text-align: center;
+}
+.marker .heartrate-text{
+	color: red;
+}
+</style>
 <script>
 var temp_data = [];
-var margin = 30;
 temp_data = [
-{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",min:90,max:135,loc:[{t:undefined,h:95,x:500,y:450},{t:undefined,h:150,x:450,y:435},{t:undefined,h:110,x:432,y:455},{t:undefined,h:120,x:422,y:510},{t:undefined,h:140,x:390,y:450},{t:undefined,h:145,x:380,y:470},{t:undefined,h:70,x:362,y:505},{t:undefined,h:30,x:322,y:500},]},
+{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",min:90,max:135,loc:[
+	{t:undefined,h:95,x:500,y:450},
+	{t:undefined,h:150,x:450,y:435},
+	{t:undefined,h:110,x:432,y:455},
+	{t:undefined,h:120,x:422,y:510},
+	{t:undefined,h:140,x:390,y:450},
+	{t:undefined,h:145,x:380,y:470},
+	{t:undefined,h:70,x:362,y:505},
+	{t:undefined,h:30,x:322,y:500},]},
 {id:2,name:"Ings",diagnose:"Diagnose: knie & rug"}
 ];
 
 var all_revs = [];
 
-var colors = ["#3D7BF7","#36FFAC","#FFEC38","#CC833B","#EB564B"];
+var colors = ["#0281A1","#FFFF03","#B80202"];
 
 
-createPath(temp_data[0]);
+//createPath(temp_data[0]);
 function createPath(_userData){
 	var path = "";
 	var prevColor = undefined;
-	var newline = true;
+	var prevHeartRate = undefined;
 	for(var i = 0; i < _userData.loc.length; i++){
-
 		var color = undefined;
 
 		if(_userData.loc[i].h < _userData.min){
-			if(_userData.loc[i].h < _userData.min-margin){
-				color = colors[0];
-			}else{
-				color = colors[1];
-			}
+			color = colors[0];
+			console.log('low')
 		}else if(_userData.loc[i].h > _userData.max){
-			if(_userData.loc[i].h > _userData.max+margin){
-				color = colors[4];
-			}else{
-				color = colors[3];
-			}
-		}else{
 			color = colors[2];
+			console.log('high')
+
+		}else{
+			color = colors[1];
+			console.log('normal')
+
 		}
 
 		if(path === ""){
 			path += "M";
-		}else{
-			path += "L";
+			prevHeartRate = _userData.loc[i].h;
+		}else
+{			path += "L";
 		}
 		path += _userData.loc[i].x+" ";
 		path += _userData.loc[i].y+" ";
 		;
 
 		if(prevColor !== color || prevColor !== undefined){
-			drawPath(path,prevColor);
+			drawPath(path,prevColor,prevHeartRate);
 			path = "";
 			path += "M";
 			path += _userData.loc[i].x+" ";
@@ -152,11 +215,12 @@ function createPath(_userData){
 	//	drawPath(path,color);
 };
 
-function drawPath(_path,_color){
+function drawPath(_path,_color,_avrHeartrate){
 	var pathContainer = d3.select("#paths");
 	pathContainer.append("svg:path")
 	.attr("d",_path)
 	.attr("stroke",_color)
+	.attr("title",_avrHeartrate)
 	.attr("stroke-width",10)
 	.attr("fill","none")
 	.attr("stroke-linejoin","round")
@@ -223,12 +287,10 @@ function displayInfo(_idData){
 		}
 		//----
 
+		var pixelMeterRatio = 1.73;
+		var originX = 745;
+		var originY = 918;
 
-
-
-		var pixelMeterRatio = 1.44;
-		var originX = 530;
-		var originY = 900;
 		var markerScale = 0.5;
 		
 		(function() {	
@@ -289,6 +351,8 @@ socket.on('dataClient', function(data){
 		mat[5] = originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
 
 		$(deviceMarker).css("transform", arrayToMatrix(mat));	
+
+		createPath({id:device_id, name:"test",diagnose:"boeie",min:120,max:160,loc:[{t:undefined,h:heartrate,x:x,y:y}]});
 	});
 
 	//[ "1.1",	"0", 	"0", 	"1.1", 	"-87.65", 	"62" ]

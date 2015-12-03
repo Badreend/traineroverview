@@ -15,8 +15,6 @@
 		width: auto;
 		height:auto; 
 		min-width: 1052px; 
-		background-color: #fafafa; 
-		border:1px solid #ededed; 
 		display: inline-block; 
 		margin-left: 0px auto; 
 		margin-right: 0px auto; 
@@ -88,18 +86,18 @@
 
 				<div class="img_container">
 
-					<div class="hexagon">
-						<img id="profile_pic" src="{{rehabilitant.pictureUrl}}" alt=""/>
-					</div>
+					<div class="hexagon" id="pUrl">
+						<img id="profile_pic" src="{{rehabilitant.pictureUrl}}" alt="" class="tall"/>
+					</div> 
 					<input type="hidden" name="picture_url" value="{{rehabilitant.pictureUrl}}"/>
 
 				</div>
 				<br>
 				<br>
-				<label class="btn btn-default">
+				<label class="btn btn-default" onClick="clearPictureClass()">
 					Upload foto
 					<div style="height:0; overflow:hidden;">
-						<input id="fileUpload" name='avatar' type='file' accept="image/*" class="btn-file" style="height=0"/>
+						<input id="fileUpload" name='avatar' type='file' accept="image/*" class="btn-file" style="height=0" capture="camera"/>
 					</div>
 				</label>
 			</div>
@@ -157,6 +155,18 @@
 							</div>
 						</td>-->
 					</tr>
+					<tr>
+					<td>
+						 Selecteer groep:
+					</td>
+					<td>
+						<label for="selectedGroup"></label>
+						<select class="form-control" id="selectedGroup">
+    						<option value="maandagWoensdag" >Maandag - Woensdag</option>
+    						<option value="donderdagVrijdag">Donderdag - Vrijdag</option>
+  						</select>
+					</td>
+				</tr>
 				</table>
 			</div>
 		<div class= "form_wrapper" style="text-align:left;">
@@ -197,15 +207,7 @@
 						<input type="hidden" name="max_heartrate" value="{{rehabilitant.maxHeartRate}}"/>
 					</td>
 				</tr>
-				<tr>
-					<td>
-						<label for="selectedGroup">Selecteer groep:</label>
-						<select class="form-control" id="selectedGroup">
-    						<option value="maandagWoensdag" >Maandag - Woensdag</option>
-    						<option value="donderdagVrijdag">Donderdag - Vrijdag</option>
-  						</select>
-					</td>
-				</tr>
+				
 			</table>
 		</div>
 
@@ -220,11 +222,31 @@
 <script>
 
 
+$( "#profile_pic" ).load(function() {
+  $('#pUrl').find('img').each(function() {
+        //var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
+        var imgClass;
+        if (this.width>this.height) {imgClass = 'wide';}
+        else{imgClass = 'tall';}
+        $(this).addClass(imgClass);
+    })
+});
+
+function clearPictureClass(){
+	$('#pUrl').find('img').each(function() {
+		$(this).removeAttr('src');
+		$(this).removeClass();
+	})
+}
 	function readURL(input) {
+
 		if (input.files && input.files[0]) {
+
+			var img = document.createElement("img");
 			var reader = new FileReader();
 			reader.onload = function (e) {
-				$('#profile_pic').attr('src', e.target.result)
+				img.src = e.target.result;
+
 				$('input[name="picture_url"]').val(e.target.result);
 			};
 			reader.readAsDataURL(input.files[0]);

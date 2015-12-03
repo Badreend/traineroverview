@@ -11,13 +11,18 @@
 body, html {
   height: 100%;
   width: 100%;
+  background: url(/imgs/shared/Background.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
 
 ::-webkit-scrollbar { 
   display: none; 
 }
 body{
-  background: #fdfdfd;
+
 }
 
 h1{    
@@ -34,6 +39,8 @@ h3{
   color: #689595;
   font-size: 18px;
 }
+
+
 
 .vertical_line{
   height: 100%;
@@ -84,10 +91,11 @@ h3{
   opacity:1;
 }
 #menu_top li img{
-  padding-left:10%;
+  padding-left:5%;
   width:90%;
 }
 #menu_bottom {
+  border-top: 1px solid #bebebe;
   width:100%;
   margin-top:20px;
   font-size: 15px;
@@ -98,23 +106,80 @@ h3{
   cursor:pointer;
   height:50px;
   width:100%;
-  margin-top:40px;
+  margin-top:20px;
+  padding-right: 11px!important;
 }
-#menu_bottom li img{
-  padding-left:10%;
-  width:90%;
-}
+
 #side_column{
   position:fixed;
-  float:left;
-  width:60px;
+  
+  /*width:60px;*/
+  width: 250px;
   height: 100%;
   background: #fefefe;
   z-index: 23;
   border-right:1px solid #aaa;
+  text-align: right;
+  z-index: 9999;
+  left:-190px;
+  transition-property:left;
+  -moz-transition-property: left;
+  -webkit-transition-property:left;
+  -o-transition-property:left;
+
+  transition-duration: 0.5s;
+  -moz-transition-duration: 0.5s;
+  -webkit-transition-duration: 0.5s;
+  -o-transition-duration: 0.5s;
+
+  transition-timing-function: ease;
+  -moz-transition-timing-function: ease;
+  -webkit-transition-timing-function: ease;
+  -o-transition-timing-function: ease;
+
+  transition-delay: .1s;
+  -moz-transition-delay: .1s; 
+  -webkit-transition-delay: .1s;
+  -o-transition-delay: .1s;
+
+  box-shadow: 1px 0px 10px #dedede;
 }
 
+#side_column ul li {
+  padding-right: 5px;
+  color: #689595;
+}
+#side_column ul li a{
+    font-size: 15px;
+    color: #689595;
+    text-decoration: none;
+    
+}
 
+#side_column ul li a:active{
+  text-decoration: none;
+}
+
+#side_column ul li img{
+  width: auto;
+  height: 50px;
+
+}
+
+#menu_bottom li img{
+  padding-left:5%;
+  height:auto!important;
+  width:50px!important;
+}
+
+.selected {
+  background-color: #689595;
+  color: #FFF;
+}
+
+#side_column ul li.selected a{
+  color: #ffffff;
+}
 
 
 #droppables { 
@@ -184,16 +249,69 @@ h3{
   padding: 19px;
   }
 
+  .img_container_small{
+  width: 124px;
+  height: 102px;
+  background-image: url(../imgs/shared/Splash_Screen_Frame.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding: 10px;
+  margin: 0px auto;
+  }
+
 
 .hexagon {
     width: 210px;
     height: 162px;
     -webkit-clip-path: url("#polygon-clip-hexagon");
+    -moz-clip-path: url("#polygon-clip-hexagon");
     clip-path: url("#polygon-clip-hexagon");
     overflow: hidden;
     margin:0 auto;
     z-index:10;
   }
+  .hexagon_small {
+    width: 100px;
+    height: 82px;
+    -webkit-clip-path: url("#polygon-clip-hexagon");
+    -moz-clip-path: url("#polygon-clip-hexagon");
+    clip-path: url("#polygon-clip-hexagon");
+    overflow: hidden;
+    margin:0 auto;
+    z-index: 10;
+  }
+
+  @-moz-document url-prefix() {
+    .img_container{
+      background-image: none;
+      width: 250px;
+      height:210px;
+      padding:0;
+    }
+
+    .img_container_small{
+      background-image: none;
+      width: 124px;
+      height: 102px;
+      padding:0;
+    }
+
+
+    .hexagon {
+        height: 210px;
+        width:210px;
+        border-radius: 50%;
+        border: 15px solid #568b8a;
+    }
+
+    .hexagon_small {
+        height: 100px;
+        width:100px;
+        border-radius: 50%;
+        border: 5px solid #568b8a;
+    }
+}
+
 
 .hexagon_small {
     width: 100px;
@@ -412,13 +530,13 @@ nav.active { left: 0; }
   float:left;
   width:180px;
   padding-top:20px;
-  height: calc(100% - 30px);
+  height: 100%;
   background: #111;
   float: left; 
   background: #fff;
   color: #ddd; 
   text-align: center;
-  overflow: scroll;
+  overflow :scroll;
   position: static;
   border-right:1px solid #aaa;
 }
@@ -431,8 +549,6 @@ nav.active { left: 0; }
 }
 .drag_box img{
   width:100px;
-  border-radius: 50%;
-  border: 3px solid #ededed;
 }
 
 
@@ -446,28 +562,29 @@ nav.active { left: 0; }
   overflow: scroll;
 }
 .drop_box_container{
+  background-image: url(/imgs/shared/Spelopzet_Frame.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
     text-align: center;
   width:160px;
   height:145px;
-  margin:0 10 10 10;
   margin:50px;
   float:left;
-  border:1px solid #E8905D;
+  padding-top: 20px;
 }
 .drop_box {
     text-align: center;
-  width:160px;
+  width:165px;
   height:145px;
   float:left;
 }
 .drop_box_container p{
+  position: absolute;
   margin-left:auto;
   margin-right:auto;
-  margin-left:10px;
-  margin-top:50px;
-   background-color: rgba(255, 255, 255, 0.6);
-  width:130px;
-  float: left;
+  margin-top:40px;
+  width: 160px;
+
 }
 
 ul

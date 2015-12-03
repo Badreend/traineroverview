@@ -39,6 +39,12 @@
 	<img id="splash_logo" src="imgs/views/splashScreen/Logo_EVA.png"></img>
 </body>
 <script>
+
+
+if ( (window.innerWidth < 1024) ) { 
+		window.location = '/unavailable';
+	}
+
 	setTimeout(function(){ window.location = '/login'; }, 1000);	
 </script>
 </html>

@@ -47,6 +47,7 @@
         } )();
 
     }
+    var selectedolditem = localStorage.getItem('selectedolditem');
    $(document).ready(function(){
         $('#mobile-nav').click(function(event) {
             $('nav').toggleClass('active');
@@ -66,15 +67,64 @@
             $(".menu-current-group").removeClass("hide"); 
             $(".menu-current-group a").attr("href",$(".menu-current-group a").attr("href")+currentGroup);
         }
+
+        $('#menu_top li').click(function(e) {
+            var id = $(this).attr("id");
+            $('#menu_top li').removeClass('selected');
+            $(this).addClass('selected');
+            menuHighlight(id);
+        });
+        
+
+        if (selectedolditem != null) {
+            $('#'+selectedolditem).removeClass('selected');
+            $('#'+selectedolditem).addClass('selected');
+        }
     });
 
 
 $(window).load(function() {
     $('.hexagon').find('img').each(function() {
-        var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
+        //var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
+        var imgClass;
+        if (this.width>this.height) {imgClass = 'wide';}
+        else{imgClass = 'tall';}
         $(this).addClass(imgClass);
     })
+    
+
 })
+
+var menuOpened = false;
+
+
+function menuSwitch(){
+
+    if(menuOpened == false){
+        $($('#side_column').get()).css({
+            left:'0'
+        })
+        menuOpened=true;
+    } else{
+        $($('#side_column').get()).css({
+            left:'-190'
+        })
+        menuOpened=false;
+    }
+}
+function menuToNormal(){
+    if (menuOpened == true){
+        $($('#side_column').get()).css({
+            left: '-190'
+        })
+    }
+}
+
+function menuHighlight(val){
+    localStorage.setItem("selectedolditem", val);
+}
+
+
 
 
 </script>
@@ -82,50 +132,56 @@ $(window).load(function() {
 
 </head>
     <body>
-        <div id="container">
+        <div id="container" >
         <div id="side_column">
            <ul id="menu_top">
-                <li>
-                    <a href="#"><img src="imgs/shared/back.png"></a>
+                <li id='terug'>
+                    <a href="#">Terug<img src="imgs/shared/Button_Back.png"></a>
                 </li>
                 <br>            
-                <li>
-                    <a href="/group-overview"><img src="imgs/shared/group.png"></a>
+                <li id='group_overview'>
+                    <a href="/group-overview">Groepsoverzicht<img src="imgs/shared/Button_Group.png"></a>
                 </li>
-                <li class="hide menu-current-group">
-                    <a href="/group-activity?group_id="><img src="imgs/shared/group-02.png"></a>
+                <li id='group_activity' class="hide menu-current-group">
+                    <a href="/group-activity?group_id=">Groepsactiviteit<img src="imgs/shared/group-02.png"></a>
                 </li>
-                <li class="hide menu-eva">
-                    <a href="/nulmeting"><img src="imgs/shared/eva.png"></a>
+                <li id='eva'class="hide menu-eva">
+                    <a href="/nulmeting">EVA<img src="imgs/shared/Button_EVA.png"></a>
                 </li>
 
-                <li class="hide menu-map" style="background:#217D78; ">
-                    <a href="/map_v2">
-                        <img style="padding-top:1px"src="imgs/shared/temp_menu_icon.png">
+                <li id='map'class="hide menu-map">
+                    <a href="/map_v2">Game OGS
+                        <img style="padding-top:1px"src="imgs/shared/Button_OGS.png">
                     </a>
                 </li>
             </ul>
             <ul id="menu_bottom">
                 <li>
                     <a class="modal-link" href="/rehabilitant" data-toggle="modal" data-target="#myModal">
-                        <img src="imgs/shared/add.png"/>
+                        Voeg revalidant toe
+                        <img src="imgs/shared/Button_Plus.png"/>
                     </a>
                 </li>
+                <a href="#" onClick="menuSwitch()">
                 <li>
-                    <a href="/logout"><img src="imgs/shared/logout.png"></a>
+                    Informatie <img src="imgs/shared/Button_Menu.png"/>
+                </li>
+                </a>
+                <li>
+                    <a href="/logout">Uitloggen<img src="imgs/shared/Button_LogOut.png"></a>
                 </li>
             </ul>
 
         </div>
 
-        <div id="content">
+        <div id="content" onClick="menuToNormal()">
             {{{body}}}
         </div>
         </div>
 
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-dialog" style="width:100%; height:auto;">
+                <div class="modal-content" style="padding-bottom:20px;">
                 
                 </div>
             </div>
