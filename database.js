@@ -392,6 +392,24 @@ module.exports = {
                callback();
            });
         });
+    },
+    
+    PairDevices: function(devices, callback){
+        pg.connect(this.connectionString, function(err, client, done){
+            var counter = 0;
+            devices.forEach(function(device) {
+                var query = client.query(
+                    "UPDATE connected_device SET rehabilitant_id = {0} WHERE id = {1}"
+                    .format(device.rehabilitant_id != null ? device.rehabilitant_id : 'NULL', device.id));
+                
+                query.on('end', function(){
+                    done();
+                    counter++;
+                    if(counter == devices.length)
+                        callback();
+                });
+            });
+        });
     }
 };
 

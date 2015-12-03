@@ -203,6 +203,15 @@ app.post('/upload', function(req, res){
     });
 });
 
+app.post('/pair_devices', function(req, res){
+    var devices = req.body.device;
+    
+    db.PairDevices(devices, function(){
+        io.emit("startGame");
+        res.redirect('/map_v2');
+    });
+});
+
 app.get('/map_v2', checkAuth, function(req, res){
     var gameId = req.session.game_id;
     
