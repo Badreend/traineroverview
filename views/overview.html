@@ -4,36 +4,30 @@
     <ul class="drop_box" style="height:280px">
         {{#each rehabilitants}}
         <li class="drag_box" userID="{{this.id}}" >
+            <input class="id-holder" type="hidden" name="rehabilitant_id" value="{{this.id}}"/>
             <div class= "img_container_small" >
                     <div class="hexagon_small">
                         <img src="{{this.pictureUrl}}">
-                        </div>
+                    </div>
                 </div>
             <h3>{{this.GetFullName}}</h3>   
         </li>
         {{/each}}
-
-
-
-       
-
-
-
-
     </ul>
 </div>
 
 
-
-<div id='available_pods'>
-    {{#each game.connectedDevices}}
-    <div data-device-id="{{this.id}}" class="drop_box_container">
-        <p>
-            {{this.id}}
-        </p>
-        <ul class="drop_box">
-        </ul>
-    </div>
+<form action="/pair_devices" method="POST">
+    <div id='available_pods'>
+        {{#each game.connectedDevices}}
+        <div data-device-id="{{this.id}}" class="drop_box_container">
+            <p>
+                <input type="hidden" name="device[{{@index}}]_[id]" value="{{this.id}}"/>
+                {{this.id}}
+            </p>
+            <ul class="drop_box">
+            </ul>
+        </div>
     {{/each}}
     {{#unless game.connectedDevices}}
     <center>
@@ -41,9 +35,13 @@
     </center>
     {{/unless}}
 </div>
-<div style="position:fixed; bottom:20%; width:100%; text-align:center;">
-    <a href="javascript:sendstart();" class="btn btn-primary" onClick="menuHighlight('map')">Start Game</a>
 </div>
+
+
+    <div style="position:fixed; bottom:20%; width:100%; text-align:center;">
+        <input type="submit" class="btn btn-primary" value="Start Game" onClick="menuHighlight('map')"/>
+    </div>
+</form>
 
 
 
@@ -55,12 +53,6 @@ $(document).ready(function(){
     resort();
 });
 
-var socket = io.connect();
-
-function sendstart(){
-    socket.emit('pressedStart',"aids");
-    window.location = '/map_v2';
-}
 
 function resort(){
     $('.drop_box').sortable({
@@ -76,20 +68,45 @@ function resort(){
                     $(ui.sender).sortable('cancel');
                 }
             }
+            pairDevices();
         }
     }).disableSelection();
 }
 
+function pairDevices(){
+    $('.drop_box_container').each(function(idx,elem){
+        var rehabilitant = $(elem).find('.drag_box .id-holder');
+        var originalName = $(rehabilitant).attr('name');
+        
+        if(rehabilitant.length == 1){
+            originalName = originalName.replace(/device\[[0-9]+\]_\[/,'').replace(']','');
+                
+            $(rehabilitant).attr('name', 'device['+idx+']_['+originalName+']');
+        }
+    });
+    
+    $('.id-holder').each(function(idx,elem){
+        var container = $(elem).closest('.drop_box_container');
+        var originalName = $(elem).attr('name');
+        
+        if(container.length == 0)
+            $(elem).attr('name', originalName.replace(/device\[[0-9]+\]_\[/,'').replace(']',''));
+    });
+}
+
 socket.on('newDeviceConnected', function(connectedDeviceId){
     var templatePodHtml = '<div data-device-id="%id%" class="drop_box_container"> \
+        <input type="hidden" name="device[%index%]_[id]" value="%id%"/> \
         <p> \
             %id% \
         </p> \
         <ul class="drop_box"> \
         </ul> \
     </div>';
-     $("#available_pods").append(templatePodHtml.replace(/%id%/g, connectedDeviceId));
-     resort();
+    
+    var index = $("#available_pods div[data-device-id]").length; 
+    $("#available_pods").append(templatePodHtml.replace(/%id%/g, connectedDeviceId).replace(/%index%/g,index));
+    resort();
 });
 
 socket.on('deviceDisconnected', function(deviceId){

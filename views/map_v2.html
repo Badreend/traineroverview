@@ -9,28 +9,15 @@
 
 </style>
 
-<div id="rev_colulmn">
-	<div id="groupName"> Groep Wo/Vr</div>
-	<div id="rev_list">
-		<ul id="draglist" style="height:280px">     
-				{{#each connectedDevices}}
-				<li   class="drag_box" device-id="{{this.id}}" >
-					<img src="{{this.rehabilitant.pictureUrl}}">
-					<h3>{{this.rehabilitant.GetFullName}}</h3>   
-				</li>
-				{{/each}}
-			</ul>
-		</div>
+{{> rehabilitantlist }}
+
+<div id="right_column">
+	<div id="header">
+		<h1>Speloverzicht</h1>
 	</div>
+	<div id="map_info_column">
 
-
-	<div id="right_column">
-		<div id="header">
-			<h1>Speloverzicht</h1>
-		</div>
-		<div id="map_info_column">
-
-			<div id="info">
+		<div id="info">
 			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
 		-->
@@ -165,7 +152,15 @@
 <script>
 var temp_data = [];
 temp_data = [
-{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",min:90,max:135,loc:[{t:undefined,h:95,x:500,y:450},{t:undefined,h:150,x:450,y:435},{t:undefined,h:110,x:432,y:455},{t:undefined,h:120,x:422,y:510},{t:undefined,h:140,x:390,y:450},{t:undefined,h:145,x:380,y:470},{t:undefined,h:70,x:362,y:505},{t:undefined,h:30,x:322,y:500},]},
+{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",min:90,max:135,loc:[
+	{t:undefined,h:95,x:500,y:450},
+	{t:undefined,h:150,x:450,y:435},
+	{t:undefined,h:110,x:432,y:455},
+	{t:undefined,h:120,x:422,y:510},
+	{t:undefined,h:140,x:390,y:450},
+	{t:undefined,h:145,x:380,y:470},
+	{t:undefined,h:70,x:362,y:505},
+	{t:undefined,h:30,x:322,y:500},]},
 {id:2,name:"Ings",diagnose:"Diagnose: knie & rug"}
 ];
 
@@ -174,7 +169,7 @@ var all_revs = [];
 var colors = ["#0281A1","#FFFF03","#B80202"];
 
 
-createPath(temp_data[0]);
+//createPath(temp_data[0]);
 function createPath(_userData){
 	var path = "";
 	var prevColor = undefined;
@@ -292,12 +287,10 @@ function displayInfo(_idData){
 		}
 		//----
 
+		var pixelMeterRatio = 1.73;
+		var originX = 745;
+		var originY = 918;
 
-
-
-		var pixelMeterRatio = 1.44;
-		var originX = 530;
-		var originY = 900;
 		var markerScale = 0.5;
 		
 		(function() {	
@@ -358,6 +351,8 @@ socket.on('dataClient', function(data){
 		mat[5] = originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
 
 		$(deviceMarker).css("transform", arrayToMatrix(mat));	
+
+		createPath({id:device_id, name:"test",diagnose:"boeie",min:120,max:160,loc:[{t:undefined,h:heartrate,x:x,y:y}]});
 	});
 
 	//[ "1.1",	"0", 	"0", 	"1.1", 	"-87.65", 	"62" ]
