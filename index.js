@@ -208,7 +208,17 @@ app.get('/map_v2', checkAuth, function(req, res){
         res.render('map_v2', { connectedDevices: connectedDevices });
     });
 });
-
+app.get('/eva', checkAuth, function(req, res){
+    var gameId = req.session.game_id;
+    
+    if(gameId == null){
+        return res.redirect('/group-overview');
+    }
+    
+    db.GetFullGame(gameId, function(connectedDevices){
+        res.render('eva', { connectedDevices: connectedDevices });
+    });
+});
 app.get('/exit_game', checkAuth, function(req, res){
     var gameId = req.query.id;
     

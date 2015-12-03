@@ -65,8 +65,12 @@
 
 	<div id="right_column">
 		<div id="header">
-			<h1>Speloverzicht</h1>
+			<h1>EVA overzicht</h1>
 		</div>
+		<div class="graph">
+
+		</div>
+
 		<div id="map_info_column">
 
 			<div id="info">
@@ -75,21 +79,8 @@
 		-->
 	</div>
 </div>
-
-<section id="inverted-contain">
-	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
-		<div class="panzoom">
-			<svg width="500px" height="800px" style="position:absolute" id="paths">
-				
-			</svg>
-			<div class="marker" device-id="1" >
-				<div style="border-radius: 50%; width:75px; height:75px; background:#FF1D61; opacity:.8;">
-				</div>
-			</div>
-			<img id="map" src="imgs/views/map/MRC.jpg">
-		</div>
-	</div>
 </div>
+
 <script>
 var temp_data = [];
 var margin = 30;
@@ -294,4 +285,5 @@ socket.on('dataClient', function(data){
 	//[ "1.1",	"0", 	"0", 	"1.1", 	"-87.65", 	"62" ]
 	//scaleX	skewX	skewY	scaleY	posX		posY
 	</script>
-</section>
+
+<script src="js/evaVisualisatie.js"></script>
