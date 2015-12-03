@@ -250,6 +250,10 @@ module.exports = {
             pg.connect(this.connectionString, function(err, client, done) {
                 var commaDelimitedDeviceIds = game.connectedDevices.map(function(device){ return device.id; }).join(",");
                 
+                if(client == null){
+                    console.log("client null! " + err);
+                }
+                
                 var query = client.query(
                     "SELECT * \
                     FROM v_map_states \
