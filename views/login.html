@@ -77,7 +77,12 @@
 
 <script type="text/javascript">
 
+function menuHighlight(){
+    	localStorage.setItem("selectedolditem", 'group_overview');
+	}
+
 $(window).load(function() {
+
     $('.hexagon').find('img').each(function() {
         var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
         $(this).addClass(imgClass);
@@ -161,7 +166,9 @@ function reposition(receivedID){
 		$(".password").on("keyup", function(e){
 			var code = e.which;
 			if(code ==13){
+				menuHighlight('group_overview');
 				checkLogin();
+				
 			}
 		});
 	});
@@ -173,6 +180,7 @@ function reposition(receivedID){
 		var trainerId = $(".password").closest("div.trainer").data("id");
 		var password = $(".password").val();
 		login(trainerId, password);
+		menuHighlight();
 	}
 	
 	function login(trainerId, password){
@@ -189,19 +197,18 @@ function reposition(receivedID){
 					alert(data.message);
 				}else{
 					window.location = data.redirect;
+
 				}
 			}
 		});
 	}
 </script>
 <div style="height:0; overflow:hidden;">
-            <svg class="clip-svg">
-                <defs>
+            <svg class="clip-svg" height="0" width:"0">
                     <clipPath id="polygon-clip-hexagon" stroke="#ededed" stroke-width="3" clipPathUnits="objectBoundingBox">
                         <!--<polygon points="0.5 0, 1 0.25, 1 0.75, 0.5 1, 0 0.75, 0 0.25" />-->
                         <polygon points="0 0.5, 0.25 0, 0.75 0, 1 0.5, 0.75 1, 0.25 1" />
                     </clipPath>
-                </defs>
             </svg> 
         </div>
     </body>

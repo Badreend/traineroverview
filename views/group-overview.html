@@ -3,7 +3,7 @@
 <div class="groups_container">
         {{#each groups}}
         <div class="group_wrapper">
-            <a href="/group-activity?group_id={{this.id}}">
+            <a href="/group-activity?group_id={{this.id}}" onClick="menuHighlight('group_activity')">
                 <div class="img_container">
                     <div class="hexagon">
                         <img src="{{this.GetIcon}}"/>
@@ -16,7 +16,10 @@
 </div>
 
 
+<script type="text/javascript">
 
+
+</script>
 <!--
 <div id="container">
     <div class="row">
