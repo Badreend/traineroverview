@@ -1,47 +1,47 @@
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <title>Trainer Overview</title>
+	<meta charset="utf-8">
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+	<title>Trainer Overview</title>
 
 
-   
+	
 
-    <script src="js/jquery-1.10.1.min.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
-
-
-    <script src="js/plugins/mostrar_nav.js"></script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
-        <script src="js/jquery.ui.touch-punch.js"></script>
+	<script src="js/jquery-1.10.1.min.js"></script>
+	<script src="js/jquery-ui.min.js"></script>
 
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-    <script src="js/app.js"></script>
+	<script src="js/plugins/mostrar_nav.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="js/jquery.ui.touch-punch.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="css/css.css">
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script src="js/app.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/css.css">
 
 </head>
- 
- 
+
+
 <div id="warningMSG">Houd uw scherm horizontaal om de app te kunnen gebruiken.</div>
 <div id="container">
-		<div class="groups_container">
-			{{#each trainers}}
-			<div class="trainer" data-id="{{this.id}}">
-				<div class="trainer_profile">
-					<div class="img_container" >
-						<div class="hexagon">
-							<img src="{{this.pictureUrl}}" data-pin-nopin="true" >
-						</div>
+	<div class="groups_container">
+		{{#each trainers}}
+		<div class="trainer" data-id="{{this.id}}">
+			<div class="trainer_profile">
+				<div class="img_container" >
+					<div class="hexagon">
+						<img src="{{this.pictureUrl}}" data-pin-nopin="true" >
 					</div>
-					<h2>{{this.GetFullName}}</h2>
 				</div>
+				<h2>{{this.GetFullName}}</h2>
 			</div>
-			{{/each}}
 		</div>
+		{{/each}}
+	</div>
 </div>
 
 <div class="loadingOverlay">
@@ -51,75 +51,85 @@
 </div>
 
 <style>
-	.loadingOverlay{
-		display: none; 
-		position: fixed; 
-		width: 100%; 
-		height: 100%; 
-		align-items: center; 
-		top: 0px; 
-		background-color: rgba(0, 0, 0, 0.5);
-	}
-	
-	.loadingHolder{
-		display: block;
-		width:50px;
-		height: 50px; 
-		margin: 0px auto;
-	}
-	.loadingHolder img {
-		width: 100%;
-		height: 100%;
-	}
+.loadingOverlay{
+	display: none; 
+	position: fixed; 
+	width: 100%; 
+	height: 100%; 
+	align-items: center; 
+	top: 0px; 
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.loadingHolder{
+	display: block;
+	width:50px;
+	height: 50px; 
+	margin: 0px auto;
+}
+.loadingHolder img {
+	width: 100%;
+	height: 100%;
+}
 </style>
 
 <script type="text/javascript">
 function menuHighlight(){
-    	localStorage.setItem("selectedolditem", 'group_overview');
-	}
+	localStorage.setItem("selectedolditem", 'group_overview');
+}
 $(window).load(function() {
-    $('.hexagon').find('img').each(function() {
-        var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
-        $(this).addClass(imgClass);
-    })
-    
+	$('.hexagon').find('img').each(function() {
+		var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
+		$(this).addClass(imgClass);
+	})
 })
-	$(".trainer").click(function(){
+$(".trainer").click(function(){
 	$( this ).unbind( "click" );
 	var selectedId = this.getAttribute('data-id');
 	console.log(selectedId);
-	 $(".trainer").not(this).animate({
-	 	opacity: 0.0,
-	  }, 1000, function() {
-	  	reposition(selectedId);
-	  this.closest('div').remove();
-	 });
-	 // $( this ).parent().get( 0 ).css({
-		// position: 'absolute'
-	 // });
-function reposition(receivedID){
-	var _id = parseInt(receivedID)-1;
-	console.log("hoi");
-	$($('.trainer').parent().get(0)).css({
-		margin: 'auto',
-		 position: 'absolute',
-		 top: '25%',
-		 left: '0',
-		 right: '0',
-		 bottom: '20%',
-		 width: '700',
-		 height: 'auto'
-	})
-	$($('.trainer').get( _id )).css({
-		 width: '700',
-		 margin: '0'
-	})
-	$($('.trainer_profile').get(_id)).css({
-		margin: '0'
-	})
-	$input = ('<div id="loginform_placeholder"><div id="password_container"> <input type="password" class="password" size="20" value="" placeholder="Password"/></div><div id="login_container" onclick="checkLogin()"><h2>Login</h2></div></div>')
-	$($('.trainer').get( _id)).append($input);
-}
+	$(".trainer").not(this).animate({
+		opacity: 0.0,
+	}, 1000, function() {
+		reposition(selectedId);
+		this.closest('div').remove();
+
+
+		$(".password").on("keyup", function(e){
+			var code = e.which;
+			if(code ==13){
+				menuHighlight('group_overview');
+				checkLogin();
+				
+			}
+		});
+	});
+
+
+	function reposition(receivedID){
+		var _id = parseInt(receivedID)-1;
+		console.log("hoi");
+		$($('.trainer').parent().get(0)).css({
+			margin: 'auto',
+			position: 'absolute',
+			top: '25%',
+			left: '0',
+			right: '0',
+			bottom: '20%',
+			width: '700',
+			height: 'auto'
+		})
+		$($('.trainer').get( _id )).css({
+			width: '700',
+			margin: '0'
+		})
+		$($('.trainer_profile').get(_id)).css({
+			margin: '0'
+		})
+		$input = ('<div id="loginform_placeholder"><div id="password_container"> <input type="password" class="password" size="20" value="" placeholder="Password"/></div><div id="login_container" onclick="checkLogin()"><h2>Login</h2></div></div>')
+		$($('.trainer').get( _id)).append($input);
+	}
+
+
 /*
 	$($( this ).parent().get( 0 )).css({
 		 margin: 'auto',
@@ -139,51 +149,44 @@ function reposition(receivedID){
 		margin: '0'
 	});
 	$input = ('<div id="loginform_placeholder"><div id="password_container"> <input type="password" class="password" size="20" value="" placeholder="Password"/></div><div id="login_container" onclick="checkLogin()"><h2>Login</h2></div></div>')
-*/
+	*/
 //$($( this ).get( 0 )).append($input);
-		$(".password").on("keyup", function(e){
-			var code = e.which;
-			if(code ==13){
-				menuHighlight('group_overview');
-				checkLogin();
-				
+
+});
+
+function checkLogin(){
+	var trainerId = $(".password").closest("div.trainer").data("id");
+	var password = $(".password").val();
+	login(trainerId, password);
+	menuHighlight();
+}
+
+function login(trainerId, password){
+	$(".loadingOverlay").show();
+	$(".loadingOverlay").css("display", "flex");
+	
+	$.ajax({
+		url: "loginRequest",
+		method: "POST",
+		data: {trainerId: trainerId, password: password},
+		success:function(data) {
+			if(!data.valid){
+				$(".loadingOverlay").hide();
+				alert(data.message);
+			}else{
+				window.location = data.redirect;
 			}
-		});
+		}
 	});
-	
-	function checkLogin(){
-		var trainerId = $(".password").closest("div.trainer").data("id");
-		var password = $(".password").val();
-		login(trainerId, password);
-		menuHighlight();
-	}
-	
-	function login(trainerId, password){
-		$(".loadingOverlay").show();
-		$(".loadingOverlay").css("display", "flex");
-		
-		$.ajax({
-			url: "loginRequest",
-			method: "POST",
-			data: {trainerId: trainerId, password: password},
-			success:function(data) {
-				if(!data.valid){
-					$(".loadingOverlay").hide();
-					alert(data.message);
-				}else{
-					window.location = data.redirect;
-				}
-			}
-		});
-	}
+}
 </script>
 <div style="height:0; overflow:hidden;">
-            <svg class="clip-svg" height="0" width:"0">
-                    <clipPath id="polygon-clip-hexagon" stroke="#ededed" stroke-width="3" clipPathUnits="objectBoundingBox">
-                        <!--<polygon points="0.5 0, 1 0.25, 1 0.75, 0.5 1, 0 0.75, 0 0.25" />-->
-                        <polygon points="0 0.5, 0.25 0, 0.75 0, 1 0.5, 0.75 1, 0.25 1" />
-                    </clipPath>
-            </svg> 
-        </div>
-    </body>
+	<svg class="clip-svg" height="0" width:"0">
+		<clipPath id="polygon-clip-hexagon" stroke="#ededed" stroke-width="3" clipPathUnits="objectBoundingBox">
+			<!--<polygon points="0.5 0, 1 0.25, 1 0.75, 0.5 1, 0 0.75, 0 0.25" />-->
+			<polygon points="0 0.5, 0.25 0, 0.75 0, 1 0.5, 0.75 1, 0.25 1" />
+		</clipPath>
+	</svg> 
+</div>
+</body>
 </html>
