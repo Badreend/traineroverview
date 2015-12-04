@@ -132,18 +132,16 @@ function menuHighlight(val){
 
 </head>
     <body>
+        <div id="warningMSG">Yalla hou je scherm recht</div>
         <div id="container" >
         <div id="side_column">
-           <ul id="menu_top">
-                <li id='terug'>
-                    <a href="#">Terug<img src="imgs/shared/Button_Back.png"></a>
-                </li>
-                <br>            
+            <div id="menu">
+           <ul id="menu_top">   
                 <li id='group_overview'>
                     <a href="/group-overview">Groepsoverzicht<img src="imgs/shared/Button_Group.png"></a>
                 </li>
                 <li id='group_activity' class="hide menu-current-group">
-                    <a href="/group-activity?group_id=">Groepsactiviteit<img src="imgs/shared/group-02.png"></a>
+                    <a href="/group-activity?group_id=">Groepsactiviteit<img src="imgs/shared/Button_GroupAssignment.png"></a>
                 </li>
                 <li id='eva'class="hide menu-eva">
                     <a href="/nulmeting">EVA<img src="imgs/shared/Button_EVA.png"></a>
@@ -173,6 +171,7 @@ function menuHighlight(val){
             </ul>
 
         </div>
+    </div>
 
         <div id="content" onClick="menuToNormal()">
             {{{body}}}
