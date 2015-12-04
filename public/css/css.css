@@ -707,17 +707,17 @@ ul
 
 }
 .graph .dot{
-  stroke:#000;
   cursor: pointer;
 } 
 .graph .vLine{
   stroke:#000;
+  opacity: .5;
 }
 .domain{
   display: none;
 }
 .hoverInfo{
-  font-family: Open Sans;
+  font-family: helvetica;
   width:100%;
   padding-top:20px;
   text-align: center;
