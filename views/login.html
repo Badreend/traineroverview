@@ -26,7 +26,7 @@
 </head>
  
  
-
+<div id="warningMSG">Houd uw scherm horizontaal om de app te gebruiken</div>
 <div id="container">
 		<div class="groups_container">
 			{{#each trainers}}
@@ -81,8 +81,6 @@ function menuHighlight(){
     	localStorage.setItem("selectedolditem", 'group_overview');
 	}
 
-$(window).load(function() {
-
     $('.hexagon').find('img').each(function() {
         var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
         $(this).addClass(imgClass);
@@ -98,6 +96,7 @@ $(window).load(function() {
 	$( this ).unbind( "click" );
 	var selectedId = this.getAttribute('data-id');
 	console.log(selectedId);
+
 	 $(".trainer").not(this).animate({
 	 	opacity: 0.0,
 	  }, 1000, function() {

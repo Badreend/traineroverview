@@ -43,7 +43,8 @@
 
 <section id="inverted-contain">
 	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
-		<div class="panzoom">
+		
+			<div class="panzoom" style="width:1700px;">
 			<svg width="500px" height="800px" style="position:absolute" id="paths">
 			</svg>
 			{{#each connectedDevices}}
@@ -52,7 +53,12 @@
 				</div>
 			</div>
 			{{/each}}
-			<img id="map" src="imgs/views/map/Kaart.svg">
+
+			<div id="loadMap" style= "width:1753px; height:1240px; overflow:hidden;">
+				<!-- Dont load the map as and SVG, use jquery to insert the code from the SVG file into this div. For better framerate, makes maikel smile :) -->
+			</div>
+		
+
 		</div>
 	</div>
 </div>
@@ -150,6 +156,11 @@
 }
 </style>
 <script>
+$(document).ready(function() {
+ 	$("#loadMap").load("imgs/views/map/kaart.html"); 
+ } );
+
+
 var temp_data = [];
 temp_data = [
 {id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",min:90,max:135,loc:[
