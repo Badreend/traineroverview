@@ -9,8 +9,9 @@ drawGraph();
 
 function drawGraph(){
   var margin = {top:20,left:220,right:100},
-  width = 900,
-  height = 300;
+  width = $(".graph").width()-80;
+  console.log(width)
+  height = 200;
 
   var x = d3.scale.linear()
   .domain([0,temp_data[0].loc.length])   
@@ -41,7 +42,7 @@ function drawGraph(){
 
 
     //.append("g");
-    svg.html('<image xlink:href="imgs/shared/dataBg.jpg" x="0" y="0" width="900" height="300" style="clip-path: url(#svgClip);"/>');
+    svg.html('<image xlink:href="imgs/shared/dataBg.jpg" x="0" y="0" preserveAspectRatio="none" width="'+width+'" height="'+height+'" style="clip-path: url(#svgClip); width:'+width+'px;height:'+height+'px"/>');
 
     var lines = svg.selectAll( "g" )
     .data( temp_data );  

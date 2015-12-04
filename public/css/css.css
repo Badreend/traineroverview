@@ -696,6 +696,7 @@ ul
   height:100%;
 }
 .graph{
+  width:100%;
   position: absolute;
     padding-left:220px;
       margin-top:150px;
