@@ -1,7 +1,7 @@
 temp_data = [
-{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",min:90,max:135,loc:[{t:undefined,h:40,x:500,y:450},{t:undefined,h:150,x:450,y:435},{t:undefined,h:110,x:432,y:455},{t:undefined,h:120,x:422,y:510},{t:undefined,h:140,x:390,y:450},{t:undefined,h:145,x:380,y:470},{t:undefined,h:70,x:362,y:505},{t:undefined,h:30,x:322,y:500},]},
-{id:2,name:"Ings",diagnose:"Diagnose: knie & rug te veel pijn",min:90,max:135,loc:[{t:undefined,h:30,x:500,y:450},{t:undefined,h:70,x:450,y:435},{t:undefined,h:80,x:432,y:455},{t:undefined,h:90,x:422,y:510},{t:undefined,h:110,x:390,y:450},{t:undefined,h:100,x:380,y:470},{t:undefined,h:90,x:362,y:505},{t:undefined,h:60,x:322,y:500},]},
-{id:3,name:"Ings",diagnose:"Diagnose: knie & rug auw auw ",min:90,max:135,loc:[{t:undefined,h:90,x:500,y:450},{t:undefined,h:150,x:450,y:435},{t:undefined,h:110,x:432,y:455},{t:undefined,h:120,x:422,y:510},{t:undefined,h:140,x:390,y:450},{t:undefined,h:145,x:380,y:470},{t:undefined,h:70,x:362,y:505},{t:undefined,h:30,x:322,y:500},]},
+{id:1,name:"Momo Niek",diagnose:"Diagnose: Knie & rug klachten / Cluster: 6 / Week: 5 van 8 / Functie:Kolonel / Doelipsum die la lorem de ipsum tekst. ongeveer, één vol zin",min:90,max:140,loc:[{t:undefined,h:40,x:500,y:450},{t:undefined,h:150,x:450,y:435},{t:undefined,h:110,x:432,y:455},{t:undefined,h:120,x:422,y:510},{t:undefined,h:140,x:390,y:450},{t:undefined,h:145,x:380,y:470},{t:undefined,h:70,x:362,y:505},{t:undefined,h:30,x:322,y:500},]},
+{id:2,name:"Ings",diagnose:"Diagnose: Knie & rug klachten / Cluster: 6 / Week: 5 van 8 / Functie:Kolonel / Doelipsum die la lorem de ipsum tekst. ongeveer, één vol zinDoelipsum die la lorem de ipsum tekst. ongeveer, één vol zin",min:90,max:140,loc:[{t:undefined,h:30,x:500,y:450},{t:undefined,h:70,x:450,y:435},{t:undefined,h:80,x:432,y:455},{t:undefined,h:90,x:422,y:510},{t:undefined,h:110,x:390,y:450},{t:undefined,h:100,x:380,y:470},{t:undefined,h:90,x:362,y:505},{t:undefined,h:60,x:322,y:500},]},
+{id:3,name:"Ings",diagnose:"Diagnose: van alles / Cluster: 6 / Week: 5 van 8 / Functie:Kolonel / Doelipsum die la lorem de ipsum tekst. ongeveer, één vol zin",min:90,max:140,loc:[{t:undefined,h:90,x:500,y:450},{t:undefined,h:150,x:450,y:435},{t:undefined,h:110,x:432,y:455},{t:undefined,h:120,x:422,y:510},{t:undefined,h:140,x:390,y:450},{t:undefined,h:145,x:380,y:470},{t:undefined,h:70,x:362,y:505},{t:undefined,h:30,x:322,y:500},]},
 
 ];
 
@@ -23,7 +23,10 @@ var svg = d3.select(".graph").append("svg")
 
 $('.drag_box').bind('tap click', function(){
   var dragBoxId = $(this).attr('device-id');
+    $(".hoverInfo").remove();
+
   drawGraph(temp_data[dragBoxId])
+  drawGuides();
 });
 
 function drawGuides(){
@@ -57,7 +60,8 @@ function drawGraph(_userData){
 
 
   //_userData.
-  var target = (_userData.max - _userData.min) + _userData.min;
+  var target = (_userData.max - _userData.min)/2 + _userData.min;
+  console.log(target)
   var x = d3.scale.linear()
   .domain([0,temp_data[0].loc.length])   
   .range([margin.left-180, width]);
@@ -140,11 +144,12 @@ function drawGraph(_userData){
     .attr("r", 5)
     .attr("svg:title",function(d){return d.h})
     .attr("stroke",function(d){
-      if(d.h >= _userData.min && d.h <= _userData.max ){
+      heartRate = d.h;
+      if(heartRate>= _userData.min && d.h <= _userData.max ){
         return colors[2];
-      }else if(d.h <= _userData.min){
+      }else if(heartRate <= _userData.min){
         return colors[0];
-      }else if(d.h >= _userData.max){
+      }else if(heartRate >= _userData.max){
         console.log(_userData.min)
         return colors[3];
       }
