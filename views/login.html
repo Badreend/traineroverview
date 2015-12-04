@@ -26,7 +26,7 @@
 </head>
  
  
-<div id="warningMSG">Houd uw scherm horizontaal om de app te gebruiken</div>
+<div id="warningMSG">Houd uw scherm horizontaal om de app te kunnen gebruiken.</div>
 <div id="container">
 		<div class="groups_container">
 			{{#each trainers}}
@@ -67,53 +67,39 @@
 		height: 50px; 
 		margin: 0px auto;
 	}
-
 	.loadingHolder img {
 		width: 100%;
 		height: 100%;
 	}
-
 </style>
 
 <script type="text/javascript">
-
 function menuHighlight(){
     	localStorage.setItem("selectedolditem", 'group_overview');
 	}
-
+$(window).load(function() {
     $('.hexagon').find('img').each(function() {
         var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
         $(this).addClass(imgClass);
     })
-
     
 })
-
-
-
-
 	$(".trainer").click(function(){
 	$( this ).unbind( "click" );
 	var selectedId = this.getAttribute('data-id');
 	console.log(selectedId);
-
 	 $(".trainer").not(this).animate({
 	 	opacity: 0.0,
 	  }, 1000, function() {
-
 	  	reposition(selectedId);
 	  this.closest('div').remove();
 	 });
 	 // $( this ).parent().get( 0 ).css({
 		// position: 'absolute'
-
 	 // });
-
 function reposition(receivedID){
-
 	var _id = parseInt(receivedID)-1;
 	console.log("hoi");
-
 	$($('.trainer').parent().get(0)).css({
 		margin: 'auto',
 		 position: 'absolute',
@@ -132,12 +118,8 @@ function reposition(receivedID){
 		margin: '0'
 	})
 	$input = ('<div id="loginform_placeholder"><div id="password_container"> <input type="password" class="password" size="20" value="" placeholder="Password"/></div><div id="login_container" onclick="checkLogin()"><h2>Login</h2></div></div>')
-
 	$($('.trainer').get( _id)).append($input);
 }
-
-
-
 /*
 	$($( this ).parent().get( 0 )).css({
 		 margin: 'auto',
@@ -149,7 +131,6 @@ function reposition(receivedID){
 		 width: '900',
 		 height: 'auto'
 	});
-
 	$($( this ).get( 0 )).css({
 		 width: '900',
 		 margin: '0'
@@ -157,9 +138,7 @@ function reposition(receivedID){
 	$($('.trainer_profile').get(0)).css({
 		margin: '0'
 	});
-
 	$input = ('<div id="loginform_placeholder"><div id="password_container"> <input type="password" class="password" size="20" value="" placeholder="Password"/></div><div id="login_container" onclick="checkLogin()"><h2>Login</h2></div></div>')
-
 */
 //$($( this ).get( 0 )).append($input);
 		$(".password").on("keyup", function(e){
@@ -171,10 +150,7 @@ function reposition(receivedID){
 			}
 		});
 	});
-
-
 	
-
 	function checkLogin(){
 		var trainerId = $(".password").closest("div.trainer").data("id");
 		var password = $(".password").val();
@@ -196,7 +172,6 @@ function reposition(receivedID){
 					alert(data.message);
 				}else{
 					window.location = data.redirect;
-
 				}
 			}
 		});
