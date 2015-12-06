@@ -1,13 +1,6 @@
 <script src="js/plugins/panzoom.js"></script>
 <script src="js/plugins/pointertouch.js"></script>
 <script src="js/d3.min.js"></script>
-<style type="text/css">
-
-.drag_box img{
-	border: 5px solid #fddf29 !important;
-}
-
-</style>
 
 <div id="rev_colulmn">
 	<div id="groupName"> Groep Wo/Vr</div>
@@ -15,41 +8,37 @@
 		<ul id="draglist" style="height:280px">
 
 			<li   class="drag_box" device-id="1" >
-				<img src="imgs/heads/moniek.png">
+				<div class= "img_container_small" >
+					<div class="hexagon_small">
+						<img src="imgs/heads/moniek.jpg">
+					</div>
+				</div>
 				<h3>Momo Niek</h3>   
 			</li>
 
 			<li   class="drag_box" device-id="2" >
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>     
+				<div class= "img_container_small" >
+					<div class="hexagon_small">
+						<img src="imgs/heads/inge.jpg">
+					</div>
+				</div>
+										<h3>Ings</h3>     
+
 			</li>
 
 			<li   class="drag_box" device-id="3">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>     
+				<div class= "img_container_small" >
+					<div class="hexagon_small">
+						<img src="imgs/heads/badr.jpg">
+					</div>
+				</div>   
+										<h3>Bada</h3>  
+
 			</li>
 
-			<li   class="drag_box" device-id="4">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>    
-			</li>
 
-			<li   class="drag_box" device-id="5">
-				<img src="imgs/heads/badr.png">
-				<h3>Bada man</h3>    
-			</li>
 
-			<li   class="drag_box" device-id="6">
-				<img src="imgs/heads/badr.png">
-				<h3>Ings</h3>     
-			</li>
-
-			<li   class="drag_box" device-id="7">
-				<img src="imgs/heads/inge.png">
-				<h3>Ings</h3>      
-			</li>
-
-			<li   class="drag_box" device-id="8">
+<!-- 			<li   class="drag_box" device-id="8">
 				<img src="imgs/heads/inge.png">
 				<h3>Ings</h3>      
 				{{#each connectedDevices}}
@@ -57,7 +46,7 @@
 					<img src="{{this.rehabilitant.pictureUrl}}">
 					<h3>{{this.rehabilitant.GetFullName}}</h3>   
 				</li>
-				{{/each}}
+				{{/each}} -->
 			</ul>
 		</div>
 	</div>
@@ -286,4 +275,4 @@ socket.on('dataClient', function(data){
 	//scaleX	skewX	skewY	scaleY	posX		posY
 	</script>
 
-<script src="js/evaVisualisatie.js"></script>
+	<script src="js/evaVisualisatie.js"></script>
