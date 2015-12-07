@@ -278,6 +278,10 @@ io.on('connection', function(socket){
         db.RemoveConnectedDevice(data.remove_id);
         io.sockets.emit("deviceDisconnected", data.remove_id);
     });
+    
+    socket.on("userPausedApp", function(data){
+        db.PauseConnectedDevice(data.deviceId, data.pause);
+    });
 
     socket.on("pressedStart", function(data){
         io.emit("startGame");

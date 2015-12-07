@@ -187,7 +187,8 @@ module.exports = {
                     FROM game g \
                     INNER JOIN connected_device cd ON cd.game_id = g.id \
                     LEFT JOIN rehabilitant r ON r.id = cd.rehabilitant_id \
-                    WHERE g.id = " + game.id);
+                    WHERE g.id = {0} \
+                    AND cd.active = TRUE".format(game.id));
                 
                 var connDevices = [];
                 q2.on('row', function(row) {
@@ -229,6 +230,16 @@ module.exports = {
         });
     },
     
+    PauseConnectedDevice: function(deviceId, pause){
+        pg.connect(this.connectionString, function(err, client, done){
+           var query = client.query("UPDATE connected_device SET active = {0} WHERE id = {1}".format(!pause, deviceId));
+           
+           query.on('end', function(){
+               done();
+           });
+        });
+    },
+    
     RemoveConnectedDevice: function(deviceId){
         pg.connect(this.connectionString, function(err, client, done){
            var query = client.query("DELETE FROM connected_device WHERE id = " + deviceId);
@@ -249,7 +260,8 @@ module.exports = {
                     "SELECT s.* \
                     FROM v_map_states s \
                     INNER JOIN connected_device cd ON cd.id = s.connected_device_id \
-                    WHERE cd.game_id = " + gameId);
+                    WHERE cd.game_id = {0} \
+                    AND cd.active = TRUE".format(gameId));
                 
                 //var group = new Group();
                 var connectedDevices = [];
