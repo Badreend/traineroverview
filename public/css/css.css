@@ -300,12 +300,12 @@ h3{
     margin:0 auto;
     z-index:10;
   }
-  .hexagon_small {
+.hexagon_small {
     width: 100px;
     height: 82px;
     -webkit-clip-path: url("#polygon-clip-hexagon");
-    -moz-clip-path: url("#polygon-clip-hexagon");
     clip-path: url("#polygon-clip-hexagon");
+    border: 0;
     overflow: hidden;
     margin:0 auto;
     z-index: 10;
@@ -343,15 +343,7 @@ h3{
 }
 
 
-.hexagon_small {
-    width: 100px;
-    height: 82px;
-    -webkit-clip-path: url("#polygon-clip-hexagon");
-    clip-path: url("#polygon-clip-hexagon");
-    overflow: hidden;
-    margin:0 auto;
-    z-index: 10;
-  }
+
 
 
 .hexagon img.tall, .hexagon_small img.tall{

@@ -5,14 +5,21 @@
 	<div id="rev_list">
 		<ul id="draglist" style="height:280px">
 			{{#each connectedDevices}}
+
 			<li class="drag_box" device-id="{{this.id}}" >
+				<div class= "img_container_small" >
+					<div class="hexagon_small">
 				<img src="{{this.rehabilitant.pictureUrl}}">
+			</div></div>
 				<h3>{{this.rehabilitant.GetFullName}}</h3>   
 			</li>
 			{{/each}}
 			{{#each rehabilitants}}
 			<li class="drag_box" device-id="" >
+
+				
 				<a href="/rehabilitant?id={{this.id}}" data-toggle="modal" data-target="#myModal">
+
 					<img src="{{this.pictureUrl}}">
 					<h3>{{this.GetFullName}}</h3>
 				</a>
