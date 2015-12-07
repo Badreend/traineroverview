@@ -34,6 +34,20 @@ var hbs = expressHbs.create({
             }else{
                 return options.fn(this);
             } 
+        },
+        notIn: function(context, options){
+            var contains = false;
+            context.forEach(function(element) {
+                if(element.rehabilitant.id == this.id){
+                    contains = true;
+                }
+            }, this);
+            
+            if(contains){
+                return options.inverse(this);
+            }else{
+                return options.fn(this);
+            } 
         }
     },
     layoutsDir: 'views/layouts/',
@@ -113,6 +127,10 @@ app.post('/update_rehabilitant', checkAuth, function(req, res){
 
 app.get('/group-activity', checkAuth, function(req, res){
     var groupId = req.query.group_id;
+    
+    if(!groupId){
+        return res.redirect('/group-overview');
+    }
     
     res.cookie('currentGroup', groupId);
     
@@ -216,16 +234,14 @@ app.post('/pair_devices', function(req, res){
 });
 
 app.get('/map_v2', checkAuth, function(req, res){
-    var trainerId = req.session.user_id;
     var gameId = res.locals.gameId;
     
     db.GetGameStates(gameId, function(connectedDevices){
-        res.render('map_v2', { connectedDevices: connectedDevices });
+        res.render('map_v2', { connectedDevices: connectedDevices, gameId: gameId });
     });
 });
 
 app.get('/eva', checkAuth, function(req, res){
-    var trainerId = req.session.user_id;
     var gameId = res.locals.gameId;
     
     db.GetGameStates(gameId, function(connectedDevices){
@@ -234,10 +250,12 @@ app.get('/eva', checkAuth, function(req, res){
 });
 
 app.post('/exit_game', checkAuth, function(req, res){
-    var trainerId = req.session.user_id;
+    var gameId = req.body.gameId;
+    var groupId = req.body.groupId;
     
-    db.ExitGame(trainerId, function(exitGames){
-        res.send({exitGames: exitGames});
+    //TODO: handle connected devices. Should they be inactive? Receive a warning?
+    db.ExitGame(gameId, function(exitGames){
+        res.redirect('/group-activity?group_id='+groupId);
     });
     
 });

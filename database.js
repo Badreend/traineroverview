@@ -396,14 +396,14 @@ module.exports = {
         });
     },
     
-    ExitGame: function(trainerId, callback){
+    ExitGame: function(gameId, callback){
         pg.connect(this.connectionString, function(err, client, done){
            var query = client.query(
                "UPDATE game \
                 SET active = FALSE \
                 ,end_date = now() \
-                WHERE trainer_id = {0} \
-                RETURNING id".format(trainerId));
+                WHERE id = {0} \
+                RETURNING id".format(gameId));
            
            var gameIds = [];
            query.on('row', function(row){
