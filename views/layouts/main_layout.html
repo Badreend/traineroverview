@@ -137,12 +137,17 @@ function menuHighlight(val){
         <div id="container" >
         <div id="side_column">
             <div id="menu">
-           <ul id="menu_top">   
+           <ul id="menu_top">  
+               <a href="#" onClick="menuSwitch()">
+                <li>
+                    Informatie <img src="imgs/shared/Button_Menu.png"/>
+                </li>
+                </a> 
                 <li id='group_overview'>
-                    <a href="/group-overview">Groepsoverzicht<img src="imgs/shared/Button_Group.png"></a>
+                    <a href="/group-overview">Groepsoverzicht<img src="imgs/shared/Button_Back.png"></a>
                 </li>
                 <li id='group_activity' class="hide menu-current-group">
-                    <a href="/group-activity?group_id=">Groepsactiviteit<img src="imgs/shared/Button_GroupAssignment.png"></a>
+                    <a href="/group-activity?group_id=">Groepsactiviteit<img src="imgs/shared/Button_Group.png"></a>
                 </li>
                 {{#hasGame}}
                 <li id='eva'class="menu-eva">
@@ -159,14 +164,10 @@ function menuHighlight(val){
                 <li>
                     <a class="modal-link" href="/rehabilitant" data-toggle="modal" data-target="#myModal">
                         Voeg revalidant toe
-                        <img src="imgs/shared/Button_Plus.png"/>
+                        <img src="imgs/shared/Button_GroupAssignment.png"/>
                     </a>
                 </li>
-                <a href="#" onClick="menuSwitch()">
-                <li>
-                    Informatie <img src="imgs/shared/Button_Menu.png"/>
-                </li>
-                </a>
+                
                 <li>
                     <a href="/logout">Uitloggen<img src="imgs/shared/Button_LogOut.png"></a>
                 </li>

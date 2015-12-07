@@ -161,9 +161,10 @@
 					</td>
 					<td>
 						<label for="selectedGroup"></label>
-						<select class="form-control" id="selectedGroup">
-    						<option value="maandagWoensdag" >Maandag - Woensdag</option>
-    						<option value="donderdagVrijdag">Donderdag - Vrijdag</option>
+						<select class="form-control" name="group_id">
+							{{#each groups}}
+    						<option {{#equals ../rehabilitant.groupId this.id}}selected{{/equals}} value="{{this.id}}" >{{this.name}}</option>
+    						{{/each}}
   						</select>
 					</td>
 				</tr>

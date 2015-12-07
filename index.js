@@ -48,6 +48,13 @@ var hbs = expressHbs.create({
             }else{
                 return options.fn(this);
             } 
+        },
+        equals: function(val1, val2, options){
+            if(val1 != val2){
+                return options.inverse(this);
+            }else{
+                return options.fn(this);
+            } 
         }
     },
     layoutsDir: 'views/layouts/',
@@ -97,14 +104,15 @@ app.get('/group-overview', checkAuth, function(req, res){
 app.get('/rehabilitant', checkAuth, function(req, res){
     var rehabilitantId = req.query.id;
     
-    if(rehabilitantId != null){
-        db.GetRehabilitant(rehabilitantId, function(rehabilitant){
-            //res.render('rehabilitant', {rehabilitant:null, layout: null});
-            res.render('rehabilitant', {rehabilitant:rehabilitant, layout: null});
-        });
-    }else{
-        res.render('rehabilitant', {layout: null});
-    }
+    db.GetGroups(function(groups){
+        if(rehabilitantId != null){
+            db.GetRehabilitant(rehabilitantId, function(rehabilitant){
+                res.render('rehabilitant', {rehabilitant:rehabilitant, layout: null, groups: groups});
+            });
+        }else{
+            res.render('rehabilitant', {layout: null, groups: groups});
+        }
+    });
 });
 
 app.post('/add_rehabilitant', checkAuth, function(req, res){
@@ -316,20 +324,6 @@ io.on('connection', function(socket){
 	});
 
 
-
- //    function dataClientTest(){
- //        var devices = [];
- //        //fill devices[]
- //        for(var i = 0; i < 4;i++){
- //           var device = {device_id:i,x:52.033518,y:5.337378,heartrate:120};
- //            devices.push(device);
- //        }
- //        for(var i = 0; i < devices.length; i++){
- //            io.sockets.emit("dataClient",devices[i]);
- //        }
- //    }
-	// setTimeout(dataClientTest, 3000);
-
 socket.on('disconnect',function(data){
 		console.log('disconnect');
 	});
@@ -355,7 +349,8 @@ function checkAuth(req, res, next) {
         res.redirect('/login');
     } else {
         res.locals.trainerId = req.session.user_id;
-        res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+        //TODO: zet dit aan voor snelheid improvisatie!
+        //res.header('Cache-Control', 'public, max-age=6000');
         
         db.GetTrainerGame(req.session.user_id, function(game){
             if(game.id != 0){
