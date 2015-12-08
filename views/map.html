@@ -16,12 +16,14 @@
 			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
 		-->
+		
 	</div>
 </div>
 <div id="legend">
 	<div id="stop_game">
 		<a href="#" class="doPopover stopBTN"><i class="fa fa-user"></i>Stop Game</a>
 	</div>
+	<button class="btn" onClick="allesClear()">Verberg info</button>
 	<div id="game_timer">
 		00:00
 	</div>
@@ -118,10 +120,29 @@ $(document).ready(function() {
 
     setTimeout(update, 1000);
 	
+
+
+	$(".info").on("tap",function(){
+	console.log('tapping')
+	$('.drag_box').css('opacity', '1');
+	clearInfo();
+});
+
+
+$('#loadMap').bind('dblclick', function(){
+	console.log('click')
+	$('.drag_box').css('opacity', '1');
+	clearInfo();
+});
+
  } );
 
 
-
+function allesClear(){
+	$('.drag_box').css('opacity', '1');
+	console.log("wahed");
+	clearInfo();
+}
 
 
 
@@ -238,18 +259,6 @@ function clearInfo(){
 	selectedPlayer = undefined;
 }
 
-$('body').bind('tap', function(){
-	console.log('tapping')
-	$('.drag_box').css('opacity', '1');
-	clearInfo();
-});
-
-
-$('body').bind('dblclick', function(){
-	console.log('click')
-	$('.drag_box').css('opacity', '1');
-	clearInfo();
-});
 
 $('.marker').bind('touchend click', function(){
 	var markerId = $(this).attr('device-id');
@@ -386,7 +395,7 @@ socket.on('dataClient', function(data){
 
 var direction = 450; 
 setInterval(function(){ 
-	var tempId = 66;
+	var tempId = 69;
 	var markerCorrection = 25;
 	console.log('a')
 	var heartrate = (Math.random()*100)+40;
