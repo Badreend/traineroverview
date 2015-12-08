@@ -1,13 +1,6 @@
 <script src="js/plugins/panzoom.js"></script>
 <script src="js/plugins/pointertouch.js"></script>
 <script src="js/d3.min.js"></script>
-<style type="text/css">
-
-.drag_box img{
-	border: 5px solid #fddf29 !important;
-}
-
-</style>
 
 {{> rehabilitantlist }}
 
@@ -349,8 +342,11 @@ setInterval(function(){
 
 		$(deviceMarker).css("transform", arrayToMatrix(mat));
 		//console.log(getColor(temp_data[getIndexOfId(tempId)],2));
-		$(deviceMarker).children().css( "background-color", getColor(temp_data[getIndexOfId(tempId)],temp_data[getIndexOfId(tempId)].loc.length-2) );	
-		$(deviceDragBox).find("img").css( "border","5px solid" +getColor(temp_data[getIndexOfId(tempId)],temp_data[getIndexOfId(tempId)].loc.length-2) +"!important");	
+		$(deviceMarker).children().css( "background-color", getColor(temp_data[getIndexOfId(tempId)],temp_data[getIndexOfId(tempId)].loc.length-2) );
+		
+		//$(deviceDragBox).find(".circle").css( "background-color","#ff0000");
+		console.log("border","5px solid " +getColor(temp_data[getIndexOfId(tempId)],temp_data[getIndexOfId(tempId)].loc.length-2) +"!important");
+		$(deviceDragBox).find(".circle").css( "border", "5px solid " + getColor(temp_data[getIndexOfId(tempId)],temp_data[getIndexOfId(tempId)].loc.length-2));	
 
 
 }, 2000);
