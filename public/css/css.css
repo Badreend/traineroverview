@@ -359,14 +359,15 @@ h3{
 
 
 
-.hexagon img.tall, .hexagon_small img.tall{
+.hexagon img.tall, .hexagon_small img.tall, .circle img.tall{
     width: 100%;
     height: auto;
 }
 
-.hexagon img.wide, .hexagon_small img.wide{
+.hexagon img.wide, .hexagon_small img.wide, .circle img.wide{
     height: 100%;
     width: auto;
+    margin:0 auto;
 }
 
 
@@ -634,14 +635,19 @@ ul
 #droppables ul { position: relative; }
 #draggables li { position: static; }
 
-
+.nostyle{
+  width: 90%;
+  height: 100%;
+  background-color: transparent;
+  border: 0;
+}
 
 /* map css */
 
 
 #legend{
   width:200px;
-  height:110px;
+  height:150px;
   position: absolute;
   z-index: 99;
   bottom:0px;
@@ -701,6 +707,21 @@ ul
   text-align: center;
   font-size:32px;
 }
+
+.stopBTN{
+    width: 210px;
+    height: 30px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42;
+    background-color: #689595;
+    padding: 5px 10px 5px 10px;
+  }
+
+  .stopBTN, .stopBTN:hover, .stopBTN:active{
+    color: #fff;
+    text-decoration: none;
+  }
 
 
 #inverted-contain .panzoom-parent
