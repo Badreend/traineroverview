@@ -1,7 +1,64 @@
 <script src="js/Sortable.js"></script>
-<div id="rev_list">
+
+<style>
+
+#mover{
+    height: auto;
+    overflow: auto;
+}
+
+.verticalScroll[type=range]
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 50px;
+    position: absolute;
+    height: 100%;
+    z-index: 100000;
+    opacity: 0.001;
+    margin-left: -15px;
+
+}
+
+.scrollbarThumb{
+    width:20px;
+    height:30px;
+    position: fixed;
+    left: 230px;
+    background-color: #689595;
+    z-index:10;
+}
+
+.scrollbarBG{
+    height: 100%;
+    width:20px;
+    background-color: #ededed;
+    position: fixed;
+    left: 230px;
+    border: 1px solid #dedede
     
-    <ul class="drop_box" style="height:280px">
+}
+
+
+
+
+</style>
+
+
+    <div class="scrollbarBG">
+        <div class="scrollbarThumb"></div>
+    <input type="range" class="verticalScroll" id="scroller" value = "1000" min="0" max="1000" oninput="scroll(this.value)"/></div>
+
+
+<div id="rev_list" style="overflow:hidden;">
+
+    
+
+    
+
+
+    <div id = "mover">
+    <ul class="drop_box" style="height:auto;">
         {{#each rehabilitants}}
         <li class="drag_box" userID="{{this.id}}" >
             <input class="id-holder" type="hidden" name="rehabilitant_id" value="{{this.id}}"/>
@@ -13,7 +70,11 @@
             <h3>{{this.GetFullName}}</h3>   
         </li>
         {{/each}}
+
+        
+
     </ul>
+</div>
 </div>
 
 
@@ -48,8 +109,33 @@
 
 <script type="text/javascript">
 
+var maxScrollvalue = 1000;
+var moverHeight = parseInt($('#mover').css('height').replace("px", ""));
+var h = parseInt($("#rev_list").css('height').replace("px",""));
+var scrollbarHeight = parseInt($('.verticalScroll').css('height').replace('px',""));
+var thumbHeight = parseInt($('.scrollbarThumb').css('height').replace("px", ""));
+
+
+
+function scroll(val){
+    if (moverHeight > h){
+        var marginTop = parseInt($('#mover').css('margin-top').replace("px", ""));
+        val = maxScrollvalue - val;
+/// val /1000 * new max
+        var newVal = (val/maxScrollvalue) * (moverHeight-h);
+        var newThumbLoc = (val/maxScrollvalue) * (scrollbarHeight-thumbHeight);
+        $('#mover').css('margin-top', newVal*-1);
+        $('.scrollbarThumb').css('margin-top', newThumbLoc);
+    }
+}
 
 $(document).ready(function(){
+    if (moverHeight<h){
+    $('.scrollbarBG').css('display', 'none');
+
+
+}
+
     resort();
 });
 
