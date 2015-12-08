@@ -181,9 +181,6 @@ app.get('/nulmeting', checkAuth,function(req, res){
     res.render('nulmeting');
 });
 
-app.get('/map', checkAuth, function(req, res){
-    res.render('map');
-});
 
 app.get('/', function(req, res){
     res.render('splash', {layout: null});
@@ -237,7 +234,7 @@ app.post('/pair_devices', function(req, res){
     
     db.PairDevices(devices, function(){
         io.emit("startGame");
-        res.redirect('/map_v2');
+        res.redirect('/map');
     });
 });
 
@@ -248,12 +245,12 @@ app.get('/map_v2', checkAuth, function(req, res){
         res.render('map_v2', { connectedDevices: connectedDevices, gameId: gameId });
     });
 });
-app.get('/mapB', checkAuth, function(req, res){
+app.get('/map', checkAuth, function(req, res){
     var trainerId = req.session.user_id;
     var gameId = res.locals.gameId;
     
     db.GetGameStates(gameId, function(connectedDevices){
-        res.render('mapB', { connectedDevices: connectedDevices });
+        res.render('map', { connectedDevices: connectedDevices });
     });
 });
 
