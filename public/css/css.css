@@ -368,7 +368,7 @@ h3{
 .hexagon img.wide, .hexagon_small img.wide, .circle img.wide{
     height: 100%;
     width: auto;
-    margin:0 auto;
+    margin:0;
 }
 
 
