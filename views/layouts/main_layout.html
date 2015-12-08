@@ -94,6 +94,14 @@ $(window).load(function() {
         else{imgClass = 'tall';}
         $(this).addClass(imgClass);
     })
+
+     $('.circle').find('img').each(function() {
+        //var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
+        var imgClass;
+        if (this.width>this.height) {imgClass = 'wide';}
+        else{imgClass = 'tall';}
+        $(this).addClass(imgClass);
+    })
 })
 
 var menuOpened = false;
@@ -133,7 +141,7 @@ function menuHighlight(val){
 
 </head>
     <body>
-        <div id="warningMSG">Yalla hou je scherm recht</div>
+        <div id="warningMSG">Houd uw scherm horizontaal om de app te kunnen gebruiken.</div>
         <div id="container" >
         <div id="side_column">
             <div id="menu">
