@@ -163,24 +163,24 @@ $(document).ready(function() {
 
 var temp_data = [];
 temp_data = [
-{id:1,name:"Momo Niek",diagnose:"Diagnose: knie & rug",min:90,max:135,loc:[
-	{t:undefined,h:95,x:500,y:450},
-	{t:undefined,h:150,x:450,y:435},
-	{t:undefined,h:110,x:432,y:455},
-	{t:undefined,h:120,x:422,y:510},
-	{t:undefined,h:140,x:390,y:450},
-	{t:undefined,h:145,x:380,y:470},
-	{t:undefined,h:70,x:362,y:505},
-	{t:undefined,h:30,x:322,y:500},]},
-{id:2,name:"Ings",diagnose:"Diagnose: knie & rug"}
+{{#each connectedDevices}}
+{id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",
+ min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},loc:[
+	{{#each this.rehabilitant.states}}
+	{t:{{this.timestamp}},h:{{this.heartRate}},x:{{mapX}},y:{{this.mapY}} },
+	{{/each}}
+	]},
+{{/each}}
 ];
 
 var all_revs = [];
 
 var colors = ["#0281A1","#FFFF03","#B80202"];
 
+{{#each connectedDevices}}
+createPath(temp_data[{{@index}}]);
+{{/each}}
 
-//createPath(temp_data[0]);
 function createPath(_userData){
 	var path = "";
 	var prevColor = undefined;
@@ -232,7 +232,7 @@ function drawPath(_path,_color,_avrHeartrate){
 	.attr("d",_path)
 	.attr("stroke",_color)
 	.attr("title",_avrHeartrate)
-	.attr("stroke-width",10)
+	.attr("stroke-width",7)
 	.attr("fill","none")
 	.attr("stroke-linejoin","round")
 	.attr("stroke-linecap","round")
@@ -293,50 +293,63 @@ function displayInfo(_idData){
 	$('#info').empty();
 	$('#info').append("<h3>" + _idData.name + "</h3>");
 	$('#info').append("<p>" + _idData.diagnose + "</p>");
-			//			$('#info').append("<p>" + _idData.diagnose + "</p>");
-
-		}
+	//			$('#info').append("<p>" + _idData.diagnose + "</p>");
+}
 		//----
 
-		var pixelMeterRatio = 1.73;
-		var originX = 745;
-		var originY = 918;
+var pixelMeterRatio = 1.73;
+var originX = 745;
+var originY = 918;
 
-		var markerScale = 0.5;
+var markerScale = 0.5;
 		
-		(function() {	
-			var $section = $('#inverted-contain');
-			$section.find('.panzoom').panzoom({
-				$zoomIn: $section.find(".zoom-in"),
-				$zoomOut: $section.find(".zoom-out"),
-				$zoomRange: $section.find(".zoom-range"),
-				$reset: $section.find(".reset"),
-				startTransform: 'scale(1.1)',
-				increment: 0.1,
-				minScale: 1,
-				contain: 'invert',
-				onChange: function(e, panzoom){
-					scale = panzoom.getMatrix()[0];
-					$(".marker").each(function(idx, elem){
-						var mat = matrixToArray($(elem).css("transform"));
+(function() {	
+	var $section = $('#inverted-contain');
+	$section.find('.panzoom').panzoom({
+		$zoomIn: $section.find(".zoom-in"),
+		$zoomOut: $section.find(".zoom-out"),
+		$zoomRange: $section.find(".zoom-range"),
+		$reset: $section.find(".reset"),
+		startTransform: 'scale(1.1)',
+		increment: 0.1,
+		minScale: 1,
+		contain: 'invert',
+		onChange: function(e, panzoom){
+			scale = panzoom.getMatrix()[0];
+			$(".marker").each(function(idx, elem){
+				var mat = matrixToArray($(elem).css("transform"));
 
-					//scaleX
-					mat[0] =0.5 * 1/scale;
-					//scaleY
-					mat[3] =0.5 * 1/scale;
+			//scaleX
+			mat[0] =0.5 * 1/scale;
+			//scaleY
+			mat[3] =0.5 * 1/scale;
 
-					$(elem).css("transform", arrayToMatrix(mat));
-					//test({device_id: 1, heartrate: 89, x: 47.15, y:-41.17});
-				});
-				}
-			}).panzoom('zoom');
-		})();
-		function matrixToArray(str) {
-			return str.match(/(-?[0-9\.]+)/g);
+			$(elem).css("transform", arrayToMatrix(mat));
+			//test({device_id: 1, heartrate: 89, x: 47.15, y:-41.17});
+		});
 		}
-		function arrayToMatrix(arr){
-			var str = "matrix(";
-				return str + arr[0] +","+arr[1]+","+arr[2]+","+arr[3]+","+arr[4]+","+arr[5]+")";
+	}).panzoom('zoom');
+	
+	$('div.panzoom-parent').on('mousewheel.focal', function(e) {
+		e.preventDefault();
+		var delta = e.delta || e.originalEvent.wheelDelta;
+		var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
+		
+		$section.find('.panzoom').panzoom('zoom', zoomOut, {
+			increment: 0.1,
+			focal: e
+		});
+	});
+	
+	var dbPath
+})();
+
+function matrixToArray(str) {
+	return str.match(/(-?[0-9\.]+)/g);
+}
+function arrayToMatrix(arr){
+	var str = "matrix(";
+		return str + arr[0] +","+arr[1]+","+arr[2]+","+arr[3]+","+arr[4]+","+arr[5]+")";
 }
 
 socket.on('dataClient', function(data){

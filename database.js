@@ -109,8 +109,9 @@ module.exports = {
             });
     
             query.on('end', function() {
-                done();
                 var valid = results[0].password == trainerPassword;
+                
+                done();
                 callback(valid);
             });
         });
@@ -137,6 +138,8 @@ module.exports = {
     },
     
     CreateNewGame: function(trainerId, callback){
+        this.ExitGame(trainerId, function(){});
+        
         pg.connect(this.connectionString, function(err, client, done) {
             var query = client.query(
                 "INSERT INTO game(\"trainer_id\") " +
@@ -156,21 +159,17 @@ module.exports = {
         });
     },
     
-    GetGame: function(gameId, callback){
+    GetTrainerGame: function(trainerId, callback){
         pg.connect(this.connectionString, function(err, client, done) {
-            
-            var gameSql = gameId != null
-                ?   "SELECT g.id \"game_id\", t.* \
-                    FROM game g \
-                    INNER JOIN trainer t ON t.id = g.trainer_id \
-                    WHERE g.id = " + gameId
-                :   "SELECT g.id \"game_id\", t.* \
-                    FROM game g \
-                    INNER JOIN trainer t ON t.id = g.trainer_id \
-                    ORDER BY g.id DESC \
-                    LIMIT 1";
-                    
-            var query = client.query(gameSql);
+             
+            var query = client.query(
+                "SELECT g.id \"game_id\", t.* \
+                 FROM game g \
+                 INNER JOIN trainer t ON t.id = g.trainer_id \
+                 WHERE g.active = TRUE \
+                 AND g.trainer_id = " + trainerId + " \
+                 ORDER BY game_id DESC \
+                 LIMIT 1");
  
             var game = new Game();
             var trainer = new Trainer();
@@ -181,7 +180,6 @@ module.exports = {
             });
             
             query.on('end', function() {
-                done();
                 game.trainer = trainer;
                
                 var q2 = client.query(
@@ -202,9 +200,9 @@ module.exports = {
                 });
                 
                 q2.on('end', function() {
-                    done();
-                
                     game.connectedDevices = connDevices;
+                    
+                    done();
                     callback(game);
                 });
             });
@@ -241,25 +239,17 @@ module.exports = {
         });
     },
     
-    GetFullGame: function(gameId, callback){
-        this.GetGame(gameId, function(game){
-            if(game.connectedDevices.length == 0){
-                return callback(game.connectedDevices);
-            }
+    GetGameStates: function(gameId, callback){
+        //this.GetTrainerGame(trainerId, function(game){
             
             pg.connect(this.connectionString, function(err, client, done) {
-                var commaDelimitedDeviceIds = game.connectedDevices.map(function(device){ return device.id; }).join(",");
-                
-                if(client == null){
-                    console.log("client null! " + err);
-                    callback([{id: 44, rehabilitant_id:1, rehabilitant: {id:1}}]);
-                    return;
-                }
+                //var commaDelimitedDeviceIds = game.connectedDevices.map(function(device){ return device.id; }).join(",");
                 
                 var query = client.query(
-                    "SELECT * \
-                    FROM v_map_states \
-                    WHERE connected_device_id IN (" + commaDelimitedDeviceIds + ")");
+                    "SELECT s.* \
+                    FROM v_map_states s \
+                    INNER JOIN connected_device cd ON cd.id = s.connected_device_id \
+                    WHERE cd.game_id = " + gameId);
                 
                 //var group = new Group();
                 var connectedDevices = [];
@@ -271,12 +261,17 @@ module.exports = {
                     var rehabilitant = new Rehabilitant();
                     var rehabilitantState = new RehabilitantState();
                     
-                    Map(connectedDevice, row, 'connected_device_');
-                    Map(rehabilitant, row, 'rehabilitant_');
-                    Map(rehabilitantState, row, 'state_');
+                    if(!IsInArray(connectedDevices, row.connected_device_id, "id")){
+                        Map(connectedDevice, row, 'connected_device_');
+                        connectedDevices.push(connectedDevice);
+                    }
                     
-                    connectedDevices.push(connectedDevice);
-                    rehabilitants.push(rehabilitant);
+                    if(!IsInArray(rehabilitants, row.rehabilitant_id, "id")){
+                        Map(rehabilitant, row, 'rehabilitant_');
+                        rehabilitants.push(rehabilitant);
+                    }
+                        
+                    Map(rehabilitantState, row, 'state_');
                     states.push(rehabilitantState);
                 });
                 
@@ -299,7 +294,7 @@ module.exports = {
                     callback(connectedDevices);
                 });
             });
-        });
+        //});
     },
     
     NewRehabilitant: function(rehabilitant, callback){
@@ -389,13 +384,23 @@ module.exports = {
         });
     },
     
-    ExitGame: function(gameId, callback){
+    ExitGame: function(trainerId, callback){
         pg.connect(this.connectionString, function(err, client, done){
-           var query = client.query("UPDATE game SET active = FALSE WHERE id = " + gameId);
+           var query = client.query(
+               "UPDATE game \
+                SET active = FALSE \
+                ,end_date = now() \
+                WHERE trainer_id = {0} \
+                RETURNING id".format(trainerId));
+           
+           var gameIds = [];
+           query.on('row', function(row){
+               gameIds.push(row);
+           });
            
            query.on('end', function(){
                done();
-               callback();
+               callback(gameIds);
            });
         });
     },
@@ -409,11 +414,43 @@ module.exports = {
                     .format(device.rehabilitant_id != null ? device.rehabilitant_id : 'NULL', device.id));
                 
                 query.on('end', function(){
-                    done();
                     counter++;
-                    if(counter == devices.length)
+                    if(counter == devices.length){
+                        done();
                         callback();
+                    }
                 });
+            });
+        });
+    },
+    
+    GetActiveGames: function(callback){
+        pg.connect(this.connectionString, function(err, client, done){
+
+            var query = client.query(
+                "SELECT g.id \"game_id\" \
+                 , g.start_date \"game_start_date\" \
+                 , t.id \"trainer_id\" \
+                 , t.first_name \"trainer_first_name\" \
+                 , t.last_name \"trainer_last_name\" \
+                 FROM game g \
+                 INNER JOIN trainer t ON t.id = g.trainer_id \
+                 WHERE g.active = TRUE");
+            
+            var games = [];
+            query.on('row', function(row){
+                var game = new Game();
+                var trainer = new Trainer();
+                Map(game, row, 'game_');
+                Map(trainer, row, 'trainer_');
+                
+                game.trainer = trainer;
+                games.push(game);
+            });
+            
+            query.on('end', function(){
+                done();
+                callback(games);    
             });
         });
     }
@@ -439,4 +476,12 @@ if (!String.prototype.format) {
             return typeof args[number] != 'undefined' ? args[number] : match;
         });
     };
+}
+
+function IsInArray(arr, prop, key){
+    for(var i=0; i<arr.length; i++){
+        if(arr[i][key] == prop)
+            return true;
+    }
+    return false;
 }

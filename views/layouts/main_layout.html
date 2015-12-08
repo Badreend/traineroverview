@@ -57,11 +57,6 @@
             $(this).removeData('bs.modal');
         });
         
-        if(Cookies.get("gameBusy")){
-            $(".menu-eva").removeClass("hide");
-            $(".menu-map").removeClass("hide");            
-        }
-        
         var currentGroup = Cookies.get("currentGroup");
         if(currentGroup){
             $(".menu-current-group").removeClass("hide"); 
@@ -143,15 +138,16 @@ function menuHighlight(val){
                 <li id='group_activity' class="hide menu-current-group">
                     <a href="/group-activity?group_id=">Groepsactiviteit<img src="imgs/shared/Button_GroupAssignment.png"></a>
                 </li>
-                <li id='eva'class="hide menu-eva">
-                    <a href="/nulmeting">EVA<img src="imgs/shared/Button_EVA.png"></a>
+                {{#hasGame}}
+                <li id='eva'class="menu-eva">
+                    <a href="/eva">EVA<img src="imgs/shared/Button_EVA.png"></a>
                 </li>
-
-                <li id='map'class="hide menu-map">
+                <li id='map'class="menu-map">
                     <a href="/map_v2">Game OGS
                         <img style="padding-top:1px"src="imgs/shared/Button_OGS.png">
                     </a>
                 </li>
+                {{/hasGame}}
             </ul>
             <ul id="menu_bottom">
                 <li>

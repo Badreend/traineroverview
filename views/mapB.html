@@ -1,0 +1,363 @@
+<script src="js/plugins/panzoom.js"></script>
+<script src="js/plugins/pointertouch.js"></script>
+<script src="js/d3.min.js"></script>
+<style type="text/css">
+
+.drag_box img{
+	border: 5px solid #fddf29 !important;
+}
+
+</style>
+
+{{> rehabilitantlist }}
+
+<div id="right_column">
+	<div id="header">
+		<h1>Speloverzicht</h1>
+	</div>
+	<div id="map_info_column">
+
+		<div id="info">
+			<!-- 
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
+		-->
+	</div>
+</div>
+<div id="legend">
+	<div id="game_timer">
+		20:01
+	</div>
+	<div>
+		<div id="phase1">
+			KOUD
+		</div>
+		<div id="phase2">
+			GOED
+		</div>
+		<div id="phase3">
+			WARM
+		</div>
+	</div>
+</div>
+
+
+<section id="inverted-contain">
+	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
+		
+		<div class="panzoom" style="width:1700px;">
+			<svg width="500px" height="800px" style="position:absolute" id="paths">
+			</svg>
+			{{#each connectedDevices}}
+			<div class="marker" device-id="{{this.id}}" >
+				<div style="border-radius: 50%; width:50px; height:50px; background:#fff; opacity:1;">
+				</div>
+			</div>
+			{{/each}}
+
+			<div id="loadMap" style= "width:1753px; height:1240px; overflow:hidden;">
+				<!-- Dont load the map as and SVG, use jquery to insert the code from the SVG file into this div. For better framerate, makes maikel smile :) -->
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).ready(function() {
+	$("#loadMap").load("imgs/views/map/kaart.html"); 
+} );
+
+var levelMargin = 25;
+var colors = ["#3D7BF7","#36FFAC","#FFEC38","#CC833B","#EB564B"];
+var selectedPlayer = undefined;
+var temp_data = [];
+temp_data = [
+{{#each connectedDevices}}
+{id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",
+min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},loc:[
+{{#each this.rehabilitant.states}}
+{t:{{this.timestamp}},h:{{this.heartRate}},x:{{mapX}},y:{{this.mapY}} },
+{{/each}}
+]},
+{{/each}}
+];
+
+
+function updateData(_newData){
+	for(var i = 0; i < temp_data.length; i++){
+		if(_newData.id === temp_data[i].id){
+			temp_data[i].loc.push(_newData.loc);
+			$('#paths').empty();
+
+			createPath(temp_data[i]);
+		}
+	}
+}
+
+
+function getColor(_userData,i){
+	if(_userData.loc[i].h < _userData.min){
+		if(_userData.loc[i].h < _userData.min-levelMargin){
+			color = colors[0];
+		}else{
+			color = colors[1];
+		}
+	}else if(_userData.loc[i].h > _userData.max){
+		if(_userData.loc[i].h > _userData.max+levelMargin){
+			color = colors[4];
+		}else{
+			color = colors[3];
+		}
+	}else{
+		color = colors[2];
+	}
+	return color;
+}
+
+function getIndexOfId(_id){
+	for(var i = 0 ; i < temp_data.length; i++){
+		if(temp_data[i].id === _id){
+			return i;
+		}
+	}
+}
+
+function createPath(_userData){
+	var path = "";
+	var prevColor = undefined;
+	var prevHeartRate = undefined;
+	for(var i = 0; i < _userData.loc.length; i++){
+		var color = undefined;
+
+		color = getColor(_userData,i); 
+
+		if(path === ""){
+			path += "M";
+			prevHeartRate = _userData.loc[i].h;
+		}else
+		{			
+			path += "L";
+	}
+	path += _userData.loc[i].x+" ";
+	path += _userData.loc[i].y+" ";
+	;
+
+	if(prevColor !== color || prevColor !== undefined){
+		drawPath(path,prevColor,prevHeartRate,_userData);
+		path = "";
+		path += "M";
+		path += _userData.loc[i].x+" ";
+		path += _userData.loc[i].y+" ";
+	}
+	path += " ";
+	prevColor = color;
+}
+
+	//	drawPath(path,color);
+};
+
+//Path will be visualised here
+function drawPath(_path,_color,_avrHeartrate,_userData){
+	console.log(_path,_color,_avrHeartrate,_userData);
+	console.log(selectedPlayer);
+	//draw path only when
+	if(_userData.id === selectedPlayer){
+		var pathContainer = d3.select("#paths");
+		pathContainer.append("svg:path")
+		.attr("d",_path)
+		.attr("stroke",_color)
+		.attr("title",_avrHeartrate)
+		.attr("stroke-width",7)
+		.attr("fill","none")
+		.attr("stroke-linejoin","round")
+		.attr("stroke-linecap","round")
+		;
+	}
+}
+
+function clearInfo(){
+	$('#info').empty();
+	$('#paths').empty();
+	selectedPlayer = undefined;
+}
+
+
+
+$('body').bind('dblclick', function(){
+	$('.drag_box').css('opacity', '1');
+	clearInfo();
+});
+
+$('.marker').bind('touchend click', function(){
+	var markerId = $(this).attr('device-id');
+	$('.drag_box').each(function(){
+		var dragBoxId = $(this).attr('device-id');
+		if(dragBoxId === markerId){
+			for(var i = 0; i < temp_data.length; i++){
+				if(temp_data[i].id === parseInt(markerId)){
+					clearInfo();
+					selectedPlayer = temp_data[i].id;
+					displayInfo(temp_data[i]);
+					createPath(temp_data[i]);
+				}
+			}
+			$(this).css('opacity', '1');
+		}else{
+			$(this).css('opacity', '.3');
+		}
+
+	});
+});
+
+
+
+$('.drag_box').bind('tap click', function(){
+	var dragBoxId = $(this).attr('device-id');
+	for(var i = 0; i < temp_data.length; i++){
+		if(temp_data[i].id === parseInt(dragBoxId)){
+			clearInfo();
+			selectedPlayer = temp_data[i].id;			
+			displayInfo(temp_data[i]);
+			createPath(temp_data[i]);
+
+		}
+	}
+	$('.drag_box').each(function(){
+		if(dragBoxId === $(this).attr('device-id')){
+			$(this).css('opacity', '1');
+		}else{
+			$(this).css('opacity', '.3');
+
+		}
+	});
+});
+
+
+function displayInfo(_idData){
+	$('#info').empty();
+	$('#info').append("<h3>" + _idData.name + "</h3>");
+	$('#info').append("<p>" + _idData.diagnose + "</p>");
+}
+		//----
+
+		var pixelMeterRatio = 1.73;
+		var originX = 745;
+		var originY = 918;
+
+		var markerScale = 0.5;
+		
+		(function() {	
+			var $section = $('#inverted-contain');
+			$section.find('.panzoom').panzoom({
+				$zoomIn: $section.find(".zoom-in"),
+				$zoomOut: $section.find(".zoom-out"),
+				$zoomRange: $section.find(".zoom-range"),
+				$reset: $section.find(".reset"),
+				startTransform: 'scale(1.1)',
+				increment: 0.1,
+				minScale: 1,
+				contain: 'invert',
+				onChange: function(e, panzoom){
+					scale = panzoom.getMatrix()[0];
+					$(".marker").each(function(idx, elem){
+						var mat = matrixToArray($(elem).css("transform"));
+
+			//scaleX
+			mat[0] =0.5 * 1/scale;
+			//scaleY
+			mat[3] =0.5 * 1/scale;
+
+			$(elem).css("transform", arrayToMatrix(mat));
+			//test({device_id: 1, heartrate: 89, x: 47.15, y:-41.17});
+		});
+				}
+			}).panzoom('zoom');
+
+			$('div.panzoom-parent').on('mousewheel.focal', function(e) {
+				e.preventDefault();
+				var delta = e.delta || e.originalEvent.wheelDelta;
+				var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
+
+				$section.find('.panzoom').panzoom('zoom', zoomOut, {
+					increment: 0.1,
+					focal: e
+				});
+			});
+
+			var dbPath
+		})();
+
+		function matrixToArray(str) {
+			return str.match(/(-?[0-9\.]+)/g);
+		}
+		function arrayToMatrix(arr){
+			var str = "matrix(";
+				return str + arr[0] +","+arr[1]+","+arr[2]+","+arr[3]+","+arr[4]+","+arr[5]+")";
+}
+
+socket.on('dataClient', function(data){
+	var device_id = parseInt(data.device_id);
+		//var lat = parseFloat(data.lat);
+		//var lon = parseFloat(data.lon);
+		var x = parseFloat(data.x);
+		var y = parseFloat(data.y);
+		
+		var heartrate = parseInt(data.heartrate);
+		
+		console.log("id: " + device_id + " - position: " + x + "  " + y);
+		console.log("heartrate: " + heartrate);
+		
+		var deviceMarker = $(".marker[device-id='"+device_id+"']");
+		$(deviceMarker).find(".heartrate-text").text(heartrate); 
+		
+		var mat = matrixToArray($(deviceMarker).css("transform"));
+
+		//posX
+		mat[4] = originX + x * pixelMeterRatio - $(deviceMarker).width() * markerScale;
+		//posY
+		mat[5] = originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
+
+		$(deviceMarker).css("transform", arrayToMatrix(mat));	
+
+		updateData({id:device_id,loc:{t:undefined,h:heartrate,x:x,y:y}});
+	});
+
+
+var direction = 450; 
+setInterval(function(){ 
+	var tempId = 53;
+	var markerCorrection = 25;
+	console.log('a')
+	var heartrate = (Math.random()*100)+40;
+	var x = (Math.random()*50)+500;
+	var y = (Math.random()*5)+direction;
+	direction+=10;
+	updateData({id:tempId,loc:{t:undefined,h:heartrate,x:x,y:y}});
+
+
+	//marker
+	var deviceMarker = $(".marker[device-id='"+tempId+"']");
+	var deviceDragBox =  $(".drag_box[device-id='"+tempId+"']")
+
+	var mat = matrixToArray($(deviceMarker).css("transform"));
+
+		//posX
+		mat[4] = x-markerCorrection;
+		//posY
+		mat[5] = y-markerCorrection;
+
+		$(deviceMarker).css("transform", arrayToMatrix(mat));
+		//console.log(getColor(temp_data[getIndexOfId(tempId)],2));
+		$(deviceMarker).children().css( "background-color", getColor(temp_data[getIndexOfId(tempId)],temp_data[getIndexOfId(tempId)].loc.length-2) );	
+		$(deviceDragBox).find("img").css( "border","5px solid" +getColor(temp_data[getIndexOfId(tempId)],temp_data[getIndexOfId(tempId)].loc.length-2) +"!important");	
+
+
+}, 2000);
+
+
+
+	//[ "1.1",	"0", 	"0", 	"1.1", 	"-87.65", 	"62" ]
+	//scaleX	skewX	skewY	scaleY	posX		posY
+	</script>
+</section>

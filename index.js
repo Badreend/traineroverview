@@ -27,6 +27,13 @@ var hbs = expressHbs.create({
     helpers: {
         json: function(context) {
             return JSON.stringify(context);
+        },
+        hasGame: function(options) {
+            if(!this._locals.gameId){
+                return options.inverse(this);
+            }else{
+                return options.fn(this);
+            } 
         }
     },
     layoutsDir: 'views/layouts/',
@@ -106,15 +113,14 @@ app.post('/update_rehabilitant', checkAuth, function(req, res){
 
 app.get('/group-activity', checkAuth, function(req, res){
     var groupId = req.query.group_id;
-    var gameId = req.session.game_id;
+    
     res.cookie('currentGroup', groupId);
     
     db.GetRehabilitantsInGroup(groupId, function(rehabilitants){
         res.render('group-activity', { 
             groupId: groupId, 
             groupname: 'test', 
-            rehabilitants: rehabilitants,
-            gameId: gameId
+            rehabilitants: rehabilitants
         });
     });
     
@@ -124,14 +130,12 @@ app.get('/overview', checkAuth, function(req, res){
     var groupId = req.query.group_id;
     var trainerId = req.session.user_id;
     
-    if(!req.session.game_id){
-        db.CreateNewGame(trainerId, function(game){
-            req.session.game_id = game.id;
-            res.cookie('gameBusy','true');
+    if(res.locals.gameId){
+        db.GetTrainerGame(trainerId, function(game){
             load(game);
         });
     }else{
-        db.GetGame(req.session.game_id, function(game){
+        db.CreateNewGame(trainerId, function(game){
             load(game);
         });
     }
@@ -176,7 +180,7 @@ app.get('/login', function(req, res){
 
 app.get('/logout', function (req, res) {
     delete req.session.user_id;
-    delete req.session.game_id;
+
     res.redirect('/login');
 });    
 
@@ -189,8 +193,7 @@ app.post('/loginRequest', function(req, res){
             return res.send({valid: false, message: "Password incorrect!"});
         }else{
             req.session.user_id = trainerId;
-            delete req.session.game_id;
-            res.clearCookie('gameBusy');
+            res.locals.trainerId = trainerId;
             res.clearCookie('currentGroup');
             return res.send({valid: true, message:"Correct!", redirect: "/group-overview"});
         }
@@ -213,57 +216,70 @@ app.post('/pair_devices', function(req, res){
 });
 
 app.get('/map_v2', checkAuth, function(req, res){
-    var gameId = req.session.game_id;
+    var trainerId = req.session.user_id;
+    var gameId = res.locals.gameId;
     
-    if(gameId == null){
-        return res.redirect('/group-overview');
-    }
-    
-    db.GetFullGame(gameId, function(connectedDevices){
+    db.GetGameStates(gameId, function(connectedDevices){
         res.render('map_v2', { connectedDevices: connectedDevices });
     });
 });
+app.get('/mapB', checkAuth, function(req, res){
+    var trainerId = req.session.user_id;
+    var gameId = res.locals.gameId;
+    
+    db.GetGameStates(gameId, function(connectedDevices){
+        res.render('mapB', { connectedDevices: connectedDevices });
+    });
+});
+
 app.get('/eva', checkAuth, function(req, res){
-    var gameId = req.session.game_id;
+    var trainerId = req.session.user_id;
+    var gameId = res.locals.gameId;
     
-    if(gameId == null){
-        return res.redirect('/group-overview');
-    }
-    
-    db.GetFullGame(gameId, function(connectedDevices){
+    db.GetGameStates(gameId, function(connectedDevices){
         res.render('eva', { connectedDevices: connectedDevices });
     });
 });
-app.get('/exit_game', checkAuth, function(req, res){
-    var gameId = req.query.id;
+
+app.post('/exit_game', checkAuth, function(req, res){
+    var trainerId = req.session.user_id;
     
-    if(gameId){
-        db.ExitGame(gameId, function(){
-            delete req.session.game_id;
-            res.clearCookie('gameBusy');
-            res.redirect('/group-overview');
-        });
-    }else{
-        res.redirect('/group-overview');
-    }
+    db.ExitGame(trainerId, function(exitGames){
+        res.send({exitGames: exitGames});
+    });
     
 });
 
+app.post('/new_game', checkAuth, function(req, res){
+    var trainerId = req.session.user_id;
+    
+    db.CreateNewGame(trainerId, function(game){
+        res.send({gameId: game.id});
+    });
+});
+
 io.on('connection', function(socket){
-	socket.on('requestID', function(){
-        //TODO: hoe weet je hier met welk device je praat? Als je hieronder io.emit() doet dan stuur je een device_id naar ALLE socket clients
-        //TODO: gameId staat nu op eerst gevonden game. Echter, de unity client moet de mogelijkheid hebben om de verschillende games te bekijken 
-        // en er 1 te selecteren
+    socket.on('getActiveGames', function(data){
+        if(!data.unityId)
+            return;
+            
+        db.GetActiveGames(function(games){
+            io.emit('receiveActiveGames', {unityId: data.unityId, games: games});
+        });
+    });
+    
+	socket.on('requestID', function(data){
+        if(!data.unityId || !data.trainerId)
+            return;
+            
+        db.GetTrainerGame(data.trainerId, function(game){
         
-        db.GetGame(null, function(game){
-            var gameId = game.id; 
-           
-            db.NewConnectedDevice(gameId, function(connectedDevice){
-                io.emit("receiveID", { device_id: connectedDevice.id, user_id: ''});
+            db.NewConnectedDevice(game.id, function(connectedDevice){
+                io.emit("receiveID", { unityId: data.unityId, device_id: connectedDevice.id });
                 io.sockets.emit("newDeviceConnected", connectedDevice.id);
             });
         });
-	})
+	});
 
     socket.on("userClosedApp", function(data){
         console.log("user closed the app ");
@@ -324,7 +340,15 @@ function checkAuth(req, res, next) {
         //res.end('Not authorized');
         res.redirect('/login');
     } else {
+        res.locals.trainerId = req.session.user_id;
         res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-        next();
+        
+        db.GetTrainerGame(req.session.user_id, function(game){
+            if(game.id != 0){
+                res.locals.gameId = game.id;
+            }
+            next();
+        });
+        
     }
 }

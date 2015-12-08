@@ -36,12 +36,9 @@
 	
 	<div class="page_center">
 		<div class="btn_group">
-	<a href="{{#if gameId}}javascript:;{{else}}/overview?group_id={{groupId}}{{/if}}" {{#if gameId}} class="doPopover"{{/if}}>
+	<a href="/overview?group_id={{groupId}}">
 		<img src="/imgs/shared/Logo_GreySquirrel.png"></img><br>
 		<h2>Operation Grey Squirrel</h2>
-		{{#if gameId}}
-		<h5>Spel bezig</h5>
-		{{/if}}
 	</a>
 	<div class="popoverContent hide">
 		<p>
