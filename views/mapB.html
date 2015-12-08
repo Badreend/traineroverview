@@ -59,7 +59,55 @@
 <script>
 $(document).ready(function() {
 	$("#loadMap").load("imgs/views/map/kaart.html"); 
-} );
+
+
+
+	 $('.doPopover').popover({
+		html: true,
+		title: 'Spel bezig',
+		content: $('.popoverContent').html(),
+	});
+	
+	$('.doPopover').click(function (e) {
+		var groupId = Cookies.get("currentGroup");
+		$("input[name='groupId']").val(groupId);
+		e.stopPropagation();
+	});
+	
+	$(document).click(function (e) {
+		if (($('.popover').has(e.target).length == 0) || $(e.target).is('.close')) {
+			$('.doPopover').popover('hide');
+		}
+	});
+	
+
+	var $worked = $("#game_timer");
+
+    function update() {
+        var myTime = $worked.html();
+        var ss = myTime.split(":");
+        var dt = new Date();
+        dt.setHours(0);
+        dt.setMinutes(ss[0]);
+        dt.setSeconds(ss[1]);
+
+        var dt2 = new Date(dt.valueOf() + 1000);
+        var temp = dt2.toTimeString().split(" ");
+        var ts = temp[0].split(":");
+
+        $worked.html(ts[1]+":"+ts[2]);
+        setTimeout(update, 1000);
+    }
+
+    setTimeout(update, 1000);
+	
+ } );
+
+
+
+
+
+
 
 var levelMargin = 25;
 var colors = ["#3D7BF7","#36FFAC","#FFEC38","#CC833B","#EB564B"];
