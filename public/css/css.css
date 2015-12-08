@@ -20,7 +20,10 @@
           text-align: center;
 
         }
-    }
+
+        
+
+
 
 *{
   margin:0px;
@@ -40,11 +43,10 @@ body, html {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+  overflow: hidden;
 }
 
-::-webkit-scrollbar { 
-  display: none; 
-}
+
 body{
 
 }
@@ -64,7 +66,9 @@ h3{
   font-size: 18px;
 }
 
-
+::-webkit-scrollbar { 
+    display: none; 
+}
 
 .vertical_line{
   height: 100%;
@@ -289,6 +293,15 @@ h3{
   margin: 0px auto;
   }
 
+.circle{
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  z-index: 10;
+  border-radius: 50%;
+  border: 5px solid #ededed;
+  margin:0 auto;
+}
 
 .hexagon {
     width: 210px;
@@ -300,12 +313,12 @@ h3{
     margin:0 auto;
     z-index:10;
   }
-  .hexagon_small {
+.hexagon_small {
     width: 100px;
     height: 82px;
     -webkit-clip-path: url("#polygon-clip-hexagon");
-    -moz-clip-path: url("#polygon-clip-hexagon");
     clip-path: url("#polygon-clip-hexagon");
+    border: 0;
     overflow: hidden;
     margin:0 auto;
     z-index: 10;
@@ -343,15 +356,7 @@ h3{
 }
 
 
-.hexagon_small {
-    width: 100px;
-    height: 82px;
-    -webkit-clip-path: url("#polygon-clip-hexagon");
-    clip-path: url("#polygon-clip-hexagon");
-    overflow: hidden;
-    margin:0 auto;
-    z-index: 10;
-  }
+
 
 
 .hexagon img.tall, .hexagon_small img.tall{

@@ -28,7 +28,7 @@
 </style>
 
 
-<div style="display: none;">
+<div>
 {{> rehabilitantlist }}
 </div>
 
@@ -37,32 +37,16 @@
 	<div class="page_center">
 		<div class="btn_group">
 	<a href="/overview?group_id={{groupId}}">
-		<img src="/imgs/shared/Logo_GreySquirrel.png"></img><br>
+		<img src="/imgs/shared/Logo_GreySquirrel.png"/><br>
 		<h2>Operation Grey Squirrel</h2>
 	</a>
-	<div class="popoverContent hide">
-		<p>
-		Er is reeds een spel begonnen. Wil je deze afsluiten?
-		</p>
-		<div class="popover-footer">
-			<a href="/exit_game?id={{gameId}}" class="btn btn-danger" onClick="menuHighlight('group_overview')">Spel afsluiten</a>
-			<a href="/overview?group_id={{groupId}}" class="btn btn-default">Naar spel lobby</a>
-		</div>
-	</div>
 </div>
 <div class="vertical_line"></div>
 <div class="btn_group">
-	<a href="#">
-		<button class="btn btn-primary">Evaluatie</button>
+	<a href="/eva">
+		<img style="width: 200px;" src="/imgs/views/splashScreen/Logo_EVA.png"/><br>
+		<h2>Evaluatie</h2>
 	</a>
 </div>
 </div>
 </div>
-
-<script>
-	$('.doPopover').popover({
-		html: true,
-		title: 'Spel bezig',
-		content: $('.popoverContent').html(),
-	});
-</script>

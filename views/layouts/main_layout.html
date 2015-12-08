@@ -86,8 +86,14 @@ $(window).load(function() {
         else{imgClass = 'tall';}
         $(this).addClass(imgClass);
     })
-    
 
+     $('.hexagon_small').find('img').each(function() {
+        //var imgClass = (this.width / this.height > 1) ? 'wide' : 'tall';
+        var imgClass;
+        if (this.width>this.height) {imgClass = 'wide';}
+        else{imgClass = 'tall';}
+        $(this).addClass(imgClass);
+    })
 })
 
 var menuOpened = false;
@@ -131,12 +137,17 @@ function menuHighlight(val){
         <div id="container" >
         <div id="side_column">
             <div id="menu">
-           <ul id="menu_top">   
+           <ul id="menu_top">  
+               <a href="#" onClick="menuSwitch()">
+                <li>
+                    Informatie <img src="imgs/shared/Button_Menu.png"/>
+                </li>
+                </a> 
                 <li id='group_overview'>
-                    <a href="/group-overview">Groepsoverzicht<img src="imgs/shared/Button_Group.png"></a>
+                    <a href="/group-overview">Groepsoverzicht<img src="imgs/shared/Button_Back.png"></a>
                 </li>
                 <li id='group_activity' class="hide menu-current-group">
-                    <a href="/group-activity?group_id=">Groepsactiviteit<img src="imgs/shared/Button_GroupAssignment.png"></a>
+                    <a href="/group-activity?group_id=">Groepsactiviteit<img src="imgs/shared/Button_Group.png"></a>
                 </li>
                 {{#hasGame}}
                 <li id='eva'class="menu-eva">
@@ -153,14 +164,10 @@ function menuHighlight(val){
                 <li>
                     <a class="modal-link" href="/rehabilitant" data-toggle="modal" data-target="#myModal">
                         Voeg revalidant toe
-                        <img src="imgs/shared/Button_Plus.png"/>
+                        <img src="imgs/shared/Button_GroupAssignment.png"/>
                     </a>
                 </li>
-                <a href="#" onClick="menuSwitch()">
-                <li>
-                    Informatie <img src="imgs/shared/Button_Menu.png"/>
-                </li>
-                </a>
+                
                 <li>
                     <a href="/logout">Uitloggen<img src="imgs/shared/Button_LogOut.png"></a>
                 </li>
@@ -182,10 +189,10 @@ function menuHighlight(val){
             </div>
         </div>
 
-        <div style="height:0; overflow:hidden;">
+        <div style="height:0; overflow:hidden; position:fixed; top:-999px;">
             <svg class="clip-svg">
                 <defs>
-                    <clipPath id="polygon-clip-hexagon" stroke="#ededed" stroke-width="3" clipPathUnits="objectBoundingBox">
+                    <clipPath id="polygon-clip-hexagon" clipPathUnits="objectBoundingBox">
                         <!--<polygon points="0.5 0, 1 0.25, 1 0.75, 0.5 1, 0 0.75, 0 0.25" />-->
                         <polygon points="0 0.5, 0.25 0, 0.75 0, 1 0.5, 0.75 1, 0.25 1" />
                     </clipPath>
