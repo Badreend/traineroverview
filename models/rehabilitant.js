@@ -19,6 +19,7 @@ var Rehabilitant = function(){
 	this.goal = '';
 	this.courseDuration = 0;
 	this.dateOfBirth = new Date();
+	this.groupId = 0;
 	
 	this.GetFullName = function(){
 		return context.firstName + ' ' + context.lastName;

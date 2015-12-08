@@ -59,11 +59,9 @@ module.exports = {
         
         pg.connect(this.connectionString, function(err, client, done) {
             var query = client.query(
-                "SELECT r.* " +
-                "FROM \"group\" g " +
-                "INNER JOIN group_rehabilitant gr ON gr.group_id = g.id " +
-                "INNER JOIN rehabilitant r ON r.id = gr.rehabilitant_id " +
-                "WHERE g.id = " + groupId);
+                "SELECT * \
+                FROM rehabilitant \
+                WHERE group_id = {0}".format(groupId));
             
             query.on('row', function(row) {
                 var rehabilitant = new Rehabilitant();
@@ -187,7 +185,8 @@ module.exports = {
                     FROM game g \
                     INNER JOIN connected_device cd ON cd.game_id = g.id \
                     LEFT JOIN rehabilitant r ON r.id = cd.rehabilitant_id \
-                    WHERE g.id = " + game.id);
+                    WHERE g.id = {0} \
+                    AND cd.active = TRUE".format(game.id));
                 
                 var connDevices = [];
                 q2.on('row', function(row) {
@@ -229,6 +228,16 @@ module.exports = {
         });
     },
     
+    PauseConnectedDevice: function(deviceId, pause){
+        pg.connect(this.connectionString, function(err, client, done){
+           var query = client.query("UPDATE connected_device SET active = {0} WHERE id = {1}".format(!pause, deviceId));
+           
+           query.on('end', function(){
+               done();
+           });
+        });
+    },
+    
     RemoveConnectedDevice: function(deviceId){
         pg.connect(this.connectionString, function(err, client, done){
            var query = client.query("DELETE FROM connected_device WHERE id = " + deviceId);
@@ -249,7 +258,8 @@ module.exports = {
                     "SELECT s.* \
                     FROM v_map_states s \
                     INNER JOIN connected_device cd ON cd.id = s.connected_device_id \
-                    WHERE cd.game_id = " + gameId);
+                    WHERE cd.game_id = {0} \
+                    AND cd.active = TRUE".format(gameId));
                 
                 //var group = new Group();
                 var connectedDevices = [];
@@ -316,7 +326,8 @@ module.exports = {
                 , \"min_heartrate\" \
                 , \"max_heartrate\" \
                 , \"course_duration\" \
-                , \"date_of_birth\") \
+                , \"date_of_birth\" \
+                , \"group_id\") \
                VALUES( \
                 '{0}' \
                 , '{1}' \
@@ -330,10 +341,11 @@ module.exports = {
                 , '{8}' \
                 , '{9}' \
                 , '{10}' \
-                , '{11}') \
+                , '{11}' \
+                , '{12}') \
                RETURNING \"id\", \"first_name\", \"last_name\", \"picture_url\", \"active\", \"gender\", \"cluster\", \"diagnosis\", \"function\", \"goal\", \"min_heartrate\", \"max_heartrate\", \"course_duration\";"     
             .format(newRehabilitant.firstName, newRehabilitant.lastName, newRehabilitant.pictureUrl, newRehabilitant.gender, newRehabilitant.cluster, newRehabilitant.diagnosis, newRehabilitant.function,
-                newRehabilitant.goal, newRehabilitant.minHeartRate, newRehabilitant.maxHeartRate, newRehabilitant.courseDuration, newRehabilitant.dateOfBirth));
+                newRehabilitant.goal, newRehabilitant.minHeartRate, newRehabilitant.maxHeartRate, newRehabilitant.courseDuration, newRehabilitant.dateOfBirth, newRehabilitant.groupId));
            
            var insertedId;
            query.on('row', function(row){
@@ -367,10 +379,11 @@ module.exports = {
                 , \"max_heartrate\"='{9}' \
                 , \"course_duration\"='{10}' \
                 , \"date_of_birth\"='{11}' \
-                WHERE \"id\"='{12}' \
+                , \"group_id\"='{12}' \
+                WHERE \"id\"='{13}' \
                 RETURNING \"id\", \"first_name\", \"last_name\", \"picture_url\", \"active\", \"gender\", \"cluster\", \"diagnosis\", \"function\", \"goal\", \"min_heartrate\", \"max_heartrate\", \"course_duration\";"     
             .format(updateRehab.firstName, updateRehab.lastName, updateRehab.pictureUrl, updateRehab.gender, updateRehab.cluster, updateRehab.diagnosis, updateRehab.function,
-                updateRehab.goal, updateRehab.minHeartRate, updateRehab.maxHeartRate, updateRehab.courseDuration, updateRehab.dateOfBirth, updateRehab.id));
+                updateRehab.goal, updateRehab.minHeartRate, updateRehab.maxHeartRate, updateRehab.courseDuration, updateRehab.dateOfBirth, updateRehab.groupId, updateRehab.id));
            
            var updatedId;
            query.on('row', function(row){
@@ -384,14 +397,14 @@ module.exports = {
         });
     },
     
-    ExitGame: function(trainerId, callback){
+    ExitGame: function(gameId, callback){
         pg.connect(this.connectionString, function(err, client, done){
            var query = client.query(
                "UPDATE game \
                 SET active = FALSE \
                 ,end_date = now() \
-                WHERE trainer_id = {0} \
-                RETURNING id".format(trainerId));
+                WHERE id = {0} \
+                RETURNING id".format(gameId));
            
            var gameIds = [];
            query.on('row', function(row){

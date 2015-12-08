@@ -18,6 +18,16 @@
 	</div>
 </div>
 <div id="legend">
+	<div id="stop_game">
+		<a href="#" class="btn btn-default btn-circle doPopover" style="
+		width: 30px;
+		height: 30px;
+		text-align: center;
+		padding: 6px 0;
+		font-size: 12px;
+		line-height: 1.42;
+		border-radius: 15px;"><i class="fa fa-user"></i>STAAAHP</a>
+	</div>
 	<div id="game_timer">
 		20:01
 	</div>
@@ -34,6 +44,18 @@
 	</div>
 </div>
 
+<div class="popoverContent hide">
+	<p>
+		Weet je zeker dat je het spel wilt sluiten?
+	</p>
+	<div class="popover-footer">
+		<form action="/exit_game" method="POST">
+			<input type="hidden" name="gameId" value="{{gameId}}"/>
+			<input type="hidden" name="groupId" />
+			<input type="submit" class="btn btn-danger" value="Afsluiten"/>
+		</form>
+	</div>
+</div>
 
 <section id="inverted-contain">
 	<div style="overflow: hidden; position: relative;" class="panzoom-parent">
@@ -152,6 +174,26 @@
 <script>
 $(document).ready(function() {
  	$("#loadMap").load("imgs/views/map/kaart.html"); 
+	 
+	 $('.doPopover').popover({
+		html: true,
+		title: 'Spel bezig',
+		content: $('.popoverContent').html(),
+	});
+	
+	$('.doPopover').click(function (e) {
+		var groupId = Cookies.get("currentGroup");
+		$("input[name='groupId']").val(groupId);
+		e.stopPropagation();
+	});
+	
+	$(document).click(function (e) {
+		if (($('.popover').has(e.target).length == 0) || $(e.target).is('.close')) {
+			$('.doPopover').popover('hide');
+		}
+	});
+	
+	
  } );
 
 
@@ -335,7 +377,7 @@ var markerScale = 0.5;
 		});
 	});
 	
-	var dbPath
+
 })();
 
 function matrixToArray(str) {
