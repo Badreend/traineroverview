@@ -215,6 +215,7 @@ function createPath(_userData){
 	var path = "";
 	var prevColor = undefined;
 	var prevHeartRate = undefined;
+	var markerWidth = 75.0;
 	for(var i = 0; i < _userData.loc.length; i++){
 		var color = undefined;
 
@@ -227,16 +228,16 @@ function createPath(_userData){
 		{			
 			path += "L";
 	}
-	path += _userData.loc[i].x+" ";
-	path += _userData.loc[i].y+" ";
+	path += _userData.loc[i].x+markerWidth/2+" ";
+	path += _userData.loc[i].y+markerWidth/2+" ";
 	;
 
 	if(prevColor !== color || prevColor !== undefined){
 		drawPath(path,prevColor,prevHeartRate,_userData);
 		path = "";
 		path += "M";
-		path += _userData.loc[i].x+" ";
-		path += _userData.loc[i].y+" ";
+		path += _userData.loc[i].x+markerWidth+" ";
+		path += _userData.loc[i].y+markerWidth+" ";
 	}
 	path += " ";
 	prevColor = color;
