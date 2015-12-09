@@ -151,7 +151,7 @@ var levelMargin = 25;
 var colors = ["#3D7BF7","#36FFAC","#FFEC38","#CC833B","#EB564B"];
 var selectedPlayer = undefined;
 var temp_data = [];
-temp_data = [
+temp_data = eval([
 {{#each connectedDevices}}
 {id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",
 min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},loc:[
@@ -160,7 +160,7 @@ min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},lo
 {{/each}}
 ]},
 {{/each}}
-];
+]);
 
 function transformMapX(x, device_id){
 	return originX + x * pixelMeterRatio;
