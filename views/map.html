@@ -162,13 +162,6 @@ min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},lo
 {{/each}}
 ]);
 
-function transformMapX(x, device_id){
-	return originX + x * pixelMeterRatio;
-}
-
-function transformMapY(y, device_id){
-	return originY - y * pixelMeterRatio;
-}
 
 function updateData(_newData){
 	for(var i = 0; i < temp_data.length; i++){
@@ -320,11 +313,19 @@ function displayInfo(_idData){
 }
 		//----
 
-		var pixelMeterRatio = 1.73;
-		var originX = 743.67;
-		var originY = 914.64;
+var pixelMeterRatio = 1.73;
+var originX = 743.67;
+var originY = 914.64;
 
-		var markerScale = 0.5;
+var markerScale = 0.5;
+
+function transformMapX(x, device_id){
+	return originX + x * pixelMeterRatio;
+}
+
+function transformMapY(y, device_id){
+	return originY - y * pixelMeterRatio;
+}
 		
 		(function() {	
 			var $section = $('#inverted-contain');
