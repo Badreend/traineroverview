@@ -324,7 +324,16 @@ io.on('connection', function(socket){
     });
 
 	socket.on("dataTransfer", function(data){
-		//console.log(data);
+        var mappedData = {
+            device_id: data.device_id,
+            heartrate: data.heartrate,
+            mapX: data.x,
+            mapY: data.y,
+            gpsLat: data.lat,
+            gpsLon: data.lon
+        };
+        
+		db.InsertGameState(mappedData);
 		io.sockets.emit("dataClient",data);
 	});
 

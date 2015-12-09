@@ -156,12 +156,21 @@ temp_data = [
 {id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",
 min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},loc:[
 {{#each this.rehabilitant.states}}
-{t:{{this.timestamp}},h:{{this.heartRate}},x:{{mapX}},y:{{this.mapY}} },
+{t:{{this.timestamp}},h:{{this.heartRate}},x:tranformMapX({{this.mapX}},{{../id}}),y:tranformMapY({{this.mapY}},{{../id}}) },
 {{/each}}
 ]},
 {{/each}}
 ];
 
+function transformMapX(x, device_id){
+	var deviceMarker = $(".marker[device-id='"+device_id+"']");
+	return originX + x * pixelMeterRatio - $(deviceMarker).width() * markerScale;
+}
+
+function transfromMapY(y, device_id){
+	var deviceMarker = $(".marker[device-id='"+device_id+"']");
+	return originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
+}
 
 function updateData(_newData){
 	for(var i = 0; i < temp_data.length; i++){
@@ -326,8 +335,8 @@ function displayInfo(_idData){
 				$zoomRange: $section.find(".zoom-range"),
 				$reset: $section.find(".reset"),
 				startTransform: 'scale(1.1)',
-				increment: 0.1,
-				minScale: 1,
+				increment: 0.5,
+				minScale: 0.75,
 				contain: 'invert',
 				onChange: function(e, panzoom){
 					scale = panzoom.getMatrix()[0];
@@ -389,10 +398,10 @@ socket.on('dataClient', function(data){
 
 		$(deviceMarker).css("transform", arrayToMatrix(mat));	
 
-		updateData({id:device_id,loc:{t:undefined,h:heartrate,x:x,y:y}});
+		updateData({id:device_id,loc:{t:undefined,h:heartrate,x:mat[4],y:mat[5]}});
 	});
 
-
+/*
 var direction = 450; 
 setInterval(function(){ 
 	var tempId = 69;
@@ -424,7 +433,7 @@ setInterval(function(){
 
 
 }, 2000);
-
+*/
 
 
 	//[ "1.1",	"0", 	"0", 	"1.1", 	"-87.65", 	"62" ]

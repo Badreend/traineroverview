@@ -466,6 +466,29 @@ module.exports = {
                 callback(games);    
             });
         });
+    },
+    
+    InsertGameState: function(data){
+        pg.connect(this.connectionString, function(err, client, done){
+            var gameState = new RehabilitantState();
+            Map(gameState, data);
+            var deviceId = data.device_id;
+            
+            if(deviceId != null){
+                var query = client.query(
+                    "INSERT INTO rehabilitant_state(\"game_id\", \"rehabilitant_id\", \"heart_rate\", \"gps_lat\", \"gps_lon\", \"map_x\", \"map_y\") \
+                    SELECT \"game_id\", \"rehabilitant_id\", '{0}', '{1}', '{2}', '{3}', '{4}', '{5}' \
+                    FROM connected_device \
+                    WHERE id = {6}"
+                    .format(gameState.heartRate, gameState.gpsLat, gameState.gpsLon, gameState.mapX, gameState.mapY, deviceId));
+            
+                query.on('end', function(){
+                    done();
+                });
+            }else{
+                done();
+            }
+        });
     }
 };
 
