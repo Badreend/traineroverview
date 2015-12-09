@@ -256,7 +256,7 @@ module.exports = {
                 
                 var query = client.query(
                     "SELECT s.* \
-                    FROM v_map_states s \
+                    FROM v_map_state_precision s \
                     INNER JOIN connected_device cd ON cd.id = s.connected_device_id \
                     WHERE cd.game_id = {0} \
                     AND cd.active = TRUE".format(gameId));
@@ -476,10 +476,10 @@ module.exports = {
             
             if(deviceId != null){
                 var query = client.query(
-                    "INSERT INTO rehabilitant_state(\"game_id\", \"rehabilitant_id\", \"heart_rate\", \"gps_lat\", \"gps_lon\", \"map_x\", \"map_y\") \
+                    "INSERT INTO rehabilitant_state(\"game_id\", \"rehabilitant_id\", \"heart_rate\", \"gps_lat\", \"gps_lon\", \"x\", \"y\") \
                     SELECT \"game_id\", \"rehabilitant_id\", '{0}', '{1}', '{2}', '{3}', '{4}' \
                     FROM connected_device \
-                    WHERE id = {5}".format(gameState.heartRate, gameState.gpsLat, gameState.gpsLon, gameState.mapX, gameState.mapY, deviceId));
+                    WHERE id = {5}".format(gameState.heartRate, gameState.gpsLat, gameState.gpsLon, gameState.x, gameState.y, deviceId));
             
                 query.on('end', function(){
                     done();

@@ -9,8 +9,8 @@ var RehabilitantState = function(){
 	this.heartRateLevel = 0;
 	this.gpsLat = 0.0;
 	this.gpsLon = 0.0;
-	this.mapX = 0;
-	this.mapY = 0;
+	this.x = 0.0;
+	this.y = 0.0;
 	this.state = '';
 	this.timestamp = new Date();
 }

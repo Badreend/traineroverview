@@ -156,7 +156,7 @@ temp_data = [
 {id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",
 min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},loc:[
 {{#each this.rehabilitant.states}}
-{t:{{this.timestamp}},h:{{this.heartRate}},x:tranformMapX({{this.mapX}},{{../id}}),y:tranformMapY({{this.mapY}},{{../id}}) },
+{t:{{this.timestamp}},h:{{this.heartRate}},x:tranformMapX({{this.x}},{{../id}}),y:tranformMapY({{this.y}},{{../id}}) },
 {{/each}}
 ]},
 {{/each}}
@@ -398,11 +398,12 @@ socket.on('dataClient', function(data){
 		mat[5] = originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
 
 		var indx = getIndexOfId(device_id);
-		$(deviceMarker).css("transform", arrayToMatrix(mat));	
-		$(deviceDragBox).find(".circle").css( "border", "5px solid " + getColor(temp_data[indx],temp_data[indx].loc.length-2));	
-		$(deviceMarker).children().css( "background-color", getColor(temp_data[indx],temp_data[indx].loc.length-2) );				
+		$(deviceMarker).css("transform", arrayToMatrix(mat));			
 
 		updateData({id:device_id,loc:{t:undefined,h:heartrate,x:mat[4],y:mat[5]}});
+		
+		$(deviceDragBox).find(".circle").css( "border", "5px solid " + getColor(temp_data[indx],temp_data[indx].loc.length-2));	
+		$(deviceMarker).children().css( "background-color", getColor(temp_data[indx],temp_data[indx].loc.length-2) );	
 	});
 
 /*
