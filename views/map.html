@@ -156,7 +156,7 @@ temp_data = [
 {id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",
 min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},loc:[
 {{#each this.rehabilitant.states}}
-{t:{{this.timestamp}},h:{{this.heartRate}},x:tranformMapX({{this.x}},{{../id}}),y:tranformMapY({{this.y}},{{../id}}) },
+{t:{{this.timestamp}},h:{{this.heartRate}},x:transformMapX({{this.x}},{{../id}}),y:transformMapY({{this.y}},{{../id}}) },
 {{/each}}
 ]},
 {{/each}}
@@ -167,7 +167,7 @@ function transformMapX(x, device_id){
 	return originX + x * pixelMeterRatio - $(deviceMarker).width() * markerScale;
 }
 
-function transfromMapY(y, device_id){
+function transformMapY(y, device_id){
 	var deviceMarker = $(".marker[device-id='"+device_id+"']");
 	return originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
 }
