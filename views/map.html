@@ -383,11 +383,12 @@ socket.on('dataClient', function(data){
 		var x = parseFloat(data.x);
 		var y = parseFloat(data.y);
 		
-		var heartrate = parseInt(data.heartrate);
-		
+		var heartrate = parseInt(data.heartrate);	
 		
 		var deviceMarker = $(".marker[device-id='"+device_id+"']");
-		$(deviceMarker).find(".heartrate-text").text(heartrate); 
+		$(deviceMarker).find(".heartrate-text").text(heartrate);
+		 
+		var deviceDragBox =  $(".drag_box[device-id='"+device_id+"']");
 	
 		var mat = matrixToArray($(deviceMarker).css("transform"));
 
@@ -396,7 +397,10 @@ socket.on('dataClient', function(data){
 		//posY
 		mat[5] = originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
 
+		var indx = getIndexOfId(device_id);
 		$(deviceMarker).css("transform", arrayToMatrix(mat));	
+		$(deviceDragBox).find(".circle").css( "border", "5px solid " + getColor(temp_data[indx],temp_data[indx].loc.length-2));	
+		$(deviceMarker).children().css( "background-color", getColor(temp_data[indx],temp_data[indx].loc.length-2) );				
 
 		updateData({id:device_id,loc:{t:undefined,h:heartrate,x:mat[4],y:mat[5]}});
 	});

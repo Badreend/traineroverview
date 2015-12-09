@@ -477,10 +477,9 @@ module.exports = {
             if(deviceId != null){
                 var query = client.query(
                     "INSERT INTO rehabilitant_state(\"game_id\", \"rehabilitant_id\", \"heart_rate\", \"gps_lat\", \"gps_lon\", \"map_x\", \"map_y\") \
-                    SELECT \"game_id\", \"rehabilitant_id\", '{0}', '{1}', '{2}', '{3}', '{4}', '{5}' \
+                    SELECT \"game_id\", \"rehabilitant_id\", '{0}', '{1}', '{2}', '{3}', '{4}' \
                     FROM connected_device \
-                    WHERE id = {6}"
-                    .format(gameState.heartRate, gameState.gpsLat, gameState.gpsLon, gameState.mapX, gameState.mapY, deviceId));
+                    WHERE id = {5}".format(gameState.heartRate, gameState.gpsLat, gameState.gpsLon, gameState.mapX, gameState.mapY, deviceId));
             
                 query.on('end', function(){
                     done();
