@@ -364,7 +364,7 @@ function checkAuth(req, res, next) {
     } else {
         res.locals.trainerId = req.session.user_id;
         //TODO: zet dit aan voor snelheid improvisatie!
-        //res.header('Cache-Control', 'public, max-age=6000');
+        res.header('Cache-Control', 'public, max-age=6000');
         
         db.GetTrainerGame(req.session.user_id, function(game){
             if(game.id != 0){

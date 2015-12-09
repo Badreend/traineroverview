@@ -236,8 +236,8 @@ function createPath(_userData){
 		drawPath(path,prevColor,prevHeartRate,_userData);
 		path = "";
 		path += "M";
-		path += _userData.loc[i].x+markerWidth+" ";
-		path += _userData.loc[i].y+markerWidth+" ";
+		path += _userData.loc[i].x+markerWidth/2+" ";
+		path += _userData.loc[i].y+markerWidth/2+" ";
 	}
 	path += " ";
 	prevColor = color;
