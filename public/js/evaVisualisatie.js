@@ -1,17 +1,6 @@
-temp_data = [
-{id:1,name:"Momo Niek",diagnose:"Diagnose: Knie & rug klachten / Cluster: 6 / Week: 5 van 8 / Functie:Kolonel / Doelipsum die la lorem de ipsum tekst. ongeveer, één vol zin",min:90,max:140,loc:[{t:undefined,h:40,x:500,y:450},{t:undefined,h:150,x:450,y:435},{t:undefined,h:110,x:432,y:455},{t:undefined,h:120,x:422,y:510},{t:undefined,h:140,x:390,y:450},{t:undefined,h:145,x:380,y:470},{t:undefined,h:70,x:362,y:505},{t:undefined,h:30,x:322,y:500},]},
-{id:2,name:"Ings",diagnose:"Diagnose: Knie & rug klachten / Cluster: 6 / Week: 5 van 8 / Functie:Kolonel / Doelipsum die la lorem de ipsum tekst. ongeveer, één vol zinDoelipsum die la lorem de ipsum tekst. ongeveer, één vol zin",min:90,max:140,loc:[{t:undefined,h:30,x:500,y:450},{t:undefined,h:70,x:450,y:435},{t:undefined,h:80,x:432,y:455},{t:undefined,h:90,x:422,y:510},{t:undefined,h:110,x:390,y:450},{t:undefined,h:100,x:380,y:470},{t:undefined,h:90,x:362,y:505},{t:undefined,h:60,x:322,y:500},]},
-{id:57,name:"Geert LullenBerg",diagnose:"Diagnose: van alles / Cluster: 6 / Week: 5 van 8 / Functie:Kolonel / Doelipsum die la lorem de ipsum tekst. ongeveer, één vol zin",min:90,max:140,loc:[{t:undefined,h:90,x:500,y:450},{t:undefined,h:150,x:450,y:435},{t:undefined,h:110,x:432,y:455},{t:undefined,h:120,x:422,y:510},{t:undefined,h:140,x:390,y:450},{t:undefined,h:145,x:380,y:470},{t:undefined,h:70,x:362,y:505},{t:undefined,h:30,x:322,y:500},]},
-
-];
-
-var colors = ["#b5e3e3","#d6fff1","#fff474","#feb05b","#f88081"];
-
-
 var animationTime = 2000;
 var margin = {top:20,left:220,right:100},
 width = $(".graph").width()-80;
-console.log(width)
 height = 200;
 
 
@@ -21,12 +10,27 @@ var svg = d3.select(".graph").append("svg")
 .attr("border","1px");
 
 
+function getIndexOfId(_id){
+
+  for(var i = 0 ; i < temp_data.length; i++){
+    if(temp_data[i].id === _id){
+      return i;
+    }
+  }
+}
+function clearInfo(){
+  $('#info').empty();
+  $('#paths').empty();
+  selectedPlayer = undefined;
+}
+
 $('.drag_box').bind('tap click', function(){
   var dragBoxId = $(this).attr('device-id');
     $(".hoverInfo").remove();
+      var indx = getIndexOfId(parseInt(dragBoxId));
+      drawGraph(temp_data[indx])
+      drawGuides();
 
-  drawGraph(temp_data[dragBoxId])
-  drawGuides();
 });
 
 function drawGuides(){
@@ -58,13 +62,11 @@ function drawGuides(){
 
 function drawGraph(_userData){
 
-
   //_userData.
   var target = (_userData.max - _userData.min)/2 + _userData.min;
-  console.log(target)
   var x = d3.scale.linear()
   .domain([0,temp_data[0].loc.length])   
-  .range([margin.left-180, width]);
+  .range([margin.left-180, width-20]);
 
   var y = d3.scale.linear()
   .domain([0,target*2 ])  
@@ -75,7 +77,7 @@ function drawGraph(_userData){
   .y(function(d) {  return y(d.h); });
 
   var line2 = d3.svg.line()
-  .x(function(d,i) { console.log(x(i)); return x(i); })
+  .x(function(d,i) {  return x(i); })
   .y(function(d) {  return y(d.h); });
 
   var area = d3.svg.area()
@@ -99,12 +101,11 @@ function drawGraph(_userData){
 
 
     if($("#lineContainer")){
-      console.log('true');
     }
     container = svg.append("g").datum(_userData).attr("id","lineContainer");  
 
     container.selectAll(".vLine")
-    .data( function( d, i ) {  console.log(d.loc);return d.loc; } )  
+    .data( function( d, i ) { ;return d.loc; } )  
     .enter()
     .append("line")
     .attr("class", "vLine")
@@ -141,7 +142,7 @@ function drawGraph(_userData){
     .duration(animationTime)
     .attr("cx", line.x())
     .attr("cy", line.y())
-    .attr("r", 5)
+    .attr("r", 1)
     .attr("svg:title",function(d){return d.h})
     .attr("stroke",function(d){
       heartRate = d.h;
@@ -150,7 +151,7 @@ function drawGraph(_userData){
       }else if(heartRate <= _userData.min){
         return colors[0];
       }else if(heartRate >= _userData.max){
-        console.log(_userData.min)
+       
         return colors[3];
       }
     });
@@ -161,7 +162,7 @@ function drawGraph(_userData){
     .datum(_userData.loc)
     .attr("class", "area")
     .attr("d", d3.svg.area()
-      .x(x(0))
+      .x(line2.x())
       .y1(y(0))
       .y0(y(0))
       )
