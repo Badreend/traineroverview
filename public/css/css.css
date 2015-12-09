@@ -492,6 +492,7 @@ nav.active { left: 0; }
     white-space: nowrap;
     text-align: center;
     margin: 0 auto;
+    margin-top: 10%;
 
 }
 
@@ -506,8 +507,6 @@ nav.active { left: 0; }
 */
 .group_wrapper{
     margin:50px;
-    width:250px;
-    height:250px;
     float: left;
     overflow: hidden;
     text-align: center;
