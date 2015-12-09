@@ -163,13 +163,11 @@ min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},lo
 ];
 
 function transformMapX(x, device_id){
-	var deviceMarker = $(".marker[device-id='"+device_id+"']");
-	return originX + x * pixelMeterRatio - $(deviceMarker).width() * markerScale;
+	return originX + x * pixelMeterRatio;
 }
 
 function transformMapY(y, device_id){
-	var deviceMarker = $(".marker[device-id='"+device_id+"']");
-	return originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
+	return originY - y * pixelMeterRatio;
 }
 
 function updateData(_newData){
@@ -215,7 +213,7 @@ function createPath(_userData){
 	var path = "";
 	var prevColor = undefined;
 	var prevHeartRate = undefined;
-	var markerWidth = 75.0;
+
 	for(var i = 0; i < _userData.loc.length; i++){
 		var color = undefined;
 
@@ -228,16 +226,16 @@ function createPath(_userData){
 		{			
 			path += "L";
 	}
-	path += _userData.loc[i].x+markerWidth/2+" ";
-	path += _userData.loc[i].y+markerWidth/2+" ";
+	path += _userData.loc[i].x+" ";
+	path += _userData.loc[i].y+" ";
 	;
 
 	if(prevColor !== color || prevColor !== undefined){
 		drawPath(path,prevColor,prevHeartRate,_userData);
 		path = "";
 		path += "M";
-		path += _userData.loc[i].x+markerWidth/2+" ";
-		path += _userData.loc[i].y+markerWidth/2+" ";
+		path += _userData.loc[i].x+" ";
+		path += _userData.loc[i].y+" ";
 	}
 	path += " ";
 	prevColor = color;
@@ -323,8 +321,8 @@ function displayInfo(_idData){
 		//----
 
 		var pixelMeterRatio = 1.73;
-		var originX = 745;
-		var originY = 918;
+		var originX = 743.67;
+		var originY = 914.64;
 
 		var markerScale = 0.5;
 		
@@ -400,8 +398,11 @@ socket.on('dataClient', function(data){
 
 		var indx = getIndexOfId(device_id);
 		$(deviceMarker).css("transform", arrayToMatrix(mat));			
-
-		updateData({id:device_id,loc:{t:undefined,h:heartrate,x:mat[4],y:mat[5]}});
+		
+		var newX = transformMapX(x, device_id);
+		var newY = transformMapY(y, device_id);
+		
+		updateData({id:device_id,loc:{t:undefined,h:heartrate,x:newX,y:newY}});
 		
 		$(deviceDragBox).find(".circle").css( "border", "5px solid " + getColor(temp_data[indx],temp_data[indx].loc.length-2));	
 		$(deviceMarker).children().css( "background-color", getColor(temp_data[indx],temp_data[indx].loc.length-2) );	
