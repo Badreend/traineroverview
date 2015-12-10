@@ -543,7 +543,61 @@ module.exports = {
                 callback();
             });
         });
-    }
+    },
+    
+    GetEvaData: function(gameId, groupId, callback){
+
+        pg.connect(this.connectionString, function(err, client, done) {
+
+            //var connDevicesQuery = client.query("SELECT * FROM connected_device WHERE rehabilitant_id IS NOT NULL".format(gameId));
+            var rehabilitantsQuery = client.query("SELECT r.* FROM rehabilitant r INNER JOIN group_rehabilitant gr ON gr.rehabilitant_id = r.id WHERE gr.group_id = {0}".format(groupId));
+            var statesQuery = client.query("SELECT ds.*, cd.rehabilitant_id FROM connected_device_state ds INNER JOIN connected_device cd ON cd.id = ds.connected_device_id WHERE cd.game_id = {0}".format(gameId));                
+            
+            var rehabilitants = [];
+            var states = [];
+
+            var queryDoneCount = 0;
+            
+            rehabilitantsQuery.on('row', function(row) {
+                var rehabilitant = new Rehabilitant();
+
+                Map(rehabilitant, row);
+                rehabilitants.push(rehabilitant);
+            });
+            
+            rehabilitantsQuery.on('end', function(){
+                queryDoneCount++;
+                OnDone();                    
+            });
+            
+            statesQuery.on('row', function(row) {
+                var state = new ConnectedDeviceState();
+                
+                Map(state, row);
+                state.rehabilitant_id = row.rehabilitant_id;
+                states.push(state);
+            });
+            
+            statesQuery.on('end', function(){
+                queryDoneCount++;
+                OnDone();
+            });
+            
+            function OnDone(){
+                if(queryDoneCount < 2) return;
+                
+                rehabilitants.forEach(function(rehabilitant, index){
+                    rehabilitant.states = states.filter(function(state){
+                        return state.rehabilitant_id == rehabilitant.id;
+                    });
+                    
+                });
+                
+                done();
+                callback(rehabilitants);
+            }
+        });
+    },
 };
 
 function Map(obj1, obj2, prefix){

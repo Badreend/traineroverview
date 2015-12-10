@@ -107,11 +107,9 @@
         {{#notIn ../game.connectedDevices}}
         <li class="drag_box" userID="{{this.id}}" >
             <input class="id-holder" type="hidden" name="rehabilitant_id" value="{{this.id}}"/>
-            <div class= "img_container_small" >
-                    <div class="hexagon_small">
-                        <img src="{{this.pictureUrl}}">
-                    </div>
-                </div>
+            <div class= "circle">
+                <img src="{{this.pictureUrl}}">
+            </div>
             <h3>{{this.GetFullName}}</h3>   
         </li>
         {{/notIn}}
@@ -135,13 +133,11 @@
             <ul class="drop_box">
                 {{#if this.rehabilitant.id}}
                 {{#with this.rehabilitant}}
-                <li class="drag_box" userID="{{this.id}}" >
+                <li class="drag_box" userID="{{this.id}}" style="overflow:visible;">
                     <input class="id-holder" type="hidden" name="rehabilitant_id" value="{{this.id}}"/>
-                    <div class= "img_container_small" >
-                            <div class="hexagon_small">
-                                <img src="{{this.pictureUrl}}">
-                            </div>
-                        </div>
+                    <div class= "circle">
+                        <img src="{{this.pictureUrl}}">
+                    </div>
                     <h3>{{this.GetFullName}}</h3>   
                 </li>
                 {{/with}}

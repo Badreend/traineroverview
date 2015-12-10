@@ -11,6 +11,10 @@
 
 
 	<div id="map_info_column">
+		<div class="hideBTN" onClick ='allesClear()'>
+			<img src="/imgs/shared/Button_Verberg_v2.png"/>
+		</div>
+
 
 		<div id="info">
 			<!-- 
@@ -18,12 +22,13 @@
 		-->
 		wahed
 	</div>
+
+
 </div>
 <div id="legend">
 	<div id="stop_game">
 		<a href="#" class="doPopover stopBTN"><i class="fa fa-user"></i>Stop Game</a>
 	</div>
-	<button class="btn" onClick="allesClear()">Verberg info</button>
 	<div id="game_timer">
 		{{startMinutes}}:{{startSeconds}}
 	</div>
@@ -137,11 +142,37 @@ $('#loadMap').bind('dblclick', function(){
 
  } );
 
+function showInfoBox(){
+	if (selectedPlayer== undefined){
+		$( '#map_info_column' ).animate({
+            left: "+=200"
+        }, 500, "swing")
+	}
+}
+
 
 function allesClear(){
-	$('.drag_box').css('opacity', '1');
-	console.log("wahed");
-	clearInfo();
+	$( '.drag_box' ).animate({
+            	opacity: "1"
+            })
+	if (selectedPlayer!= undefined){
+		selectedPlayer = undefined;
+		$( '#map_info_column' ).animate({
+            left: "-=200"
+            }, 500, "swing", function(){
+				clearInfo();
+				
+        })
+	}
+}
+
+
+function clearInfo(){
+	console.log("hide");
+	$('#info').empty();
+	$('#paths').empty();
+	
+
 }
 
 
@@ -165,7 +196,8 @@ var selectedPlayer = undefined;
 var temp_data = [];
 temp_data = eval([
 {{#each connectedDevices}}
-{id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",
+{id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",doel: "{{this.rehabilitant.goal}}",cluster:  "{{this.rehabilitant.cluster}}",
+ functie: "{{this.rehabilitant.function}}",
 min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},loc:[
 {{#each this.states}}
 {t:{{this.timestamp}},h:{{this.heartRate}},x:transformMapX({{this.x}},{{../id}}),y:transformMapY({{this.y}},{{../id}}) },
@@ -266,14 +298,17 @@ function drawPath(_path,_color,_avrHeartrate,_userData){
 	}
 }
 
-function clearInfo(){
-	$('#info').empty();
-	$('#paths').empty();
-	selectedPlayer = undefined;
-}
+// function clearInfo(){
+// 	$('#info').empty();
+// 	$('#paths').empty();
+// 	selectedPlayer = undefined;
+// }
+
+
 
 
 $('.marker').bind('touchend click', function(){
+	showInfoBox();
 	var markerId = $(this).attr('device-id');
 	$('.drag_box').each(function(){
 		var dragBoxId = $(this).attr('device-id');
@@ -286,17 +321,21 @@ $('.marker').bind('touchend click', function(){
 					createPath(temp_data[i]);
 				}
 			}
-			$(this).css('opacity', '1');
+			$( this ).animate({
+            	opacity: "1"
+            })
 		}else{
-			$(this).css('opacity', '.3');
+			$( this ).animate({
+            	opacity: "0.3"
+            })
 		}
-
 	});
 });
 
 
 
 $('.drag_box').bind('tap click', function(){
+showInfoBox();
 	var dragBoxId = $(this).attr('device-id');
 	for(var i = 0; i < temp_data.length; i++){
 		if(temp_data[i].id === parseInt(dragBoxId)){
@@ -309,9 +348,13 @@ $('.drag_box').bind('tap click', function(){
 	}
 	$('.drag_box').each(function(){
 		if(dragBoxId === $(this).attr('device-id')){
-			$(this).css('opacity', '1');
+			$( this ).animate({
+            	opacity: "1"
+            })
 		}else{
-			$(this).css('opacity', '.3');
+			$( this ).animate({
+            	opacity: "0.3"
+            })
 
 		}
 	});
@@ -320,11 +363,19 @@ $('.drag_box').bind('tap click', function(){
 
 function displayInfo(_idData){
 	console.log(_idData);
+
 	$('#info').empty();
-	$('#info').append("<h3>" + _idData.name + "</h3>");
-	$('#info').append("<p>" + _idData.diagnose + "</p>");
+	$('#info').append("<center><h3>" + _idData.name + "</h3></center><hr>");
+	$('#info').append(
+		"<p><b>DIAGNOSE: </b>" + _idData.diagnose + " / "
+		+"<b>Cluster: </b>" + _idData.cluster +" / "
+		+"<b>WEEK: </b>" + _idData.week + " / "
+		+"<b>Functie: </b>" + _idData.functie +" / "
+		+"<b>DOEL: </b>" + _idData.doel +" / "
+		+"</p><hr>");
+	console.log(_idData.loc[0])
+	$('#info').append("<center><h1>" + _idData.loc[0].h +"</h1></center>");
 }
-		//----
 
 		
 		(function() {	

@@ -10,21 +10,25 @@
 			<li class="drag_box" device-id="{{this.id}}" >
 				<div class="circle">
 				<img src="{{this.rehabilitant.pictureUrl}}">
-				<h3>{{this.rehabilitant.GetFullName}}</h3>   
 				</div>
+				<h3>{{this.rehabilitant.GetFullName}}</h3>   
+				
 			</li>
 			
 			{{/each}}
 			{{#each rehabilitants}}
-			<li class="drag_box" device-id="" >
+			<li class="drag_box" device-id="{{this.id}}" >
 
-				
+				{{#if canEdit}}
 				<a href="/rehabilitant?id={{this.id}}" data-toggle="modal" data-target="#myModal">
+				{{/if}}
 					<div class="circle">
 						<img src="{{this.pictureUrl}}">
 					</div>
 					<h3>{{this.GetFullName}}</h3>
+				{{#if canEdit}}
 				</a>
+				{{/if}}
 			</li>
 			{{/each}}
 		</ul>

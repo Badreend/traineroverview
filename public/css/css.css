@@ -144,6 +144,7 @@ h3{
   position: relative;
 }
 
+
 #side_column{
   position:fixed;
   
@@ -493,7 +494,6 @@ nav.active { left: 0; }
     text-align: center;
     margin: 0 auto;
     margin-top: 10%;
-
 }
 
 /*
@@ -687,8 +687,8 @@ ul
   background: rgba(255,255,255,.8);
   margin-top:50px;
   padding-bottom:20px;
-
   padding-left:10px;
+  left:-200px;
 }
 
 #info{
@@ -708,6 +708,11 @@ ul
   font-size:32px;
 }
 
+.hideBTN{
+  cursor: pointer;
+  float: right;
+  display: block;
+}
 .stopBTN{
     width: 210px;
     height: 30px;
