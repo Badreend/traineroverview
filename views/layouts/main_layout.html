@@ -47,6 +47,9 @@
         } )();
 
     }
+
+
+
     var selectedolditem = localStorage.getItem('selectedolditem');
    $(document).ready(function(){
         $('#mobile-nav').click(function(event) {
@@ -75,6 +78,8 @@
             $('#'+selectedolditem).removeClass('selected');
             $('#'+selectedolditem).addClass('selected');
         }
+
+        
     });
 
 
@@ -152,7 +157,7 @@ function menuHighlight(val){
                 </li>
                 </a> 
                 <li id='group_overview'>
-                    <a href="/group-overview">Groepsoverzicht<img src="imgs/shared/Button_Back.png"></a>
+                    <a href="/group-overview">Groepsoverzicht<img src="imgs/shared/Button_GroupOverview.png"></a>
                 </li>
                 <li id='group_activity' class="hide menu-current-group">
                     <a href="/group-activity?group_id=">Groepsactiviteit<img src="imgs/shared/Button_Group.png"></a>

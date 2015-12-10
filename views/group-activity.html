@@ -28,6 +28,32 @@
 
 </style>
 
+<script type="text/javascript">
+
+$( document ).ready(function() {
+	console.log({{groupId}});
+$('.group_wrapper').click(function(){
+    var i= this.id;
+    console.log(i);
+    $( this ).animate({
+        marginTop: "-=25"
+        }, 500, "swing")
+
+    	$('.group_wrapper').not(this).animate({
+        	opacity: 0.5,
+    	},500, function() {
+        	setTimeout (function(){
+        		if (i=="group"){
+        			console.log("Group id:" + {{groupId}});
+            		window.location.href = "/overview?group_id=" + {{groupId}};
+        		} else {
+        			window.location.href = "/eva";
+        		}
+        	},500)
+    	})
+	});
+});
+</script>
 
 <div>
 {{> rehabilitantlist }}
@@ -36,15 +62,15 @@
 <div class="page_container">
 	
 	<div class="page_center">
-		<div class="btn_group">
-	<a href="/overview?group_id={{groupId}}">
+		<div class="group_wrapper" id="group">
+			<a href="#">
 		<img src="/imgs/shared/Logo_GreySquirrel.png"/><br>
 		<h2>Operation Grey Squirrel</h2>
 	</a>
 </div>
 <div class="vertical_line"></div>
-<div class="btn_group">
-	<a href="/eva">
+<div class="group_wrapper" id="eva">
+	<a href="#">
 		<img style="width: 200px;" src="/imgs/views/splashScreen/Logo_EVA.png"/><br>
 		<h2>Evaluatie</h2>
 	</a>

@@ -1,7 +1,6 @@
 
 
 
-
 <div class="groups_container">
         <div class="group_wrapper" id="1">
             <a href="#" onClick="menuHighlight('group_activity')">
@@ -22,27 +21,27 @@
 <script type="text/javascript">
 
 $( document ).ready(function() {
-$('.group_wrapper').click(function(){
-    var i= this.id;
-    $( this ).animate({
-        marginTop: "-=25"
-        }, 500, "swing")
+    $('.group_wrapper').click(function(){
+        var i = this.id;
+        $( this ).animate({
+            marginTop: "-=25"
+            }, 500, "swing")
 
-    $('.group_wrapper').not(this).animate({
-        opacity: 0.5,
-    },500, function() {
-        setTimeout (function(){
-            window.location.href = "/group-activity?group_id=" + i;
-        },500)
-    })
-});
+        $('.group_wrapper').not(this).animate({
+            opacity: 0.5,
+        },500, function() {
+            setTimeout (function(){
+                window.location.href = "/group-activity?group_id=" + i;
+            },500)
+        })
+    });
 });
 
 
 
 </script>
 <!-- OLD -->
-<!--
+<!-- 
 <div class="groups_container">
         {{#each groups}}
         <div class="group_wrapper">
@@ -56,7 +55,7 @@ $('.group_wrapper').click(function(){
             </a>
         </div>
         {{/each}}
-</div> -->
+</div>  -->
 
 
 
