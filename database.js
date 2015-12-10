@@ -545,31 +545,18 @@ module.exports = {
         });
     },
     
-    GetEvaData: function(gameId, callback){
-        //TODO: hier moet nog groupId bij, anders haalt ie alle revalidanten op
+    GetEvaData: function(gameId, groupId, callback){
+
         pg.connect(this.connectionString, function(err, client, done) {
 
-            var connDevicesQuery = client.query("SELECT * FROM connected_device WHERE rehabilitant_id IS NOT NULL".format(gameId));
-            var rehabilitantsQuery = client.query("SELECT * FROM rehabilitant");
-            var statesQuery = client.query("SELECT * FROM connected_device_state ds INNER JOIN connected_device cd ON cd.id = ds.connected_device_id".format(gameId));                
+            //var connDevicesQuery = client.query("SELECT * FROM connected_device WHERE rehabilitant_id IS NOT NULL".format(gameId));
+            var rehabilitantsQuery = client.query("SELECT r.* FROM rehabilitant r INNER JOIN group_rehabilitant gr ON gr.rehabilitant_id = r.id WHERE gr.group_id = {0}".format(groupId));
+            var statesQuery = client.query("SELECT ds.*, cd.rehabilitant_id FROM connected_device_state ds INNER JOIN connected_device cd ON cd.id = ds.connected_device_id WHERE cd.game_id = {0}".format(gameId));                
             
-            var connectedDevices = [];
             var rehabilitants = [];
             var states = [];
 
             var queryDoneCount = 0;
-            
-            connDevicesQuery.on('row', function(row) {
-                var connectedDevice = new ConnectedDevice();
-
-                Map(connectedDevice, row);
-                connectedDevices.push(connectedDevice);
-            });
-            
-            connDevicesQuery.on('end', function(){
-                queryDoneCount++;
-                OnDone();                    
-            });
             
             rehabilitantsQuery.on('row', function(row) {
                 var rehabilitant = new Rehabilitant();
@@ -587,6 +574,7 @@ module.exports = {
                 var state = new ConnectedDeviceState();
                 
                 Map(state, row);
+                state.rehabilitant_id = row.rehabilitant_id;
                 states.push(state);
             });
             
@@ -596,36 +584,17 @@ module.exports = {
             });
             
             function OnDone(){
-                if(queryDoneCount < 3) return;
-                
-                connectedDevices.forEach(function(device, index){
-                    var rehabs = rehabilitants.filter(function(rehabilitant){
-                        return rehabilitant.id == device.rehabilitant_id;
-                    });
-                    
-                    if(rehabs.length > 0){
-                        var rehabilitant = rehabs[0];
-                        
-                        device.rehabilitant = rehabilitant;
-                    }
-                    
-                    device.states = states.filter(function(state){
-                        return state.connectedDeviceId == device.id;
-                    });
-                });
+                if(queryDoneCount < 2) return;
                 
                 rehabilitants.forEach(function(rehabilitant, index){
-                    if(!IsInArray(connectedDevices, rehabilitant.id, "rehabilitant_id")){
-                        var connectedDevice = new ConnectedDevice();
-                        connectedDevice.rehabilitant_id = rehabilitant.id;
-                        connectedDevice.rehabilitant = rehabilitant;
-                        
-                        connectedDevices.push(connectedDevice);
-                    }
+                    rehabilitant.states = states.filter(function(state){
+                        return state.rehabilitant_id == rehabilitant.id;
+                    });
+                    
                 });
                 
                 done();
-                callback(connectedDevices);
+                callback(rehabilitants);
             }
         });
     },
