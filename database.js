@@ -249,43 +249,25 @@ module.exports = {
     },
     
     GetGameStates: function(gameId, callback){
-        //this.GetTrainerGame(trainerId, function(game){
             
             pg.connect(this.connectionString, function(err, client, done) {
-                //var commaDelimitedDeviceIds = game.connectedDevices.map(function(device){ return device.id; }).join(",");
-                
-                /*var query = client.query(
-                    "SELECT * \
-                    FROM v_connected_device_states \
-                    WHERE connected_device_game_id = {0}".format(gameId));*/
-                var connDevicesQuery = client.query("SELECT * FROM connected_device WHERE game_id = {0} AND active = true".format(gameId));
+
+                var connDevicesQuery = client.query("SELECT * FROM connected_device WHERE game_id = {0} AND active = true AND rehabilitant_id IS NOT NULL".format(gameId));
                 var rehabilitantsQuery = client.query("SELECT * FROM rehabilitant");
                 var statesQuery = client.query("SELECT * FROM connected_device_state ds INNER JOIN connected_device cd ON cd.id = ds.connected_device_id WHERE cd.game_id = {0} AND cd.active = true".format(gameId));                
+                var gameTimeQuery = client.query("SELECT start_date FROM game WHERE id = {0}".format(gameId));
                 
-                //var group = new Group();
                 var connectedDevices = [];
                 var rehabilitants = [];
                 var states = [];
+                var startDate = new Date();
                 var queryDoneCount = 0;
                 
                 connDevicesQuery.on('row', function(row) {
                     var connectedDevice = new ConnectedDevice();
-                    //var rehabilitant = new Rehabilitant();
-                    //var state = new ConnectedDeviceState();
-                    
-                    //if(!IsInArray(connectedDevices, row.connected_device_id, "id")){
-                        //Map(connectedDevice, row, 'connected_device_');
-                        Map(connectedDevice, row);
-                        connectedDevices.push(connectedDevice);
-                    //}
-                    
-                    //if(!IsInArray(rehabilitants, row.rehabilitant_id, "id")){
-                    //    Map(rehabilitant, row, 'rehabilitant_');
-                    //    rehabilitants.push(rehabilitant);
-                    //}
-                        
-                    //Map(state, row, 'state_');
-                    //states.push(state);
+
+                    Map(connectedDevice, row);
+                    connectedDevices.push(connectedDevice);
                 });
                 
                 connDevicesQuery.on('end', function(){
@@ -295,11 +277,9 @@ module.exports = {
                 
                 rehabilitantsQuery.on('row', function(row) {
                     var rehabilitant = new Rehabilitant();
-                    
-                    //if(!IsInArray(rehabilitants, row.rehabilitant_id, "id")){
-                        Map(rehabilitant, row);
-                        rehabilitants.push(rehabilitant);
-                    //}
+
+                    Map(rehabilitant, row);
+                    rehabilitants.push(rehabilitant);
                 });
                 
                 rehabilitantsQuery.on('end', function(){
@@ -319,8 +299,17 @@ module.exports = {
                     OnDone();
                 });
                 
+                gameTimeQuery.on('row', function(row){
+                    startDate = row.start_date || startDate;
+                });
+                
+                gameTimeQuery.on('end', function(){
+                    queryDoneCount++;
+                    OnDone();
+                });
+                
                 function OnDone(){
-                    if(queryDoneCount < 3) return;
+                    if(queryDoneCount < 4) return;
                     
                     connectedDevices.forEach(function(device, index){
                         var rehabs = rehabilitants.filter(function(rehabilitant){
@@ -338,7 +327,7 @@ module.exports = {
                         });
                     });
                     done();
-                    callback(connectedDevices);
+                    callback(connectedDevices, startDate);
                 }
             });
         //});
@@ -541,6 +530,17 @@ module.exports = {
             
             query.on('end', function(){
                 done();
+            });
+        });
+    },
+    
+    StartGame: function(gameId, callback){
+         pg.connect(this.connectionString, function(err, client, done){
+            var query = client.query("UPDATE game SET start_date = now() WHERE id = {0} AND start_date IS NULL".format(gameId));
+                
+            query.on('end', function(){
+                done();
+                callback();
             });
         });
     }

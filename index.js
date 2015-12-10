@@ -177,6 +177,7 @@ app.get('/overview', checkAuth, function(req, res){
         db.GetRehabilitantsInGroup(groupId, function(rehabilitants){
             res.render('overview', {
                 groupname: 'test',
+                trainerId: trainerId,
                 rehabilitants: rehabilitants,
                 game: game//{connectedDevices: [{id:1},{id:2}]}
             });
@@ -236,20 +237,28 @@ app.post('/upload', function(req, res){
     });
 });
 
-app.post('/pair_devices', function(req, res){
+app.post('/pair_devices', checkAuth, function(req, res){
     var devices = req.body.device;
+    var gameId = res.locals.gameId;    
     
     db.PairDevices(devices, function(){
-        io.emit("startGame");
-        res.redirect('/map');
+        db.StartGame(gameId, function(){
+            io.emit("startGame");
+            res.redirect('/map');
+        });
     });
 });
 
 app.get('/map', checkAuth, function(req, res){
     var gameId = res.locals.gameId;
     
-    db.GetGameStates(gameId, function(connectedDevices){
-        res.render('map', { connectedDevices: connectedDevices, gameId: gameId });
+    db.GetGameStates(gameId, function(connectedDevices, startDate){
+        var now = new Date();
+        var timeDiff = Math.abs(now.getTime() - startDate.getTime());
+        var hours = Math.floor(((timeDiff / 1000) / 60) / 60);
+        var minutes = Math.floor(((timeDiff / 1000) / 60) % 60);
+        var seconds = Math.floor((timeDiff / 1000) % 60);
+        res.render('map', { connectedDevices: connectedDevices, gameId: gameId, startHours: hours, startMinutes: minutes, startSeconds: seconds});
     });
 });
 
@@ -298,7 +307,7 @@ io.on('connection', function(socket){
         
             db.NewConnectedDevice(game.id, function(connectedDevice){
                 io.emit("receiveID", { unityId: data.unityId, device_id: connectedDevice.id });
-                io.sockets.emit("newDeviceConnected", connectedDevice.id);
+                io.sockets.emit("newDeviceConnected", { trainerId: data.trainerId, deviceId: connectedDevice.id });
             });
         });
 	});
