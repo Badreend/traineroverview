@@ -265,7 +265,7 @@ app.get('/map', checkAuth, function(req, res){
 app.get('/eva', checkAuth, function(req, res){
     var gameId = res.locals.gameId;
     
-    db.GetGameStates(gameId, function(connectedDevices){
+    db.GetEvaData(gameId, function(connectedDevices){
         res.render('eva', { connectedDevices: connectedDevices });
     });
 });

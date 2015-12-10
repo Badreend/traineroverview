@@ -543,7 +543,92 @@ module.exports = {
                 callback();
             });
         });
-    }
+    },
+    
+    GetEvaData: function(gameId, callback){
+        //TODO: hier moet nog groupId bij, anders haalt ie alle revalidanten op
+        pg.connect(this.connectionString, function(err, client, done) {
+
+            var connDevicesQuery = client.query("SELECT * FROM connected_device WHERE rehabilitant_id IS NOT NULL".format(gameId));
+            var rehabilitantsQuery = client.query("SELECT * FROM rehabilitant");
+            var statesQuery = client.query("SELECT * FROM connected_device_state ds INNER JOIN connected_device cd ON cd.id = ds.connected_device_id".format(gameId));                
+            
+            var connectedDevices = [];
+            var rehabilitants = [];
+            var states = [];
+
+            var queryDoneCount = 0;
+            
+            connDevicesQuery.on('row', function(row) {
+                var connectedDevice = new ConnectedDevice();
+
+                Map(connectedDevice, row);
+                connectedDevices.push(connectedDevice);
+            });
+            
+            connDevicesQuery.on('end', function(){
+                queryDoneCount++;
+                OnDone();                    
+            });
+            
+            rehabilitantsQuery.on('row', function(row) {
+                var rehabilitant = new Rehabilitant();
+
+                Map(rehabilitant, row);
+                rehabilitants.push(rehabilitant);
+            });
+            
+            rehabilitantsQuery.on('end', function(){
+                queryDoneCount++;
+                OnDone();                    
+            });
+            
+            statesQuery.on('row', function(row) {
+                var state = new ConnectedDeviceState();
+                
+                Map(state, row);
+                states.push(state);
+            });
+            
+            statesQuery.on('end', function(){
+                queryDoneCount++;
+                OnDone();
+            });
+            
+            function OnDone(){
+                if(queryDoneCount < 3) return;
+                
+                connectedDevices.forEach(function(device, index){
+                    var rehabs = rehabilitants.filter(function(rehabilitant){
+                        return rehabilitant.id == device.rehabilitant_id;
+                    });
+                    
+                    if(rehabs.length > 0){
+                        var rehabilitant = rehabs[0];
+                        
+                        device.rehabilitant = rehabilitant;
+                    }
+                    
+                    device.states = states.filter(function(state){
+                        return state.connectedDeviceId == device.id;
+                    });
+                });
+                
+                rehabilitants.forEach(function(rehabilitant, index){
+                    if(!IsInArray(connectedDevices, rehabilitant.id, "rehabilitant_id")){
+                        var connectedDevice = new ConnectedDevice();
+                        connectedDevice.rehabilitant_id = rehabilitant.id;
+                        connectedDevice.rehabilitant = rehabilitant;
+                        
+                        connectedDevices.push(connectedDevice);
+                    }
+                });
+                
+                done();
+                callback(connectedDevices);
+            }
+        });
+    },
 };
 
 function Map(obj1, obj2, prefix){
