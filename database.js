@@ -4,7 +4,7 @@ var Group = require('./models/group')
 var Rehabilitant = require('./models/rehabilitant')
 var Game = require('./models/game')
 var ConnectedDevice = require('./models/connectedDevice')
-var RehabilitantState = require('./models/rehabilitantState')
+var ConnectedDeviceState = require('./models/connectedDeviceState')
 
 module.exports = {
     connectionString: null,
@@ -249,43 +249,68 @@ module.exports = {
     },
     
     GetGameStates: function(gameId, callback){
-        //this.GetTrainerGame(trainerId, function(game){
             
             pg.connect(this.connectionString, function(err, client, done) {
-                //var commaDelimitedDeviceIds = game.connectedDevices.map(function(device){ return device.id; }).join(",");
+
+                var connDevicesQuery = client.query("SELECT * FROM connected_device WHERE game_id = {0} AND active = true AND rehabilitant_id IS NOT NULL".format(gameId));
+                var rehabilitantsQuery = client.query("SELECT * FROM rehabilitant");
+                var statesQuery = client.query("SELECT * FROM connected_device_state ds INNER JOIN connected_device cd ON cd.id = ds.connected_device_id WHERE cd.game_id = {0} AND cd.active = true".format(gameId));                
+                var gameTimeQuery = client.query("SELECT start_date FROM game WHERE id = {0}".format(gameId));
                 
-                var query = client.query(
-                    "SELECT s.* \
-                    FROM v_map_state_precision s \
-                    INNER JOIN connected_device cd ON cd.id = s.connected_device_id \
-                    WHERE cd.game_id = {0} \
-                    AND cd.active = TRUE".format(gameId));
-                
-                //var group = new Group();
                 var connectedDevices = [];
                 var rehabilitants = [];
                 var states = [];
+                var startDate = new Date();
+                var queryDoneCount = 0;
                 
-                query.on('row', function(row) {
+                connDevicesQuery.on('row', function(row) {
                     var connectedDevice = new ConnectedDevice();
-                    var rehabilitant = new Rehabilitant();
-                    var rehabilitantState = new RehabilitantState();
-                    
-                    if(!IsInArray(connectedDevices, row.connected_device_id, "id")){
-                        Map(connectedDevice, row, 'connected_device_');
-                        connectedDevices.push(connectedDevice);
-                    }
-                    
-                    if(!IsInArray(rehabilitants, row.rehabilitant_id, "id")){
-                        Map(rehabilitant, row, 'rehabilitant_');
-                        rehabilitants.push(rehabilitant);
-                    }
-                        
-                    Map(rehabilitantState, row, 'state_');
-                    states.push(rehabilitantState);
+
+                    Map(connectedDevice, row);
+                    connectedDevices.push(connectedDevice);
                 });
                 
-                query.on('end', function(){
+                connDevicesQuery.on('end', function(){
+                    queryDoneCount++;
+                    OnDone();                    
+                });
+                
+                rehabilitantsQuery.on('row', function(row) {
+                    var rehabilitant = new Rehabilitant();
+
+                    Map(rehabilitant, row);
+                    rehabilitants.push(rehabilitant);
+                });
+                
+                rehabilitantsQuery.on('end', function(){
+                    queryDoneCount++;
+                    OnDone();                    
+                });
+                
+                statesQuery.on('row', function(row) {
+                    var state = new ConnectedDeviceState();
+                    
+                    Map(state, row);
+                    states.push(state);
+                });
+                
+                statesQuery.on('end', function(){
+                    queryDoneCount++;
+                    OnDone();
+                });
+                
+                gameTimeQuery.on('row', function(row){
+                    startDate = row.start_date || startDate;
+                });
+                
+                gameTimeQuery.on('end', function(){
+                    queryDoneCount++;
+                    OnDone();
+                });
+                
+                function OnDone(){
+                    if(queryDoneCount < 4) return;
+                    
                     connectedDevices.forEach(function(device, index){
                         var rehabs = rehabilitants.filter(function(rehabilitant){
                             return rehabilitant.id == device.rehabilitant_id;
@@ -293,16 +318,17 @@ module.exports = {
                         
                         if(rehabs.length > 0){
                             var rehabilitant = rehabs[0];
-                            rehabilitant.states = states.filter(function(state){
-                                return state.rehabilitant_id == rehabilitant.id;
-                            });
-                            
+
                             device.rehabilitant = rehabilitant;
                         }
+                        
+                        device.states = states.filter(function(state){
+                            return state.connectedDeviceId == device.id;
+                        });
                     });
                     done();
-                    callback(connectedDevices);
-                });
+                    callback(connectedDevices, startDate);
+                }
             });
         //});
     },
@@ -470,16 +496,14 @@ module.exports = {
     
     InsertGameState: function(data){
         pg.connect(this.connectionString, function(err, client, done){
-            var gameState = new RehabilitantState();
+            var gameState = new ConnectedDeviceState();
             Map(gameState, data);
             var deviceId = data.device_id;
             
             if(deviceId != null){
                 var query = client.query(
-                    "INSERT INTO rehabilitant_state(\"game_id\", \"rehabilitant_id\", \"heart_rate\", \"gps_lat\", \"gps_lon\", \"x\", \"y\") \
-                    SELECT \"game_id\", \"rehabilitant_id\", '{0}', '{1}', '{2}', '{3}', '{4}' \
-                    FROM connected_device \
-                    WHERE id = {5}".format(gameState.heartRate, gameState.gpsLat, gameState.gpsLon, gameState.x, gameState.y, deviceId));
+                    "INSERT INTO connected_device_state(\"connected_device_id\", \"heart_rate\", \"gps_lat\", \"gps_lon\", \"x\", \"y\") \
+                    VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(deviceId, gameState.heartRate, gameState.gpsLat, gameState.gpsLon, gameState.x, gameState.y));
             
                 query.on('end', function(){
                     done();
@@ -487,6 +511,37 @@ module.exports = {
             }else{
                 done();
             }
+        });
+    },
+    
+    CleanupOldDevices: function(timeoutMinutes){
+        pg.connect(this.connectionString, function(err, client, done){
+            var query = client.query(
+                "UPDATE connected_device \
+                SET active = false \
+                WHERE active = true \
+                AND id IN ( \
+                    SELECT cds.connected_device_id \
+                    FROM connected_device_state cds \
+                    GROUP BY cds.connected_device_id \
+                    HAVING MAX(\"timestamp\") < now() - INTERVAL '{0} minute')"
+                .format(timeoutMinutes)
+            );
+            
+            query.on('end', function(){
+                done();
+            });
+        });
+    },
+    
+    StartGame: function(gameId, callback){
+         pg.connect(this.connectionString, function(err, client, done){
+            var query = client.query("UPDATE game SET start_date = now() WHERE id = {0} AND start_date IS NULL".format(gameId));
+                
+            query.on('end', function(){
+                done();
+                callback();
+            });
         });
     }
 };
