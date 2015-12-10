@@ -19,14 +19,14 @@
 			{{#each rehabilitants}}
 			<li class="drag_box" device-id="{{this.id}}" >
 
-				{{#if canEdit}}
+				{{#if ../canEdit}}
 				<a href="/rehabilitant?id={{this.id}}" data-toggle="modal" data-target="#myModal">
 				{{/if}}
 					<div class="circle">
 						<img src="{{this.pictureUrl}}">
 					</div>
 					<h3>{{this.GetFullName}}</h3>
-				{{#if canEdit}}
+				{{#if ../canEdit}}
 				</a>
 				{{/if}}
 			</li>

@@ -59,20 +59,23 @@ module.exports = {
         
         pg.connect(this.connectionString, function(err, client, done) {
             var query = client.query(
-                "SELECT * \
-                FROM rehabilitant \
+                "SELECT r.*, g.name \"group_name\" \
+                FROM rehabilitant r \
+                INNER JOIN \"group\" g ON g.id = {0} \
                 WHERE group_id = {0}".format(groupId));
             
+            var groupName;
             query.on('row', function(row) {
                 var rehabilitant = new Rehabilitant();
                 Map(rehabilitant, row);
                 
+                groupName = row.group_name;
                 results.push(rehabilitant);
             });
     
             query.on('end', function() {
                 done();
-                callback(results);
+                callback(results, groupName);
             });
         });
     },
@@ -550,18 +553,21 @@ module.exports = {
         pg.connect(this.connectionString, function(err, client, done) {
 
             //var connDevicesQuery = client.query("SELECT * FROM connected_device WHERE rehabilitant_id IS NOT NULL".format(gameId));
-            var rehabilitantsQuery = client.query("SELECT r.* FROM rehabilitant r INNER JOIN group_rehabilitant gr ON gr.rehabilitant_id = r.id WHERE gr.group_id = {0}".format(groupId));
+            var rehabilitantsQuery = client.query("SELECT r.*, g.name \"group_name\" FROM rehabilitant r INNER JOIN \"group\" g ON g.id = {0} WHERE r.group_id = {0}".format(groupId));
             var statesQuery = client.query("SELECT ds.*, cd.rehabilitant_id FROM connected_device_state ds INNER JOIN connected_device cd ON cd.id = ds.connected_device_id WHERE cd.game_id = {0}".format(gameId));                
             
             var rehabilitants = [];
             var states = [];
 
             var queryDoneCount = 0;
+            var groupName;
             
             rehabilitantsQuery.on('row', function(row) {
                 var rehabilitant = new Rehabilitant();
 
                 Map(rehabilitant, row);
+                groupName = row.group_name;
+                
                 rehabilitants.push(rehabilitant);
             });
             
@@ -594,7 +600,7 @@ module.exports = {
                 });
                 
                 done();
-                callback(rehabilitants);
+                callback(rehabilitants, groupName);
             }
         });
     },

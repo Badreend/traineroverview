@@ -149,10 +149,10 @@ app.get('/group-activity', checkAuth, function(req, res){
     
     res.cookie('currentGroup', groupId);
     
-    db.GetRehabilitantsInGroup(groupId, function(rehabilitants){
+    db.GetRehabilitantsInGroup(groupId, function(rehabilitants, groupName){
         res.render('group-activity', { 
             groupId: groupId, 
-            groupname: 'test', 
+            groupname: groupName, 
             rehabilitants: rehabilitants,
             canEdit: true
         });
@@ -175,9 +175,9 @@ app.get('/overview', checkAuth, function(req, res){
     }
     
     function load(game){
-        db.GetRehabilitantsInGroup(groupId, function(rehabilitants){
+        db.GetRehabilitantsInGroup(groupId, function(rehabilitants, groupName){
             res.render('overview', {
-                groupname: 'test',
+                groupname: groupName,
                 trainerId: trainerId,
                 rehabilitants: rehabilitants,
                 game: game//{connectedDevices: [{id:1},{id:2}]}
@@ -267,8 +267,8 @@ app.get('/eva', checkAuth, function(req, res){
     var gameId = res.locals.gameId;
     var groupId = req.query.group_id || 1;
     
-    db.GetEvaData(gameId, groupId, function(rehabilitants){
-        res.render('eva', { rehabilitants: rehabilitants, canEdit: false });
+    db.GetEvaData(gameId, groupId, function(rehabilitants, groupName){
+        res.render('eva', { rehabilitants: rehabilitants, canEdit: false, groupname: groupName });
     });
 });
 
