@@ -766,8 +766,8 @@ ul
   cursor: pointer;
 } 
 .graph .vLine{
-  stroke:#000;
-  opacity: .5;
+  stroke:#689595;
+  opacity:1;
 }
 .domain{
   display: none;

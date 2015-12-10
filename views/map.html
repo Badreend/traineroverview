@@ -160,7 +160,7 @@ function transformMapY(y, device_id){
 }
 
 var levelMargin = 25;
-var colors = ["#3D7BF7","#36FFAC","#FFEC38","#CC833B","#EB564B"];
+var colors = ["#9ECCCD","#C2F7FF","#FBEA28","#FA954F","#F27374"];
 var selectedPlayer = undefined;
 var temp_data = [];
 temp_data = eval([
@@ -319,6 +319,7 @@ $('.drag_box').bind('tap click', function(){
 
 
 function displayInfo(_idData){
+	console.log(_idData);
 	$('#info').empty();
 	$('#info').append("<h3>" + _idData.name + "</h3>");
 	$('#info').append("<p>" + _idData.diagnose + "</p>");

@@ -38,35 +38,35 @@ min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},lo
 ]);
 
 
-cluserData();
-// function cluserData(){
-// 	var newLoc = [];
-// 	var numSteps = 20;
-// 	for(var i = 0; i < temp_data.length;i++){
-// 		var step = Math.round(temp_data[i].loc.length/numSteps);
-// 		for(var j = 0; j < temp_data[i].loc.length; j+=step){
-// 			var avg = undefined;
-// 			for(var k = j; k < j+step; k++){
-// 				var heartrate = temp_data[i].loc[k];
-// 				console.log(heartrate)
-// 				if(!isNaN(heartrate)){
-// 				avg += heartrate;
-// 				}
-// 			}
-// 			// var avg = undefined; 
-// 			// 	console.log("old step"+step)
-// 			// if(j+step >= temp_data[i].loc.length){
-// 			// 	step = temp_data[i].loc.length - (j+step)
-// 			// 	console.log("new step"+step)
-// 			// }
-// 			// for(var k = j; k < j+step; k++){
-// 			// 	avg += temp_data[i].loc[k];
-// 			// }
-// 			// 	avg = avg/step;
-// 			// 	console.log(avg)
-// 		}
-// 	}
-// }
+clusterData();
+function clusterData(){
+	var numSteps = 10;
+
+	for(var i = 0; i < temp_data.length;i++){
+		var newHs = [];
+		var step = Math.round(temp_data[i].loc.length/numSteps);
+		for(var j = 0; j < temp_data[i].loc.length; j+=step){
+			var avg = 0;
+			for(var k = j; k < j+step; k++){
+				if(j+step <= temp_data[i].loc.length){
+						var heartrate = parseInt(temp_data[i].loc[k].h);
+						console.log(heartrate)
+						avg += (heartrate);
+							
+				}
+			}
+
+			console.log("step "+step)
+			console.log("total"+avg)
+
+			avg = Math.round(avg/step);
+			console.log("avg "+ avg)
+			newHs.push({h:avg});
+		}
+			console.log(newHs);
+			temp_data[i].loc = newHs;
+	}
+}
 
 
 
@@ -74,7 +74,7 @@ cluserData();
 
 
 var levelMargin = 25;
-var colors = ["#3D7BF7","#36FFAC","#FFEC38","#CC833B","#EB564B"];
+var colors = ["#9ECCCD","#C2F7FF","#FBEA28","#F8A56C","#F27374"];
 var selectedPlayer = undefined;
 
 

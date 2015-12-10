@@ -11,7 +11,6 @@ var svg = d3.select(".graph").append("svg")
 
 
 function getIndexOfId(_id){
-
   for(var i = 0 ; i < temp_data.length; i++){
     if(temp_data[i].id === _id){
       return i;
@@ -40,7 +39,7 @@ function drawGuides(){
     .append("line")
     .attr("stroke-dasharray","5,5")
     .attr("class", "hLine")
-    .attr("stroke","#777")
+    .attr("stroke","#689595")
     .attr("x1", 0)
     .attr("x2", width)
     .attr("y1",height/5 * i )
@@ -138,21 +137,30 @@ function drawGraph(_userData){
     .attr("cy", y(0))
     .attr("stroke-width","4")
     .attr("stroke","#fff")
+    .attr("fill","#fff")
     .transition()
     .duration(animationTime)
     .attr("cx", line.x())
     .attr("cy", line.y())
-    .attr("r", 1)
+    .attr("r", 5)
+    .attr("fill","#fff")
     .attr("svg:title",function(d){return d.h})
     .attr("stroke",function(d){
       heartRate = d.h;
       if(heartRate>= _userData.min && d.h <= _userData.max ){
         return colors[2];
       }else if(heartRate <= _userData.min){
-        return colors[0];
+        if(heartRate <= _userData.min-(target/2)){
+            return colors[0];
+        }else{
+          return colors[1];
+        }
       }else if(heartRate >= _userData.max){
-       
-        return colors[3];
+        if(heartRate >= _userData.max+(target/2)){
+          return colors[4];
+        }else{
+          return colors[3];
+        }
       }
     });
     data.exit().remove();
