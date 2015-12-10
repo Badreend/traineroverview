@@ -20,9 +20,15 @@
 			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
 		-->
-		wahed
 	</div>
+	<div id="map_heartRate_column_wrapper">
+		<div id="map_heartRate_column">
 
+		</div>
+	</div>
+<div style="margin-right:10px;">
+<center><button class="btn btn-warning"> Warning</button> <button class="btn btn-danger"> Return</button></center>
+</div>
 
 </div>
 <div id="legend">
@@ -371,10 +377,15 @@ function displayInfo(_idData){
 		+"<b>Cluster: </b>" + _idData.cluster +" / "
 		+"<b>WEEK: </b>" + _idData.week + " / "
 		+"<b>Functie: </b>" + _idData.functie +" / "
-		+"<b>DOEL: </b>" + _idData.doel +" / "
+		+"<b>DOEL: </b>" + _idData.doel
 		+"</p><hr>");
-	console.log(_idData.loc[0])
-	$('#info').append("<center><h1>" + _idData.loc[0].h +"</h1></center>");
+
+	$('#map_heartRate_column').empty();
+	if (_idData.h == "undefined"){
+		$('#map_heartRate_column').append("<center><img src='/imgs/views/map/blackheart.png'/><h1>" + _idData.h +"</h1><span>BPM</span></center>");
+	} else{
+		$('#map_heartRate_column').append("<center><img src='/imgs/views/map/blackheart.png'/> <h1> 0 </h1> <span> BPM </span></center>");
+	}
 }
 
 		
