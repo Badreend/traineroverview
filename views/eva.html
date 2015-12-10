@@ -27,10 +27,10 @@
 
 var temp_data = [];
 temp_data = eval([
-{{#each connectedDevices}}
-{id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",
-min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},loc:[
-{{#each this.rehabilitant.states}}
+{{#each rehabilitants}}
+{id:{{this.id}},name:"{{this.GetFullName}}",diagnose:"{{this.diagnosis}}",
+min:{{this.minHeartRate}},max:{{this.maxHeartRate}},loc:[
+{{#each this.states}}
 {t:{{this.timestamp}},h:{{this.heartRate}},x:transformMapX({{this.x}},{{../id}}),y:transformMapY({{this.y}},{{../id}}) },
 {{/each}}
 ]},

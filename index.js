@@ -153,7 +153,8 @@ app.get('/group-activity', checkAuth, function(req, res){
         res.render('group-activity', { 
             groupId: groupId, 
             groupname: 'test', 
-            rehabilitants: rehabilitants
+            rehabilitants: rehabilitants,
+            canEdit: true
         });
     });
     
@@ -264,9 +265,10 @@ app.get('/map', checkAuth, function(req, res){
 
 app.get('/eva', checkAuth, function(req, res){
     var gameId = res.locals.gameId;
+    var groupId = req.query.group_id || 1;
     
-    db.GetGameStates(gameId, function(connectedDevices){
-        res.render('eva', { connectedDevices: connectedDevices });
+    db.GetEvaData(gameId, groupId, function(rehabilitants){
+        res.render('eva', { rehabilitants: rehabilitants, canEdit: false });
     });
 });
 
