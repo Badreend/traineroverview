@@ -202,6 +202,7 @@ $(document).ready(function(){
 }
 
     resort();
+    pairDevices();
 });
 
 
@@ -245,7 +246,12 @@ function pairDevices(){
     });
 }
 
-socket.on('newDeviceConnected', function(connectedDeviceId){
+socket.on('newDeviceConnected', function(data){
+    if(data.trainerId == null || data.trainerId != {{trainerId}})
+        return;
+        
+    var connectedDeviceId = data.deviceId;
+    
     var templatePodHtml = '<div data-device-id="%id%" class="drop_box_container"> \
         <input type="hidden" name="device[%index%]_[id]" value="%id%"/> \
         <p> \

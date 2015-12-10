@@ -10,7 +10,7 @@ var Rehabilitant = function(){
 	this.diagnosis = '';
 	this.heartRate = 0;
 	this.heartRateLevel = 0;
-	this.states = [];
+	//this.states = [];
 	this.minHeartRate = 0;
 	this.maxHeartRate = 0;
 	this.gender = '';
@@ -41,11 +41,6 @@ var Rehabilitant = function(){
 		return context.courseDuration == 15;
 	};
 	
-	this.GetCurrentHeartRate = function(){
-		for(var i=0; i<context.states.length; i++){
-			
-		}
-	};
 };
 
 

@@ -8,13 +8,15 @@
 	<div id="header">
 		<h1>Speloverzicht</h1>
 	</div>
+
+
 	<div id="map_info_column">
 
 		<div id="info">
 			<!-- 
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
 		-->
-		
+		wahed
 	</div>
 </div>
 <div id="legend">
@@ -23,7 +25,7 @@
 	</div>
 	<button class="btn" onClick="allesClear()">Verberg info</button>
 	<div id="game_timer">
-		00:00
+		{{startMinutes}}:{{startSeconds}}
 	</div>
 	<div>
 		<div id="phase1">
@@ -143,7 +145,19 @@ function allesClear(){
 }
 
 
+var pixelMeterRatio = 1.73;
+var originX = 743.67;
+var originY = 914.64;
 
+var markerScale = 0.5;
+
+function transformMapX(x, device_id){
+	return originX + x * pixelMeterRatio;
+}
+
+function transformMapY(y, device_id){
+	return originY - y * pixelMeterRatio;
+}
 
 var levelMargin = 25;
 var colors = ["#3D7BF7","#36FFAC","#FFEC38","#CC833B","#EB564B"];
@@ -153,7 +167,7 @@ temp_data = eval([
 {{#each connectedDevices}}
 {id:{{this.id}},name:"{{this.rehabilitant.GetFullName}}",diagnose:"{{this.rehabilitant.diagnosis}}",
 min:{{this.rehabilitant.minHeartRate}},max:{{this.rehabilitant.maxHeartRate}},loc:[
-{{#each this.rehabilitant.states}}
+{{#each this.states}}
 {t:{{this.timestamp}},h:{{this.heartRate}},x:transformMapX({{this.x}},{{../id}}),y:transformMapY({{this.y}},{{../id}}) },
 {{/each}}
 ]},
@@ -311,19 +325,6 @@ function displayInfo(_idData){
 }
 		//----
 
-var pixelMeterRatio = 1.73;
-var originX = 743.67;
-var originY = 914.64;
-
-var markerScale = 0.5;
-
-function transformMapX(x, device_id){
-	return originX + x * pixelMeterRatio;
-}
-
-function transformMapY(y, device_id){
-	return originY - y * pixelMeterRatio;
-}
 		
 		(function() {	
 			var $section = $('#inverted-contain');
@@ -403,8 +404,10 @@ socket.on('dataClient', function(data){
 		
 		updateData({id:device_id,loc:{t:undefined,h:heartrate,x:newX,y:newY}});
 		
-		$(deviceDragBox).find(".circle").css( "border", "5px solid " + getColor(temp_data[indx],temp_data[indx].loc.length-2));	
-		$(deviceMarker).children().css( "background-color", getColor(temp_data[indx],temp_data[indx].loc.length-2) );	
+		if(temp_data[indx].loc.length >= 2){
+			$(deviceDragBox).find(".circle").css( "border", "5px solid " + getColor(temp_data[indx],temp_data[indx].loc.length-2));	
+			$(deviceMarker).children().css( "background-color", getColor(temp_data[indx],temp_data[indx].loc.length-2) );	
+		}
 	});
 
 /*

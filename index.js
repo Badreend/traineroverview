@@ -6,8 +6,10 @@ var io = require('socket.io')(http);
 var express  = require('express');
 var expressHbs = require('express3-handlebars');
 var bodyParser = require("body-parser");
-var session = require('express-session')
-var multer  = require('multer')
+var session = require('express-session');
+var multer  = require('multer');
+var schedule = require('node-schedule');
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, __dirname + '/public/uploads')
@@ -82,6 +84,11 @@ app.use(session({
 }));
 
 db.Init(connectionString);
+
+//execute job every minute
+var j = schedule.scheduleJob('* * * * *', function(){
+    db.CleanupOldDevices(2); //cleanup devices that have had no state update for 2 minutes
+});
 
 
 app.get('/ready', checkAuth, function(req, res){
@@ -170,6 +177,7 @@ app.get('/overview', checkAuth, function(req, res){
         db.GetRehabilitantsInGroup(groupId, function(rehabilitants){
             res.render('overview', {
                 groupname: 'test',
+                trainerId: trainerId,
                 rehabilitants: rehabilitants,
                 game: game//{connectedDevices: [{id:1},{id:2}]}
             });
@@ -229,28 +237,28 @@ app.post('/upload', function(req, res){
     });
 });
 
-app.post('/pair_devices', function(req, res){
+app.post('/pair_devices', checkAuth, function(req, res){
     var devices = req.body.device;
+    var gameId = res.locals.gameId;    
     
     db.PairDevices(devices, function(){
-        io.emit("startGame");
-        res.redirect('/map');
+        db.StartGame(gameId, function(){
+            io.emit("startGame");
+            res.redirect('/map');
+        });
     });
 });
 
-app.get('/map_v2', checkAuth, function(req, res){
-    var gameId = res.locals.gameId;
-    
-    db.GetGameStates(gameId, function(connectedDevices){
-        res.render('map_v2', { connectedDevices: connectedDevices, gameId: gameId });
-    });
-});
 app.get('/map', checkAuth, function(req, res){
-    var trainerId = req.session.user_id;
     var gameId = res.locals.gameId;
     
-    db.GetGameStates(gameId, function(connectedDevices){
-        res.render('map', { connectedDevices: connectedDevices });
+    db.GetGameStates(gameId, function(connectedDevices, startDate){
+        var now = new Date();
+        var timeDiff = Math.abs(now.getTime() - startDate.getTime());
+        var hours = Math.floor(((timeDiff / 1000) / 60) / 60);
+        var minutes = Math.floor(((timeDiff / 1000) / 60) % 60);
+        var seconds = Math.floor((timeDiff / 1000) % 60);
+        res.render('map', { connectedDevices: connectedDevices, gameId: gameId, startHours: hours, startMinutes: minutes, startSeconds: seconds});
     });
 });
 
@@ -299,7 +307,7 @@ io.on('connection', function(socket){
         
             db.NewConnectedDevice(game.id, function(connectedDevice){
                 io.emit("receiveID", { unityId: data.unityId, device_id: connectedDevice.id });
-                io.sockets.emit("newDeviceConnected", connectedDevice.id);
+                io.sockets.emit("newDeviceConnected", { trainerId: data.trainerId, deviceId: connectedDevice.id });
             });
         });
 	});
@@ -338,7 +346,7 @@ io.on('connection', function(socket){
 	});
 
 
-socket.on('disconnect',function(data){
+    socket.on('disconnect',function(data){
 		console.log('disconnect');
 	});
 
@@ -364,7 +372,7 @@ function checkAuth(req, res, next) {
     } else {
         res.locals.trainerId = req.session.user_id;
         //TODO: zet dit aan voor snelheid improvisatie!
-        res.header('Cache-Control', 'public, max-age=6000');
+        //res.header('Cache-Control', 'public, max-age=6000');
         
         db.GetTrainerGame(req.session.user_id, function(game){
             if(game.id != 0){
