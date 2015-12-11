@@ -125,15 +125,24 @@ function allesClear(){
 		$( '#map_info_column' ).animate({
             left: "-=200"
             }, 500, "swing", function(){
+            	$('.graph').find("svg").empty();
 				clearInfo();
-				
-        })
+
+					svg.append("text")
+			        .attr("text-anchor","middle")
+			        .attr("y","100px")
+			        .attr("x",width/2)
+			        .html("Geen revalidant niet geselecteerd");
+			        })
+		      $(".hoverInfo").find("h2").html('---');
+
 	}
 }
 
 function clearInfo(){
 	$('#info').empty();
 	$('#paths').empty();
+
 	selectedPlayer = undefined;
 	canShowHide=true;
 }
