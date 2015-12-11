@@ -23,7 +23,7 @@
 	</div>
 	<div id="map_heartRate_column_wrapper">
 		<div id="map_heartRate_column">
-
+			<center><img src='/imgs/views/map/blackheart.png'/><h1 id="setHR">0</h1><span>BPM</span></center>
 		</div>
 	</div>
 <div style="margin-right:10px;">
@@ -269,6 +269,7 @@ function createPath(_userData){
 		{			
 			path += "L";
 	}
+	updateHeartRateText(_userData.loc[i].h);
 	path += _userData.loc[i].x+" ";
 	path += _userData.loc[i].y+" ";
 	;
@@ -379,15 +380,12 @@ function displayInfo(_idData){
 		+"<b>Functie: </b>" + _idData.functie +" / "
 		+"<b>DOEL: </b>" + _idData.doel
 		+"</p><hr>");
-
-	$('#map_heartRate_column').empty();
-	if (_idData.h == "undefined"){
-		$('#map_heartRate_column').append("<center><img src='/imgs/views/map/blackheart.png'/><h1>" + _idData.h +"</h1><span>BPM</span></center>");
-	} else{
-		$('#map_heartRate_column').append("<center><img src='/imgs/views/map/blackheart.png'/> <h1> 0 </h1> <span> BPM </span></center>");
-	}
 }
 
+function updateHeartRateText(hr){
+	console.log("new heartrate = " + hr);
+	$('h1#setHR').text(hr);
+}
 		
 		(function() {	
 			var $section = $('#inverted-contain');
