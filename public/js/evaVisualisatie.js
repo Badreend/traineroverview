@@ -10,6 +10,16 @@ var svg = d3.select(".graph").append("svg")
 .attr("border","1px");
 
 
+  var bpmContainer = d3.select(".graph").append("div")
+  .attr("class","hoverInfo")
+  .append("div")
+  .attr("class","bpm")
+  ;
+
+  bpmContainer.append("img").attr("src","/imgs/shared/heart.png");
+  bpmContainer.append("h2").html("---");
+  bpmContainer.append("p").html("BPM");
+
 function getIndexOfId(_id){
   for(var i = 0 ; i < temp_data.length; i++){
     if(temp_data[i].id === _id){
@@ -25,7 +35,6 @@ function clearInfo(){
 
 $('.drag_box').bind('tap click', function(){
   var dragBoxId = $(this).attr('device-id');
-    $(".hoverInfo").remove();
       var indx = getIndexOfId(parseInt(dragBoxId));
       drawGraph(temp_data[indx])
       drawGuides();
@@ -47,10 +56,6 @@ function drawGuides(){
   }
 
 
-  d3.select(".graph").append("div")
-  .attr("class","hoverInfo")
-  .html("")
-  ;
 
 }
 
@@ -85,11 +90,6 @@ function drawGraph(_userData){
   .y0(y(0));
 
 
-
-
-
-
-
     //.append("g");
     svg.html('<image xlink:href="imgs/shared/dataBg.jpg" x="0" y="0" preserveAspectRatio="none" width="'+width+'" height="'+height+'" style="clip-path: url(#svgClip); width:'+width+'px;height:'+height+'px"/>');
 
@@ -117,10 +117,6 @@ function drawGraph(_userData){
     .attr("y2", line.y())
     .attr("r", 10);
 
-
-
-
-
     var data = container.selectAll(".dot")
     .data( function( d, i ) { return d.loc; } )
     ;
@@ -131,7 +127,10 @@ function drawGraph(_userData){
     .attr("class", "dot")
     .on("click", function(d){
 
-      $(".hoverInfo").html(d.h)
+     // $(".hoverInfo").html('");
+      $(".hoverInfo").find("h2").html(d.h);
+
+
     })
     .attr("cx", line.x())
     .attr("cy", y(0))
