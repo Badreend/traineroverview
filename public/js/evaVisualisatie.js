@@ -89,7 +89,7 @@ function drawGraph(_userData){
 
   var y = d3.scale.linear()
   .domain([0,target*2 ])  
-  .range([height, margin.top]);
+  .range([height, 0]);
 
   var line = d3.svg.line()
   .x(function(d,i) { console.log(x(i)); return x(i); })
