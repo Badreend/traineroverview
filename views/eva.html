@@ -101,6 +101,8 @@ $('.drag_box').bind('tap click', function(){
 function displayInfo(_idData){
 	console.log('abb');
 	console.log(_idData)
+	 var target = (_idData.max - _idData.min)/2 + _idData.min;
+	 console.log(target);
 	$('#info').empty();
 	$('#info').append("<center><h3>" + _idData.name + "</h3></center><hr>");
 	$('#info').append(
@@ -110,6 +112,23 @@ function displayInfo(_idData){
 		+"<b>Functie: </b>" + _idData.functie +" / "
 		+"<b>DOEL: </b>" + _idData.doel
 		+"</p><hr>");
+	$('#info').append(
+		"<p>BPM Legenda<img src='imgs/shared/waterpas.png'></img>"
+			+"<svg width='180px' height='100px'>"
+			+"<text text-anchor='middle' x='73' y='20px'>"+_idData.min
+			+"</text>"
+			+"<text text-anchor='middle' x='111px'y='20px'>"+_idData.max
+			+"</text>"
+			+"<text text-anchor='middle' x='37px'y='20px'>"+(Math.round(_idData.min-(target/2)))
+			+"</text>"
+			+"<text text-anchor='middle' x='146px'y='20px'>"+(Math.round(_idData.max+(target/2)))
+			+"</text>"				
+			+"<line class='legendLines' x1='73' x2='73' y1='1'y2='7'/>"
+			+"<line class='legendLines' x1='109' x2='109' y1='1'y2='7'/>"
+			+"<line class='legendLines' x1='37' x2='37' y1='1'y2='7'/>"	
+			+"<line class='legendLines' x1='146' x2='146' y1='1'y2='7'/>"				
+			+"</svg>"
+			+"</p><hr>");
 }
 
 
