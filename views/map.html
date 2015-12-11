@@ -36,16 +36,15 @@
 	<div id="game_timer">
 		{{startMinutes}}:{{startSeconds}}
 	</div>
-	<div>
-		<div id="phase1">
-			KOUD
-		</div>
-		<div id="phase2">
-			GOED
-		</div>
-		<div id="phase3">
-			WARM
-		</div>
+	<div id="legend_HR">
+		<b>BPM Legenda</b><img src='imgs/shared/waterpas.png'></img>
+			<svg width='180px' height='30px'>			
+			<line class='legendLines' x1='73' x2='73' y1='1'y2='7'/>
+			<line class='legendLines' x1='109' x2='109' y1='1'y2='7'/>
+			<line class='legendLines' x1='37' x2='37' y1='1'y2='7'/>"
+			<line class='legendLines' x1='146' x2='146' y1='1'y2='7'/>				
+			</svg>
+			</p><hr>
 	</div>
 </div>
 
@@ -368,8 +367,9 @@ showInfoBox();
 
 function displayInfo(_idData){
 	console.log(_idData);
-
+	var target = (_idData.max - _idData.min)/2 + _idData.min;
 	$('#info').empty();
+	$('#legend_HR').empty();
 	$('#info').append("<center><h3>" + _idData.name + "</h3></center><hr>");
 	$('#info').append(
 		"<p><b>Diagnose: </b>" + _idData.diagnose + " / "
@@ -378,6 +378,25 @@ function displayInfo(_idData){
 		+"<b>Functie: </b>" + _idData.functie +" / "
 		+"<b>Doel: </b>" + _idData.doel
 		+"</p><hr>");
+
+	$('#legend_HR').append(
+		"<b>BPM Legenda</b><img src='imgs/shared/waterpas.png'></img>"
+			+"<svg width='180px' height='30px'>"
+			+"<text text-anchor='middle' x='73' y='20px'>"+_idData.min
+			+"</text>"
+			+"<text text-anchor='middle' x='111px'y='20px'>"+_idData.max
+			+"</text>"
+			+"<text text-anchor='middle' x='37px'y='20px'>"+(Math.round(_idData.min-(target/2)))
+			+"</text>"
+			+"<text text-anchor='middle' x='146px'y='20px'>"+(Math.round(_idData.max+(target/2)))
+			+"</text>"				
+			+"<line class='legendLines' x1='73' x2='73' y1='1'y2='7'/>"
+			+"<line class='legendLines' x1='109' x2='109' y1='1'y2='7'/>"
+			+"<line class='legendLines' x1='37' x2='37' y1='1'y2='7'/>"	
+			+"<line class='legendLines' x1='146' x2='146' y1='1'y2='7'/>"				
+			+"</svg>"
+			+"</p><hr>"
+			);
 }
 
 function updateHeartRateText(hr){
