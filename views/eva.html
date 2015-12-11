@@ -13,11 +13,13 @@
 		</div>
 
 		<div id="map_info_column">
-			
-			<div id="info">
-			<!-- 
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu urna facilisis, feugiat orci in, semper mi. Praesent eu felis erat. Sed tristique lectus et justo porta, at bibendum dui 
-		-->
+		<div class="hideBTN" onClick ='allesClear()'>
+			<img src="/imgs/shared/Button_Verberg_v2.png"/>
+		</div>
+
+
+		<div id="info">
+
 	</div>
 	
 </div>
@@ -74,14 +76,14 @@ function clusterData(){
 var levelMargin = 25;
 var colors = ["#9ECCCD","#C2F7FF","#FBEA28","#F8A56C","#F27374"];
 var selectedPlayer = undefined;
-
+var canShowHide = true;
 
 
 $('.drag_box').bind('tap click', function(){
+	showInfoBox();
 	var dragBoxId = $(this).attr('device-id');
 	for(var i = 0; i < temp_data.length; i++){
 		if(temp_data[i].id === parseInt(dragBoxId)){
-			clearInfo();
 			displayInfo(temp_data[i]);
 		}
 	}
@@ -103,12 +105,38 @@ function displayInfo(_idData){
 	$('#info').append("<h3>" + _idData.name + "</h3>");
 	$('#info').append("<p>" + _idData.diagnose + "</p>");
 }
+
+
+function showInfoBox(){
+	if (canShowHide== true){
+		canShowHide=false;
+		$( '#map_info_column' ).animate({
+            left: "+=200"
+        }, 500, "swing")
+	}
+}
+
+function allesClear(){
+	$( '.drag_box' ).animate({
+            	opacity: "1"
+            })
+	if (canShowHide== false){
+		canShowHide = true;
+		$( '#map_info_column' ).animate({
+            left: "-=200"
+            }, 500, "swing", function(){
+				clearInfo();
+				
+        })
+	}
+}
+
 function clearInfo(){
 	$('#info').empty();
 	$('#paths').empty();
 	selectedPlayer = undefined;
+	canShowHide=true;
 }
-
 
 
 
