@@ -37,12 +37,20 @@ $('.drag_box').bind('tap click', function(){
   var dragBoxId = $(this).attr('device-id');
       var indx = getIndexOfId(parseInt(dragBoxId));
       drawGraph(temp_data[indx])
-      drawGuides();
+      if(temp_data[indx].loc.length>0){
+        drawGuides();
+      }else{
+        console.log('no data')
+        container.append("text")
+        .attr("text-anchor","middle")
+        .attr("y","100px")
+        .attr("x",width/2)
+        .html("No data Available")
+      }
 
 });
 
 function drawGuides(){
-
   for(var i = 1; i < 5; i++){
     container.append("g")
     .append("line")
@@ -69,7 +77,7 @@ function drawGraph(_userData){
   //_userData.
   var target = (_userData.max - _userData.min)/2 + _userData.min;
   var x = d3.scale.linear()
-  .domain([0,temp_data[0].loc.length])   
+  .domain([0,_userData.loc.length])   
   .range([margin.left-180, width-20]);
 
   var y = d3.scale.linear()
@@ -77,7 +85,7 @@ function drawGraph(_userData){
   .range([height, margin.top]);
 
   var line = d3.svg.line()
-  .x(function(d,i) { return x(i); })
+  .x(function(d,i) { console.log(x(i)); return x(i); })
   .y(function(d) {  return y(d.h); });
 
   var line2 = d3.svg.line()

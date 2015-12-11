@@ -38,9 +38,14 @@ min:{{this.minHeartRate}},max:{{this.maxHeartRate}},loc:[
 ]);
 
 
+// for(var i = 0; i < 300; i++){
+
+// }
+
+
 clusterData();
 function clusterData(){
-	var numSteps = 10;
+	var numSteps = 12;
 
 	for(var i = 0; i < temp_data.length;i++){
 		var newHs = [];
@@ -50,20 +55,13 @@ function clusterData(){
 			for(var k = j; k < j+step; k++){
 				if(j+step <= temp_data[i].loc.length){
 						var heartrate = parseInt(temp_data[i].loc[k].h);
-						console.log(heartrate)
 						avg += (heartrate);
 							
 				}
 			}
-
-			console.log("step "+step)
-			console.log("total"+avg)
-
 			avg = Math.round(avg/step);
-			console.log("avg "+ avg)
 			newHs.push({h:avg});
 		}
-			console.log(newHs);
 			temp_data[i].loc = newHs;
 	}
 }
