@@ -566,7 +566,7 @@ nav.active { left: 0; }
   float:left;
   width:180px;
   padding-top:20px;
-  height: 100%;
+  height: calc(100% - 30px);
   background: #111;
   float: left; 
   background: #fff;
@@ -691,6 +691,46 @@ ul
   left:-200px;
 }
 
+#map_info_column hr {
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #dedede;
+  opacity: 0.7;
+}
+
+#map_heartRate_column_wrapper{
+  width: 100%;
+  height:auto;
+  margin-bottom: 10px;
+  float: left;
+}
+#map_heartRate_column{
+  width: auto;
+  height:10px;
+  display: table;
+    margin: 0 auto;
+    padding-right: 15px;
+}
+
+
+
+#map_heartRate_column img{
+  height: 25px;
+  float: left;
+  margin-right: 15px;
+}
+
+#map_heartRate_column h1{
+  font-size: 50px;
+  float: left;
+  margin:0;
+  margin-right: 15px;
+  margin-top: -10px;
+}
+
+#map_heartRate_column span{
+  float:left;
+}
+
 #info{
   margin-top:20px;
   width:calc(100% - 10px);
@@ -715,12 +755,11 @@ ul
 }
 .stopBTN{
     width: 210px;
-    height: 30px;
     text-align: center;
-    font-size: 12px;
+    font-size: 16px;
     line-height: 1.42;
     background-color: #689595;
-    padding: 5px 10px 5px 10px;
+    padding: 7px 15px 7px 15px;
   }
 
   .stopBTN, .stopBTN:hover, .stopBTN:active{

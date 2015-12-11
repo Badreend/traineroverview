@@ -281,7 +281,10 @@ function clearPictureClass(){
 			}
 		});
 		
+		{{#if this.id}}
+		{{else}}
 		setHeartRateValues($("#slider-range").slider("values"));
+		{{/if}}
 		
 		function setHeartRateValues(values){
 			$("#hartslag_range").html("Minimale hartslag: " + values[0] + " - maximale hartslag: " + values[1]);
