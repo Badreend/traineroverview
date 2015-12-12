@@ -8,6 +8,14 @@
 		<div id="header">
 			<h1>EVA overzicht</h1>
 		</div>
+		<div>
+			<center>
+				<h2>{{game}}</h2>
+				{{#each games}}
+				<a href="/eva?group_id={{../groupId}}&game_id={{this.id}}" class="btn btn-default {{#equals ../game.id this.id}}active{{/equals}}">{{this.id}}</a>
+				{{/each}}
+			</center>
+		</div>
 		<div class="graph">
 
 		</div>
@@ -30,7 +38,7 @@
 var temp_data = [];
 temp_data = eval([
 {{#each rehabilitants}}
-{id:{{this.id}},name:"{{this.GetFullName}}",diagnose:"{{this.diagnosis}}",
+{id:{{this.id}},name:"{{this.GetFullName}}",diagnose:"{{this.diagnosis}}",doel:"{{this.goal}}",cluster:"{{this.cluster}}",week:"{{this.courseDuration}}", functie:"{{this.function}}",
 min:{{this.minHeartRate}},max:{{this.maxHeartRate}},loc:[
 {{#each this.states}}
 {t:{{this.timestamp}},h:{{this.heartRate}},x:transformMapX({{this.x}},{{../id}}),y:transformMapY({{this.y}},{{../id}}) },
@@ -106,7 +114,7 @@ function displayInfo(_idData){
 	$('#info').empty();
 	$('#info').append("<center><h3>" + _idData.name + "</h3></center><hr>");
 	$('#info').append(
-		"<p><b>Disgnose: </b>" + _idData.diagnose + " / "
+		"<p><b>Diagnose: </b>" + _idData.diagnose + " / "
 		+"<b>Cluster: </b>" + _idData.cluster +" / "
 		+"<b>Week: </b>" + _idData.week + " / "
 		+"<b>Functie: </b>" + _idData.functie +" / "

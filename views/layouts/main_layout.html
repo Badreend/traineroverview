@@ -65,6 +65,7 @@
         if(currentGroup){
             $(".menu-current-group").removeClass("hide"); 
             $(".menu-current-group a").attr("href",$(".menu-current-group a").attr("href")+currentGroup);
+            $(".menu-eva a").attr("href", $(".menu-eva a").attr("href")+currentGroup);            
         }
 
         $('#menu_top li').click(function(e) {
@@ -166,7 +167,7 @@ function menuHighlight(val){
                 </li>
                 {{#hasGame}}
                 <li id='eva'class="menu-eva">
-                    <a href="/eva">EVA<img src="imgs/shared/Button_EVA.png"></a>
+                    <a href="/eva?group_id=">EVA<img src="imgs/shared/Button_EVA.png"></a>
                 </li>
                 <li id='map'class="menu-map">
                     <a href="/map">Game OGS

@@ -264,11 +264,13 @@ app.get('/map', checkAuth, function(req, res){
 });
 
 app.get('/eva', checkAuth, function(req, res){
-    var gameId = res.locals.gameId;
+    var gameId = req.query.game_id || res.locals.gameId;
     var groupId = req.query.group_id || 1;
+    var trainerId = req.session.user_id;
     
-    db.GetEvaData(gameId, groupId, function(rehabilitants, groupName){
-        res.render('eva', { rehabilitants: rehabilitants, canEdit: false, groupname: groupName });
+    db.GetEvaData(gameId, groupId, trainerId, function(rehabilitants, groupName, games){
+        var currentGame = games.filter(function(elem){ return elem.id == gameId; })[0];
+        res.render('eva', { rehabilitants: rehabilitants, canEdit: false, groupname: groupName, games: games, game: currentGame, groupId: groupId });
     });
 });
 

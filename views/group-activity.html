@@ -47,7 +47,7 @@ $('.group_wrapper').click(function(){
         			console.log("Group id:" + {{groupId}});
             		window.location.href = "/overview?group_id=" + {{groupId}};
         		} else {
-        			window.location.href = "/eva";
+        			window.location.href = "/eva?group_id=" + {{groupId}};
         		}
         	},500)
     	})

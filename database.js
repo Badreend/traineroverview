@@ -531,9 +531,31 @@ module.exports = {
                 .format(timeoutMinutes)
             );
             
+            var secondQuery = client.query(
+                "UPDATE connected_device \
+                SET active = false \
+                WHERE id IN ( \
+                    SELECT cd.id \
+                    FROM connected_device cd \
+                    INNER JOIN game g ON g.id = cd.game_id \
+                    WHERE g.active = false AND cd.active = true)"
+            );
+            
+            var queryCount = 0;
+            
             query.on('end', function(){
-                done();
+                queryCount++;
+                onDone();
             });
+            secondQuery.on('end', function(){
+                queryCount++;
+                onDone();
+            });
+            
+            function onDone(){
+                if(queryCount == 2)
+                    done();                
+            }
         });
     },
     
@@ -547,17 +569,30 @@ module.exports = {
             });
         });
     },
-    
-    GetEvaData: function(gameId, groupId, callback){
 
+    GetEvaData: function(gameId, groupId, trainerId, callback){
         pg.connect(this.connectionString, function(err, client, done) {
 
-            //var connDevicesQuery = client.query("SELECT * FROM connected_device WHERE rehabilitant_id IS NOT NULL".format(gameId));
             var rehabilitantsQuery = client.query("SELECT r.*, g.name \"group_name\" FROM rehabilitant r INNER JOIN \"group\" g ON g.id = {0} WHERE r.group_id = {0}".format(groupId));
-            var statesQuery = client.query("SELECT ds.*, cd.rehabilitant_id FROM connected_device_state ds INNER JOIN connected_device cd ON cd.id = ds.connected_device_id WHERE cd.game_id = {0}".format(gameId));                
+            var statesQuery = gameId 
+                ? client.query("SELECT ds.*, cd.rehabilitant_id FROM connected_device_state ds INNER JOIN connected_device cd ON cd.id = ds.connected_device_id WHERE cd.game_id = {0}".format(gameId))              
+                : client.query(
+                    "SELECT cd.game_id, ds.*, cd.rehabilitant_id \
+                    FROM connected_device_state ds \
+                    INNER JOIN connected_device cd ON cd.id = ds.connected_device_id \
+                    WHERE cd.game_id = ( \
+                        SELECT id \
+                        FROM game \
+                        WHERE trainer_id = {0} \
+                        ORDER BY id DESC \
+                        LIMIT 1 \
+                    )".format(trainerId));
+                        
+            var gamesQuery = client.query("SELECT * FROM game WHERE trainer_id = {0} ORDER BY id".format(trainerId));
             
             var rehabilitants = [];
             var states = [];
+            var games = [];
 
             var queryDoneCount = 0;
             var groupName;
@@ -589,8 +624,20 @@ module.exports = {
                 OnDone();
             });
             
+            gamesQuery.on('row', function(row) {
+                var game = new Game();
+                
+                Map(game, row);
+                games.push(game);
+            });
+            
+            gamesQuery.on('end', function(){
+                queryDoneCount++;
+                OnDone();
+            });
+            
             function OnDone(){
-                if(queryDoneCount < 2) return;
+                if(queryDoneCount < 3) return;
                 
                 rehabilitants.forEach(function(rehabilitant, index){
                     rehabilitant.states = states.filter(function(state){
@@ -600,7 +647,7 @@ module.exports = {
                 });
                 
                 done();
-                callback(rehabilitants, groupName);
+                callback(rehabilitants, groupName, games);
             }
         });
     },
