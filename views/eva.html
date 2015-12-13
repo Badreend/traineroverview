@@ -41,7 +41,7 @@ temp_data = eval([
 {id:{{this.id}},name:"{{this.GetFullName}}",diagnose:"{{this.diagnosis}}",doel:"{{this.goal}}",cluster:"{{this.cluster}}",week:"{{this.courseDuration}}", functie:"{{this.function}}",
 min:{{this.minHeartRate}},max:{{this.maxHeartRate}},loc:[
 {{#each this.states}}
-{t:{{this.timestamp}},h:{{this.heartRate}},x:transformMapX({{this.x}},{{../id}}),y:transformMapY({{this.y}},{{../id}}) },
+{t:{{this.timestamp}},h:{{this.heartRate}} },
 {{/each}}
 ]},
 {{/each}}
@@ -56,10 +56,13 @@ min:{{this.minHeartRate}},max:{{this.maxHeartRate}},loc:[
 clusterData();
 function clusterData(){
 	var numSteps = 12;
-
+	
 	for(var i = 0; i < temp_data.length;i++){
 		var newHs = [];
 		var step = Math.round(temp_data[i].loc.length/numSteps);
+		if(step == 0)
+			continue;
+			
 		for(var j = 0; j < temp_data[i].loc.length; j+=step){
 			var avg = 0;
 			for(var k = j; k < j+step; k++){
@@ -165,7 +168,7 @@ function allesClear(){
 			        .attr("text-anchor","middle")
 			        .attr("y","100px")
 			        .attr("x",width/2)
-			        .html("Geen revalidant niet geselecteerd");
+			        .html("Geen revalidant geselecteerd");
 			        })
 		      $(".hoverInfo").find("h2").html('---');
 
@@ -181,104 +184,6 @@ function clearInfo(){
 }
 
 
-
-
-var pixelMeterRatio = 1.73;
-var originX = 743.67;
-var originY = 914.64;
-
-var markerScale = 0.5;
-
-function transformMapX(x, device_id){
-	return originX + x * pixelMeterRatio;
-}
-
-function transformMapY(y, device_id){
-	return originY - y * pixelMeterRatio;
-}
-		
-		(function() {	
-			var $section = $('#inverted-contain');
-			$section.find('.panzoom').panzoom({
-				$zoomIn: $section.find(".zoom-in"),
-				$zoomOut: $section.find(".zoom-out"),
-				$zoomRange: $section.find(".zoom-range"),
-				$reset: $section.find(".reset"),
-				startTransform: 'scale(1.1)',
-				increment: 0.5,
-				minScale: 0.75,
-				contain: 'invert',
-				onChange: function(e, panzoom){
-					scale = panzoom.getMatrix()[0];
-					$(".marker").each(function(idx, elem){
-						var mat = matrixToArray($(elem).css("transform"));
-
-			//scaleX
-			mat[0] =0.5 * 1/scale;
-			//scaleY
-			mat[3] =0.5 * 1/scale;
-
-			$(elem).css("transform", arrayToMatrix(mat));
-			//test({device_id: 1, heartrate: 89, x: 47.15, y:-41.17});
-		});
-				}
-			}).panzoom('zoom');
-
-			$('div.panzoom-parent').on('mousewheel.focal', function(e) {
-				e.preventDefault();
-				var delta = e.delta || e.originalEvent.wheelDelta;
-				var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
-
-				$section.find('.panzoom').panzoom('zoom', zoomOut, {
-					increment: 0.1,
-					focal: e
-				});
-			});
-
-			var dbPath
-		})();
-
-		function matrixToArray(str) {
-			return str.match(/(-?[0-9\.]+)/g);
-		}
-		function arrayToMatrix(arr){
-			var str = "matrix(";
-				return str + arr[0] +","+arr[1]+","+arr[2]+","+arr[3]+","+arr[4]+","+arr[5]+")";
-}
-
-socket.on('dataClient', function(data){
-	var device_id = parseInt(data.device_id);
-		//var lat = parseFloat(data.lat);
-		//var lon = parseFloat(data.lon);
-		var x = parseFloat(data.x);
-		var y = parseFloat(data.y);
-		
-		var heartrate = parseInt(data.heartrate);	
-		
-		var deviceMarker = $(".marker[device-id='"+device_id+"']");
-		$(deviceMarker).find(".heartrate-text").text(heartrate);
-		 
-		var deviceDragBox =  $(".drag_box[device-id='"+device_id+"']");
-	
-		var mat = matrixToArray($(deviceMarker).css("transform"));
-
-		//posX
-		mat[4] = originX + x * pixelMeterRatio - $(deviceMarker).width() * markerScale;
-		//posY
-		mat[5] = originY - y * pixelMeterRatio - $(deviceMarker).height() * markerScale;
-
-		var indx = getIndexOfId(device_id);
-		$(deviceMarker).css("transform", arrayToMatrix(mat));			
-		
-		var newX = transformMapX(x, device_id);
-		var newY = transformMapY(y, device_id);
-		
-		updateData({id:device_id,loc:{t:undefined,h:heartrate,x:newX,y:newY}});
-		
-		$(deviceDragBox).find(".circle").css( "border", "5px solid " + getColor(temp_data[indx],temp_data[indx].loc.length-2));	
-		$(deviceMarker).children().css( "background-color", getColor(temp_data[indx],temp_data[indx].loc.length-2) );	
-	});
-
-	</script>
+</script>
 
 	<script src="js/evaVisualisatie.js"></script>
