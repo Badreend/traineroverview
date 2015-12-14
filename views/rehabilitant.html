@@ -264,7 +264,7 @@ function clearPictureClass(){
 		var minVal = 80;
 		var maxVal = 180;
 
-		{{#if this.id}}
+		{{#if rehabilitant.id}}
 			minVal = $("input[name='min_heartrate']").val();
 			maxVal = $("input[name='max_heartrate']").val();
 		{{/if}}
@@ -281,10 +281,7 @@ function clearPictureClass(){
 			}
 		});
 		
-		{{#if this.id}}
-		{{else}}
 		setHeartRateValues($("#slider-range").slider("values"));
-		{{/if}}
 		
 		function setHeartRateValues(values){
 			$("#hartslag_range").html("Minimale hartslag: " + values[0] + " - maximale hartslag: " + values[1]);

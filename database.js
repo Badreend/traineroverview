@@ -588,7 +588,7 @@ module.exports = {
                         LIMIT 1 \
                     )".format(trainerId));
                         
-            var gamesQuery = client.query("SELECT * FROM game WHERE trainer_id = {0} ORDER BY id".format(trainerId));
+            var gamesQuery = client.query("SELECT DISTINCT g.* FROM game g INNER JOIN connected_device cd ON cd.game_id = g.id INNER JOIN connected_device_state ds ON ds.connected_device_id = cd.id WHERE trainer_id = {0} ORDER BY id".format(trainerId));
             
             var rehabilitants = [];
             var states = [];
