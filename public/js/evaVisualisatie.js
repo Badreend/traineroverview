@@ -15,7 +15,7 @@ var svg = d3.select(".graph").append("svg")
         .attr("text-anchor","middle")
         .attr("y","100px")
         .attr("x",width/2)
-        .html("Geen revalidant niet geselecteerd");
+        .html("Geen revalidant geselecteerd");
 
   var bpmContainer = d3.select(".graph").append("div")
   .attr("class","hoverInfo")
